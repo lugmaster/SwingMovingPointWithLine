@@ -96,9 +96,9 @@ public class Board extends JPanel implements ActionListener{
         public void keyPressed(KeyEvent e) {
             //call event in objects
             player.keyPressed(e);
-
         }
     }
+
 
     private void detectCollisionShapes(){
         for(ColoredShape coloredShape : coloredShapes) {
