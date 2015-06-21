@@ -11,26 +11,11 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-/*
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.Graphics;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import javax.swing.JPanel;
-import javax.swing.Timer;
- */
-
 public class Board extends JPanel implements ActionListener{
 
     private final int WIDTH = 200;
     private final int HEIGHT = 200;
-    private final int DELAY = 5;
+    private final int DELAY = 10;
     private Timer timer;
     private ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
     private ArrayList<MoveableShape> moveableShapes = new ArrayList<>();
@@ -53,7 +38,7 @@ public class Board extends JPanel implements ActionListener{
         coloredShapes.add(new ColouredRectangle(80, 80, 10, 10));
         coloredShapes.add(new ColouredRectangle(100, 100, 50, 50));
         moveableShapes.add(player);
-        moveableShapes.add(new Player(50,50,3,3, Color.red));
+        moveableShapes.add(new AIPlayer(50,50,3,3, Color.red));
     }
 
     @Override
@@ -103,7 +88,7 @@ public class Board extends JPanel implements ActionListener{
         @Override
         public void keyReleased(KeyEvent e) {
             //call event in objects
-            //player.keyReleased(e);
+            player.keyReleased(e);
 
         }
 
@@ -129,11 +114,11 @@ public class Board extends JPanel implements ActionListener{
     }
 
     private void detectCollisionPlayers(){
-        for(MoveableShape moveableShape : moveableShapes) {
-            MoveableShape m = moveableShape;
+        for(MoveableShape m : moveableShapes) {
             for(MoveableShape mS : moveableShapes) {
-                if(m != mS && m.intersects(mS.getBounds()))
+                if(m != mS && m.intersects(mS.getBounds())) {
                     System.out.println("COLL MOVEABLESHAPES");
+                }
             }
         }
     }
