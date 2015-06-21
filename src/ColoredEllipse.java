@@ -6,7 +6,6 @@ public abstract class ColoredEllipse extends Ellipse2D.Double implements Moveabl
     final Color color;
     private ArrayList<Point> lines = new ArrayList<>();
     private boolean moveable;
-    private int dx, dy;
 
     public ColoredEllipse(int x, int y, int width, int height, Color color){
         super(x, y, width, height);
@@ -19,7 +18,7 @@ public abstract class ColoredEllipse extends Ellipse2D.Double implements Moveabl
     }
 
     @Override
-    public void move() {
+    public void move(int dx, int dy) {
         moveable = true;
         x += dx;
         y += dy;

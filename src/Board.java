@@ -30,7 +30,7 @@ public class Board extends JPanel implements ActionListener{
 
     private final int WIDTH = 200;
     private final int HEIGHT = 200;
-    private final int DELAY = 10;
+    private final int DELAY = 5;
     private Timer timer;
     private ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
     private ArrayList<MoveableShape> moveableShapes = new ArrayList<>();
@@ -103,7 +103,7 @@ public class Board extends JPanel implements ActionListener{
         @Override
         public void keyReleased(KeyEvent e) {
             //call event in objects
-            player.keyReleased(e);
+            //player.keyReleased(e);
 
         }
 
