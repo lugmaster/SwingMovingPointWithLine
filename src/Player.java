@@ -1,7 +1,7 @@
 import java.awt.Color;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 
-public class Player extends ColoredEllipse  {
+public class Player extends ColoredEllipse {
 
     public Player(int x, int y, int width, int height){
         super(x, y, width, height, Color.blue);
