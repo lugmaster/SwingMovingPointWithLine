@@ -18,19 +18,19 @@ public class Player extends ColoredEllipse  {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-            move(-1,0);
+            dx = -1;
         }
 
         if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-            move(1,0);
+            dx = 1;
         }
 
         if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-            move(0,-1);
+            dy = -1;
         }
 
         if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-            move(0,1);
+            dy = 1;
         }
     }
 
@@ -39,24 +39,20 @@ public class Player extends ColoredEllipse  {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-            moveZero();
+            dx = 0;
         }
 
         if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-            moveZero();
+            dx = 0;
         }
 
         if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-            moveZero();
+            dy = 0;
         }
 
         if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-            moveZero();
+            dy = 0;
         }
-    }
-
-    private void moveZero(){
-        move(0,0);
     }
 
 

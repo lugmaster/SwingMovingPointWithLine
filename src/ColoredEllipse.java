@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
@@ -6,6 +7,7 @@ public abstract class ColoredEllipse extends Ellipse2D.Double implements Moveabl
     final Color color;
     private ArrayList<Point> lines = new ArrayList<>();
     private boolean moveable;
+    protected int dx, dy;
 
     public ColoredEllipse(int x, int y, int width, int height, Color color){
         super(x, y, width, height);
@@ -18,7 +20,7 @@ public abstract class ColoredEllipse extends Ellipse2D.Double implements Moveabl
     }
 
     @Override
-    public void move(int dx, int dy) {
+    public void move() {
         moveable = true;
         x += dx;
         y += dy;
@@ -38,5 +40,47 @@ public abstract class ColoredEllipse extends Ellipse2D.Double implements Moveabl
         moveable = false;
         lines.clear();
     }
+
+    /*public void keyPressed(KeyEvent e) {
+
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+            dx = -1;
+        }
+
+        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+            dx = 1;
+        }
+
+        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+            dy = -1;
+        }
+
+        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+            dy = 1;
+        }
+    }
+
+    public void keyReleased(KeyEvent e) {
+
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+            dx = 0;
+        }
+
+        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+            dx = 0;
+        }
+
+        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+            dy = 0;
+        }
+
+        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+            dy = 0;
+        }
+    }*/
 
 }
