@@ -24,26 +24,26 @@ public abstract class MoveableEllipse extends ColoredEllipse implements Moveable
     @Override
     public void move() {
 
-        if(x > 0 && x < 200) {
+        if(x > 0 && x < Board.WIDTH) {
             moveable = true;
             x += dx;
         }
         else if(x < 1) {
             x = 1;
         }
-        else if(x > 199) {
-            x = 199;
+        else if(x > Board.WIDTH -1) {
+            x = Board.WIDTH-1;
         }
 
-        if(y > 0 && y < 200) {
+        if(y > 0 && y < Board.HEIGHT) {
             moveable = true;
             y += dy;
         }
         else if(y < 1) {
             y = 1;
         }
-        else if(y > 199) {
-            y = 199;
+        else if(y > Board.HEIGHT -1) {
+            y = Board.HEIGHT-1;
         }
         //System.out.println("X: " + x + ", Y: " +y);
 

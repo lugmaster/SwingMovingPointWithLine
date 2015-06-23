@@ -32,4 +32,27 @@ public class ShapeContainer {
     public ArrayList<MoveableShape> getMoveableShapes() {
         return moveableShapes;
     }
+
+    public void detectCollisionShapes(){
+        for(ColoredShape coloredShape : coloredShapes) {
+            for(MoveableShape moveableShape : moveableShapes) {
+                if (coloredShape.getColor().equals(moveableShape.getColor())) {
+                    if(moveableShape.intersects(coloredShape.getBounds())){
+                        System.out.println("COLLISION");
+                    }
+                }
+            }
+        }
+
+    }
+
+    public void detectCollisionPlayers(){
+        for(MoveableShape m : moveableShapes) {
+            for(MoveableShape mS : moveableShapes) {
+                if(m != mS && m.intersects(mS.getBounds())) {
+                    System.out.println("COLL MOVEABLESHAPES");
+                }
+            }
+        }
+    }
 }
