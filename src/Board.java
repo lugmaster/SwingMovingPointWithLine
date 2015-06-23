@@ -31,7 +31,7 @@ public class Board extends JPanel implements ActionListener{
         timer = new Timer(DELAY, this);
         timer.start();
 
-        shapeContainer = new ShapeContainer();
+        shapeContainer = ShapeContainer.getInstance();
         player = shapeContainer.getPlayer();
     }
 
