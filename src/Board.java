@@ -38,7 +38,7 @@ public class Board extends JPanel implements ActionListener{
         coloredShapes.add(new ColouredRectangle(80, 80, 10, 10));
         coloredShapes.add(new ColouredRectangle(100, 100, 50, 50));
         moveableShapes.add(player);
-        moveableShapes.add(new AIPlayer(50,50,3,3, Color.red));
+        moveableShapes.add(new AIPlayer(50,50,3,3,1.5f, Color.red));
     }
 
     @Override
