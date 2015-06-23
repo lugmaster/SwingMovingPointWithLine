@@ -3,6 +3,7 @@ import javax.swing.*;
 
 public class Mondrian extends JFrame {
 
+
     public Mondrian() {
         add(new Board());
 

@@ -2,11 +2,11 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.util.ArrayList;
 
-public abstract class ColoredEllipse extends Ellipse2D.Double implements MoveableShape  {
+public abstract class ColoredEllipse extends Ellipse2D.Float implements MoveableShape  {
     final Color color;
     private ArrayList<Point> lines = new ArrayList<>();
     private boolean moveable;
-    protected int dx, dy;
+    protected float dx, dy;
 
     public ColoredEllipse(int x, int y, int width, int height, Color color){
         super(x, y, width, height);
@@ -20,9 +20,30 @@ public abstract class ColoredEllipse extends Ellipse2D.Double implements Moveabl
 
     @Override
     public void move() {
-        moveable = true;
-        x += dx;
-        y += dy;
+
+        if(x > 0 && x < 200) {
+            moveable = true;
+            x += dx;
+        }
+        else if(x < 1) {
+             x = 1;
+        }
+        else if(x > 199) {
+            x = 199;
+        }
+
+        if(y > 0 && y < 200) {
+            moveable = true;
+            y += dy;
+        }
+        else if(y < 1) {
+            y = 1;
+        }
+        else if(y > 199) {
+            y = 199;
+        }
+        //System.out.println("X: " + x + ", Y: " +y);
+
         add(x,y);
     }
 

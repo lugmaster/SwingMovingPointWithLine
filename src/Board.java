@@ -23,7 +23,7 @@ public class Board extends JPanel implements ActionListener{
 
     public Board() {
         super();
-        player = new Player(60, 50, 3, 3);
+        player = new Player(60, 50, 3, 3, 1.5f);
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setDoubleBuffered(true);
@@ -79,8 +79,9 @@ public class Board extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         repaint();
         player.move();
-        detectCollisionPlayers();
-        detectCollisionShapes();
+        //detectCollisionPlayers();
+        //detectCollisionShapes();
+        System.out.println(getMaximumSize());
     }
 
     private class TAdapter extends KeyAdapter {
@@ -121,5 +122,10 @@ public class Board extends JPanel implements ActionListener{
                 }
             }
         }
+    }
+
+    @Override
+    public Dimension getMaximumSize() {
+        return super.getMaximumSize();
     }
 }

@@ -3,12 +3,15 @@ import java.awt.event.*;
 
 public class Player extends ColoredEllipse {
 
-    public Player(int x, int y, int width, int height){
-        super(x, y, width, height, Color.blue);
+    private float moveSpeed;
+
+    public Player(int x, int y, int width, int height, float moveSpeed){
+        this(x, y, width, height, moveSpeed, Color.blue);
     }
 
-    public Player(int x, int y, int width, int height, Color color){
+    public Player(int x, int y, int width, int height, float moveSpeed, Color color){
         super(x, y, width, height, color);
+        this.moveSpeed = moveSpeed;
     }
 
 
@@ -18,19 +21,19 @@ public class Player extends ColoredEllipse {
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-            dx = -1;
+            dx = -moveSpeed;
         }
 
         if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-            dx = 1;
+            dx = moveSpeed;
         }
 
         if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-            dy = -1;
+            dy = -moveSpeed;
         }
 
         if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-            dy = 1;
+            dy = moveSpeed;
         }
     }
 
