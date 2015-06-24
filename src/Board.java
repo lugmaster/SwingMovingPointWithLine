@@ -17,7 +17,6 @@ public class Board extends JPanel implements ActionListener{
     private final int DELAY = 10;
     private Timer timer;
     private ShapeContainer shapeContainer;
-    private Player player;
 
     public Board() {
         super();
@@ -32,7 +31,6 @@ public class Board extends JPanel implements ActionListener{
         timer.start();
 
         shapeContainer = ShapeContainer.getInstance();
-        player = shapeContainer.getPlayer();
     }
 
     @Override
@@ -72,7 +70,7 @@ public class Board extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
-        player.move();
+        shapeContainer.getPlayer().move();
         shapeContainer.detectCollisionPlayers();
         shapeContainer.detectCollisionShapes();
     }
@@ -81,13 +79,13 @@ public class Board extends JPanel implements ActionListener{
 
         @Override
         public void keyReleased(KeyEvent e) {
-            player.keyReleased(e);
+            shapeContainer.getPlayer().keyReleased(e);
 
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            player.keyPressed(e);
+            shapeContainer.getPlayer().keyPressed(e);
         }
     }
 

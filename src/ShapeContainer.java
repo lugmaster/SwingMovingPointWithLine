@@ -7,22 +7,22 @@ import java.util.ArrayList;
 public final class ShapeContainer {
 
     private static ShapeContainer shapeContainer = new ShapeContainer();
-    private ShapeCreator shapeCreator;
+    //private ShapeCreator shapeCreator;
     private ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
     private ArrayList<MoveableShape> moveableShapes = new ArrayList<>();
     private Player player;
     private AIPlayer aiPlayer;
 
     private ShapeContainer() {
-        shapeCreator = new ShapeCreator();
-        /*player = new Player(60, 50, 3, 3, 1.5f);
+        //shapeCreator = new ShapeCreator();
+        player = new Player(60, 50, 3, 3, 1.5f);
 
         coloredShapes.add(new ColouredRectangle(0, 0, 10, 10));
         coloredShapes.add(new ColouredRectangle(40, 40, 10, 10));
         coloredShapes.add(new ColouredRectangle(80, 80, 10, 10));
         coloredShapes.add(new ColouredRectangle(100, 100, 50, 50));
         moveableShapes.add(player);
-        moveableShapes.add(new AIPlayer(50,50,3,3,1.5f, Color.red));*/
+        moveableShapes.add(new AIPlayer(50,50,3,3,1.5f, Color.red));
     }
 
     public static ShapeContainer getInstance(){
@@ -59,6 +59,10 @@ public final class ShapeContainer {
             this.aiPlayer = aiPlayer;
             addMoveableShape(aiPlayer);
         }
+    }
+
+    public void createRectangle(int x, int y, int width, int height, Player owner) {
+       addColoredShape(new ColouredRectangle(x,y,width,height, owner));
     }
 
     public void addColoredShape(ColoredShape coloredShape){

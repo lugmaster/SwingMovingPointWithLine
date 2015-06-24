@@ -1,8 +1,6 @@
-import java.awt.*;
+/*import java.awt.*;
 
-/**
- * Created by Lukas Normal on 24.06.2015.
- */
+
 public final class ShapeCreator {
 
     //private ShapeCreator shapeCreator = new ShapeCreator();
@@ -18,13 +16,12 @@ public final class ShapeCreator {
     }
 
 
-    /*public static ShapeCreator getInstance( ) {
+    public static ShapeCreator getInstance( ) {
         if(shapeCreator == null)
             return new ShapeCreator();
         return shapeCreator;
-    }*/
-
-    public void createRectangle(int x, int y, int width, int height) {
-        ShapeContainer.getInstance().addColoredShape(new ColouredRectangle(x,y,width,height));
     }
+
+
 }
+*/
