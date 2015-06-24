@@ -1,20 +1,15 @@
 import java.awt.*;
 import java.util.ArrayList;
 
-/**
- * Created by Lukas Normal on 23.06.2015.
- */
 public final class ShapeContainer {
 
     private static ShapeContainer shapeContainer = new ShapeContainer();
-    //private ShapeCreator shapeCreator;
     private ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
     private ArrayList<MoveableShape> moveableShapes = new ArrayList<>();
     private Player player;
     private AIPlayer aiPlayer;
 
     private ShapeContainer() {
-        //shapeCreator = new ShapeCreator();
         player = new Player(60, 50, 3, 3, 1.5f);
 
         coloredShapes.add(new ColouredRectangle(0, 0, 10, 10));

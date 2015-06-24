@@ -1,9 +1,6 @@
 import java.awt.*;
 import java.util.Random;
 
-/**
- * Created by Lukas Normal on 20.06.2015.
- */
 public class ColouredRectangle extends Rectangle implements ColoredShape {
     private final Color color;
     private Player owner;
