@@ -88,7 +88,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     public void detectCollision(){
-        if(ShapeContainer.getInstance().detectCollisionShapes(this)) System.out.println("COL ON");
+      ShapeContainer.getInstance().detectCollisionShapes(this);
 
         /*if(ShapeContainer.getInstance().detectCollisionPlayers(this)){
             if(!isColliding) System.out.println("DEAD");

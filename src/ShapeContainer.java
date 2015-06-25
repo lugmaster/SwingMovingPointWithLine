@@ -72,8 +72,10 @@ public final class ShapeContainer {
     public boolean detectCollisionShapes(MoveableShape moveableShape){
         //System.out.println("Im called here dude!");
         for(ColoredShape coloredShape : coloredShapes) {
-            if(moveableShape.intersects(coloredShape.getBounds()));
-            return true;
+            if(coloredShape != moveableShape && moveableShape.intersects(coloredShape.getBounds())){
+                //System.out.println("Why the hell true?");
+                return true;
+            }
         }
         return false;
     }
