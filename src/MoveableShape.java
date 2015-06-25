@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public interface MoveableShape extends ColoredShape {
     public void move();
 
-    public void stopMoving();
+    public void clearLines();
 
     public ArrayList<Point> getLines();
 }

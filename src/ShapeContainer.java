@@ -80,6 +80,13 @@ public final class ShapeContainer {
         }
 
     }
+    public boolean detectCollisionShapes(MoveableShape moveableShape){
+        for(ColoredShape coloredShape : coloredShapes) {
+            if(moveableShape.intersects(coloredShape.getBounds()));
+            return true;
+        }
+        return false;
+    }
 
     public void detectCollisionPlayers(){
         for(MoveableShape m : moveableShapes) {

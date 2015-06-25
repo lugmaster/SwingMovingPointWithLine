@@ -7,7 +7,6 @@ import java.util.ArrayList;
 public abstract class MoveableEllipse extends ColoredEllipse implements MoveableShape {
 
     private ArrayList<Point> lines = new ArrayList<>();
-    private boolean moveable;
     protected float dx, dy;
 
     protected float moveSpeed;
@@ -25,7 +24,6 @@ public abstract class MoveableEllipse extends ColoredEllipse implements Moveable
     public void move() {
 
         if(x > 0 && x < Board.WIDTH) {
-            moveable = true;
             x += dx;
         }
         else if(x < 1) {
@@ -36,7 +34,6 @@ public abstract class MoveableEllipse extends ColoredEllipse implements Moveable
         }
 
         if(y > 0 && y < Board.HEIGHT) {
-            moveable = true;
             y += dy;
         }
         else if(y < 1) {
@@ -60,8 +57,7 @@ public abstract class MoveableEllipse extends ColoredEllipse implements Moveable
     }
 
     @Override
-    public void stopMoving() {
-        moveable = false;
+    public void clearLines() {
         lines.clear();
     }
 
