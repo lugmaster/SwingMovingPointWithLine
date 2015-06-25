@@ -1,10 +1,13 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
-public class Player extends MoveableEllipse {
+public class Player extends MoveableEllipse implements MoveableShape, LineDrawingShape{
 
     LineDrawing lineDrawing = LineDrawing.IsNotDrawingLines;
     private boolean isColliding = false;
+    private ArrayList<Point> lines = new ArrayList<>();
+
 
     public Player(int x, int y, int width, int height, float moveSpeed){
         this(x, y, width, height, moveSpeed, Color.blue);
@@ -68,6 +71,7 @@ public class Player extends MoveableEllipse {
         }
         if(!isDrawingLines()) {
             enableLineDrawing();
+            add(x,y);
         }
     }
 
@@ -84,19 +88,37 @@ public class Player extends MoveableEllipse {
     }
 
     public void detectCollision(){
-        if(ShapeContainer.getInstance().detectCollisionPlayers(this)){
-            if(isColliding) System.out.println("DEAD");
+        if(ShapeContainer.getInstance().detectCollisionShapes(this)) System.out.println("COL ON");
+
+        /*if(ShapeContainer.getInstance().detectCollisionPlayers(this)){
+            if(!isColliding) System.out.println("DEAD");
             //gameOver
         }
         if(!isColliding && ShapeContainer.getInstance().detectCollisionShapes(this)){
             isColliding = true;
             onCollisionEnterColoredShape((int) this.x, (int) this.y);
+            System.out.println("COL ON");
         }
         if(isColliding && !ShapeContainer.getInstance().detectCollisionShapes(this)) {
             isColliding = false;
             onCollisionExitColoredShape((int) this.x, (int) this.y);
-        }
+            System.out.println("COL OFF");
+        }*/
 
+    }
+
+    private void add(double x, double y) {
+        lines.add(new Point((int) x, (int) y));
+    }
+
+    @Override
+    public ArrayList<Point> getLines() {
+        return lines;
+    }
+
+    @Override
+    public void clearLines() {
+        lines.clear();
     }
 
     private boolean isDrawingLines(){

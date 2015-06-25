@@ -49,16 +49,16 @@ public class Board extends JPanel implements ActionListener{
                 g2d.setColor(moveableShape.getColor());
                 g2d.draw(moveableShape);
                 g2d.fill(moveableShape);
-                if(!moveableShape.getLines().isEmpty()) {
-                    for(int i = 0; i < moveableShape.getLines().size(); i++){
-                        if(moveableShape.getLines().size() > i+1) {
-                            int x1 = (int) moveableShape.getLines().get(i).getX();
-                            int y1 = (int) moveableShape.getLines().get(i).getY();
-                            int x2 = (int) moveableShape.getLines().get(i+1).getX();
-                            int y2 = (int) moveableShape.getLines().get(i+1).getY();
-                            g2d.drawLine(x1, y1, x2, y2);
-                        }
-                    }
+            }
+        }
+        if(!shapeContainer.getLines().isEmpty()){
+            for(int i = 0; i < shapeContainer.getLines().size(); i++){
+                if(shapeContainer.getLines().size() > i+1) {
+                    int x1 = (int) shapeContainer.getLines().get(i).getX();
+                    int y1 = (int) shapeContainer.getLines().get(i).getY();
+                    int x2 = (int) shapeContainer.getLines().get(i+1).getX();
+                    int y2 = (int) shapeContainer.getLines().get(i+1).getY();
+                    g2d.drawLine(x1, y1, x2, y2);
                 }
             }
         }
@@ -71,6 +71,7 @@ public class Board extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         repaint();
         shapeContainer.getPlayer().move();
+        shapeContainer.getPlayer().detectCollision();
 
     }
 

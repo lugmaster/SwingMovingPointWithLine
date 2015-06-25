@@ -6,9 +6,7 @@ import java.util.ArrayList;
  */
 public abstract class MoveableEllipse extends ColoredEllipse implements MoveableShape {
 
-    private ArrayList<Point> lines = new ArrayList<>();
     protected float dx, dy;
-
     protected float moveSpeed;
 
     public MoveableEllipse(int x, int y, int width, int height, float moveSpeed){
@@ -43,23 +41,9 @@ public abstract class MoveableEllipse extends ColoredEllipse implements Moveable
             y = Board.HEIGHT-1;
         }
         //System.out.println("X: " + x + ", Y: " +y);
-
-        add(x,y);
     }
 
-    private void add(double x, double y) {
-        lines.add(new Point((int) x, (int) y));
-    }
 
-    @Override
-    public ArrayList<Point> getLines() {
-        return lines;
-    }
-
-    @Override
-    public void clearLines() {
-        lines.clear();
-    }
 
 
 

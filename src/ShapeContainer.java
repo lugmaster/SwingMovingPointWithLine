@@ -56,8 +56,8 @@ public final class ShapeContainer {
         }
     }
 
-    public void createRectangle(int x, int y, int width, int height, Player owner) {
-       addColoredShape(new ColouredRectangle(x,y,width,height, owner));
+    public void createRectangle(int x, int y, int width, int height) {
+       addColoredShape(new ColouredRectangle(x,y,width,height));
     }
 
     public void addColoredShape(ColoredShape coloredShape){
@@ -70,6 +70,7 @@ public final class ShapeContainer {
 
 
     public boolean detectCollisionShapes(MoveableShape moveableShape){
+        //System.out.println("Im called here dude!");
         for(ColoredShape coloredShape : coloredShapes) {
             if(moveableShape.intersects(coloredShape.getBounds()));
             return true;
@@ -84,5 +85,9 @@ public final class ShapeContainer {
             }
         }
         return false;
+    }
+
+    public ArrayList<Point> getLines(){
+            return player.getLines();
     }
 }
