@@ -1,10 +1,10 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 public class Player extends MoveableEllipse {
 
     LineDrawing lineDrawing = LineDrawing.IsNotDrawingLines;
+    private boolean isColliding = false;
 
     public Player(int x, int y, int width, int height, float moveSpeed){
         this(x, y, width, height, moveSpeed, Color.blue);
@@ -16,7 +16,7 @@ public class Player extends MoveableEllipse {
 
     private enum LineDrawing{
         IsDrawingLines,
-        IsNotDrawingLines;
+        IsNotDrawingLines
     }
 
     public void keyPressed(KeyEvent e) {
@@ -80,6 +80,22 @@ public class Player extends MoveableEllipse {
     }
 
     public void onCollisionExitMoveableShape(){
+
+    }
+
+    public void detectCollision(){
+        if(ShapeContainer.getInstance().detectCollisionPlayers(this)){
+            if(isColliding) System.out.println("DEAD");
+            //gameOver
+        }
+        if(!isColliding && ShapeContainer.getInstance().detectCollisionShapes(this)){
+            isColliding = true;
+            onCollisionEnterColoredShape((int) this.x, (int) this.y);
+        }
+        if(isColliding && !ShapeContainer.getInstance().detectCollisionShapes(this)) {
+            isColliding = false;
+            onCollisionExitColoredShape((int) this.x, (int) this.y);
+        }
 
     }
 

@@ -68,18 +68,7 @@ public final class ShapeContainer {
         moveableShapes.add(moveableShape);
     }
 
-    public void detectCollisionShapes(){
-        for(ColoredShape coloredShape : coloredShapes) {
-            for(MoveableShape moveableShape : moveableShapes) {
-                if (coloredShape.getColor().equals(moveableShape.getColor())) {
-                    if(moveableShape.intersects(coloredShape.getBounds())){
-                        System.out.println("COLLISION");
-                    }
-                }
-            }
-        }
 
-    }
     public boolean detectCollisionShapes(MoveableShape moveableShape){
         for(ColoredShape coloredShape : coloredShapes) {
             if(moveableShape.intersects(coloredShape.getBounds()));
@@ -88,13 +77,12 @@ public final class ShapeContainer {
         return false;
     }
 
-    public void detectCollisionPlayers(){
+    public boolean detectCollisionPlayers(MoveableShape moveableShape){
         for(MoveableShape m : moveableShapes) {
-            for(MoveableShape mS : moveableShapes) {
-                if(m != mS && m.intersects(mS.getBounds())) {
-                    System.out.println("COLL MOVEABLESHAPES");
-                }
+            if(m != moveableShape && m.intersects(moveableShape.getBounds())) {
+                return true;
             }
         }
+        return false;
     }
 }

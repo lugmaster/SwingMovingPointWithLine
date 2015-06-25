@@ -71,8 +71,7 @@ public class Board extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         repaint();
         shapeContainer.getPlayer().move();
-        shapeContainer.detectCollisionPlayers();
-        shapeContainer.detectCollisionShapes();
+
     }
 
     private class TAdapter extends KeyAdapter {
