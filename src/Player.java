@@ -110,9 +110,10 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     public void detectCollisionShapes(ArrayList<ColoredShape> coloredShapes) {
-        for(ColoredShape coloredShape : coloredShapes){
-            if(this.intersects(coloredShape.getBounds())){
+      for(int i = 0; i < coloredShapes.size(); i++) {
+            if(coloredShapes.get(i).intersects(this.getBounds())){
                 onCollisionEnterColoredShape((int) this.x, (int) this.y);
+                return;
             }
         }
         onCollisionExitColoredShape((int) this.x, (int) this.y);
