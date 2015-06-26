@@ -12,10 +12,10 @@ public final class ShapeContainer {
     private ShapeContainer() {
         player = new Player(60, 50, 3, 3, 1.5f);
 
-        coloredShapes.add(new ColouredRectangle(0, 0, 10, 10));
-        coloredShapes.add(new ColouredRectangle(40, 40, 10, 10));
-        coloredShapes.add(new ColouredRectangle(80, 80, 10, 10));
-        coloredShapes.add(new ColouredRectangle(100, 100, 50, 50));
+        coloredShapes.add(new ColouredRectangle(0, 0, 10, 200));
+        coloredShapes.add(new ColouredRectangle(190, 0, 10, 200));
+        coloredShapes.add(new ColouredRectangle(0, 190, 200, 10));
+        coloredShapes.add(new ColouredRectangle(0, 0, 200, 10));
         moveableShapes.add(player);
         moveableShapes.add(new AIPlayer(50,50,3,3,1.5f, Color.red));
     }

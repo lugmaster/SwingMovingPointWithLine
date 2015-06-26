@@ -8,4 +8,6 @@ public interface LineDrawingShape {
     public void clearLines();
 
     public ArrayList<Point> getLines();
+
+    public void addLines();
 }
