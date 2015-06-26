@@ -12,6 +12,8 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private int[] onCollisionEnter;
     private int[] getOnCollisionExit;
 
+    private static int collCount = 0;
+
     public Player(int x, int y, int width, int height, float moveSpeed){
         this(x, y, width, height, moveSpeed, Color.blue);
     }
@@ -69,34 +71,34 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     public void onCollisionEnterColoredShape(int x1, int y1){
-        isColliding = true;
-        if(!stack.isEmpty()){
-            Integer[] integers = stack.pop();
-            int x2 = integers[0];
-            int y2 = integers[1];
-            int swap;
-            if(x1 < x2) {
-                swap = x2;
-                x1 = x2;
-                x2 = x1;
-            }
-            if(y1 < y2){
-                swap = y2;
-                y1 = y2;
-                y2 = y1;
-            }
-            int xfinal = x2;
-            int yfinal = y2;
-            int w = x1-x2;
-            int h = y1-y2;
-            System.out.println("P: (" + xfinal + ", " + yfinal +") w:" + w +" h:" + h);
-            ShapeContainer.getInstance().addColoredShape(new ColouredRectangle(xfinal, yfinal, w, h));
+        int x2 = onCollisionEnter[0];
+        int y2 = onCollisionEnter[1];
+        int swap;
+        if(x1 < x2) {
+            swap = x2;
+            x1 = x2;
+            x2 = x1;
         }
+        if(y1 < y2){
+            swap = y2;
+            y1 = y2;
+            y2 = y1;
+        }
+        int xfinal = x2;
+        int yfinal = y2;
+        int w = x1-x2;
+        int h = y1-y2;
+        collCount++;
+        System.out.println(collCount + " - cEnter: (" + xfinal + ", " + yfinal +") w:" + w +" h:" + h);
+        ShapeContainer.getInstance().addColoredShape(new ColouredRectangle(xfinal, yfinal, w, h));
+
+
         disableLineDrawing();
         clearLines();
     }
 
     public void onCollisionExitColoredShape(int x, int y){
+        System.out.println("cEX");
         enableLineDrawing();
         Integer[] integers = {x,y};
         stack.push(integers);
@@ -120,6 +122,9 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
                 }
                 return;
             }
+        }
+        if(onCollisionEnter != null) {
+            onCollisionExitColoredShape(0,0);
         }
         onCollisionEnter = null;
     }

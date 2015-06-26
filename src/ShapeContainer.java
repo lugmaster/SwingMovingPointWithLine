@@ -12,10 +12,10 @@ public final class ShapeContainer {
     private ShapeContainer() {
         player = new Player(60, 50, 3, 3, 1.0f);
 
-        coloredShapes.add(new ColouredRectangle(0, 0, 10, 200));
-        coloredShapes.add(new ColouredRectangle(190, 0, 10, 200));
-        coloredShapes.add(new ColouredRectangle(0, 190, 200, 10));
-        coloredShapes.add(new ColouredRectangle(0, 0, 200, 10));
+        coloredShapes.add(new ColouredRectangle(0, 0, 10, 210));
+        coloredShapes.add(new ColouredRectangle(190, 0, 10, 210));
+        coloredShapes.add(new ColouredRectangle(0, 190, 210, 10));
+        coloredShapes.add(new ColouredRectangle(0, 0, 210, 10));
         moveableShapes.add(player);
         moveableShapes.add(new AIPlayer(50,50,3,3,1.0f, Color.red));
     }
@@ -88,8 +88,9 @@ public final class ShapeContainer {
 
     public void doGameCycle(){
         getPlayer().move();
-        getPlayer().addLines();
         getPlayer().detectCollisionShapes(coloredShapes);
+        getPlayer().addLines();
+
     }
 
     public ArrayList<Point> getLines(){
