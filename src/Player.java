@@ -68,6 +68,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     public void onCollisionEnterColoredShape(int x1, int y1){
+        isColliding = true;
         if(!stack.isEmpty()){
             Integer[] integers = stack.pop();
             int x2 = integers[0];
@@ -108,21 +109,13 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     }
 
-    public void detectCollision() {
-        if (ShapeContainer.getInstance().detectCollisionPlayers(this)) {
-            if (!isColliding) System.out.println("DEAD");
-            //gameOver
+    public void detectCollisionShapes(ArrayList<ColoredShape> coloredShapes) {
+        for(ColoredShape coloredShape : coloredShapes){
+            if(this.intersects(coloredShape.getBounds())){
+                onCollisionEnterColoredShape((int) this.x, (int) this.y);
+            }
         }
-        if (!isColliding && ShapeContainer.getInstance().detectCollisionShapes(this)) {
-            isColliding = true;
-            onCollisionEnterColoredShape((int) this.x, (int) this.y);
-            System.out.println("COL ON");
-        }
-        if (isColliding && !ShapeContainer.getInstance().detectCollisionShapes(this)) {
-            isColliding = false;
-            onCollisionExitColoredShape((int) this.x, (int) this.y);
-            System.out.println("COL OFF");
-        }
+        onCollisionExitColoredShape((int) this.x, (int) this.y);
     }
 
     @Override

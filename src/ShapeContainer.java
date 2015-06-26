@@ -89,7 +89,7 @@ public final class ShapeContainer {
     public void doGameCycle(){
         getPlayer().move();
         getPlayer().addLines();
-        getPlayer().detectCollision();
+        getPlayer().detectCollisionShapes(coloredShapes);
     }
 
     public ArrayList<Point> getLines(){
