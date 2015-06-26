@@ -9,9 +9,6 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private boolean isDrawingLines = false;
     private ArrayList<Point> lines = new ArrayList<>();
     private Stack<Integer[]> stack = new Stack<>();
-    private Integer[] onCollisionExit;
-
-    private static int collCount = 0;
 
     public Player(int x, int y, int width, int height, float moveSpeed){
         this(x, y, width, height, moveSpeed, Color.blue);
@@ -21,49 +18,6 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         super(x, y, width, height, moveSpeed, color);
     }
 
-    public void keyPressed(KeyEvent e) {
-
-        int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-            dx = -moveSpeed;
-        }
-
-        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-            dx = moveSpeed;
-        }
-
-        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-            dy = -moveSpeed;
-        }
-
-        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-            dy = moveSpeed;
-        }
-    }
-
-    public void keyReleased(KeyEvent e) {
-
-
-        int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-            dx = 0;
-        }
-
-        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-            dx = 0;
-        }
-
-        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-            dy = 0;
-        }
-
-        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-            dy = 0;
-        }
-    }
-
     public void onCollisionEnterColoredShape(){
         System.out.println("cEnter");
         isDrawingLines = false;
@@ -71,13 +25,10 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         if(!stack.isEmpty()) {
             createNewShape(stack.pop());
         }
-
-
-
     }
 
     private void createNewShape(Integer[] position) {
-        int x1 = position[0];
+        int x1 = position[0]+1;
         int x2 = (int)this.x;
         int y1 = position[1];
         int y2 = (int)this.y;
@@ -91,7 +42,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
             y1 = y2;
             y2 = tmp;
         }
-        ShapeContainer.getInstance().createRectangle(x1,y1,(x2-x1)+2,(y2-y1)+2);
+        ShapeContainer.getInstance().createRectangle(x1,y1,(x2-x1),(y2-y1));
     }
 
     public void onCollisionExitColoredShape(){
@@ -137,13 +88,46 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         lines.clear();
     }
 
-    private void enableLineDrawing(){
-        isDrawingLines = true;
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+            dx = -moveSpeed;
+        }
+
+        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+            dx = moveSpeed;
+        }
+
+        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+            dy = -moveSpeed;
+        }
+
+        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+            dy = moveSpeed;
+        }
     }
 
-    private void disableLineDrawing(){
-        isDrawingLines = false;
+    public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+            dx = 0;
+        }
+
+        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+            dx = 0;
+        }
+
+        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+            dy = 0;
+        }
+
+        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+            dy = 0;
+        }
     }
+
 
 
 }
