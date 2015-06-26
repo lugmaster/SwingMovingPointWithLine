@@ -9,7 +9,8 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private boolean isColliding = true;
     private ArrayList<Point> lines = new ArrayList<>();
     private Stack<Integer[]> stack = new Stack<>();
-
+    private int[] onCollisionEnter;
+    private int[] getOnCollisionExit;
 
     public Player(int x, int y, int width, int height, float moveSpeed){
         this(x, y, width, height, moveSpeed, Color.blue);
@@ -111,14 +112,16 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     public void detectCollisionShapes(ArrayList<ColoredShape> coloredShapes) {
-      for(int i = 0; i < coloredShapes.size(); i++) {
-            if(!isColliding && this != coloredShapes.get(i) && coloredShapes.get(i).intersects(this.getBounds())){
-                onCollisionEnterColoredShape((int) this.x, (int) this.y);
+        for(int i = 0; i < coloredShapes.size(); i++) {
+            if (this != coloredShapes.get(i) && coloredShapes.get(i).intersects(this.getBounds())) {
+                if(onCollisionEnter == null) {
+                    onCollisionEnter = new int[] {(int) this.x, (int) this.y};
+                    onCollisionEnterColoredShape(onCollisionEnter[0], onCollisionEnter[1]);
+                }
                 return;
             }
         }
-        if(isColliding)
-        onCollisionExitColoredShape((int) this.x, (int) this.y);
+        onCollisionEnter = null;
     }
 
     @Override
