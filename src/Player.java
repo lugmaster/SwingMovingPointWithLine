@@ -73,34 +73,22 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
             int x2 = integers[0];
             int y2 = integers[1];
             int swap;
-            /*if(x1 < x2 && y1 < y2) {
-                //trivial
-            }*/
-            if(x1 < x2 && y1 > y2) {
-                //swap y
-                swap =y1;
+            if(x1 < x2) {
+                swap = x2;
+                x1 = x2;
+                x2 = x1;
+            }
+            if(y1 < y2){
+                swap = y2;
                 y1 = y2;
                 y2 = y1;
             }
-            if(x1 > x2 && y1 < y2) {
-                //swap x,y
-                swap =x1;
-                x1 = x2;
-                x2 = x1;
-
-
-            }
-            if(x1 > x2 && y1 > y2) {
-                //swap x
-                swap =x1;
-                x1 = x2;
-                x2 = x1;
-
-                swap =y1;
-                y1 = y2;
-                y2 = y1;
-            }
-            ShapeContainer.getInstance().addColoredShape(new ColouredRectangle(x1,y1, Math.abs(x2-x1), Math.abs(y2 - y1)));
+            int xfinal = x2;
+            int yfinal = y2;
+            int w = x1-x2;
+            int h = y1-y2;
+            System.out.println("P: (" + xfinal + ", " + yfinal +") w:" + w +" h:" + h);
+            ShapeContainer.getInstance().addColoredShape(new ColouredRectangle(xfinal, yfinal, w, h));
         }
         disableLineDrawing();
         clearLines();

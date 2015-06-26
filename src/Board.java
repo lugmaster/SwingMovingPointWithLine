@@ -71,8 +71,9 @@ public class Board extends JPanel implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         repaint();
         shapeContainer.getPlayer().move();
-        shapeContainer.getPlayer().detectCollision();
         shapeContainer.getPlayer().addLines();
+        shapeContainer.getPlayer().detectCollision();
+
 
     }
 
