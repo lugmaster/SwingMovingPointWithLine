@@ -10,14 +10,14 @@ public final class ShapeContainer {
     private AIPlayer aiPlayer;
 
     private ShapeContainer() {
-        player = new Player(60, 50, 3, 3, 1.0f);
+        player = new Player(60, 50, 3, 3, 0.2f);
 
         coloredShapes.add(new ColouredRectangle(0, 0, 10, 210));
         coloredShapes.add(new ColouredRectangle(190, 0, 10, 210));
         coloredShapes.add(new ColouredRectangle(0, 190, 210, 10));
         coloredShapes.add(new ColouredRectangle(0, 0, 210, 10));
         moveableShapes.add(player);
-        moveableShapes.add(new AIPlayer(50,50,3,3,1.0f, Color.red));
+        //moveableShapes.add(new AIPlayer(50,50,3,3,1.0f, Color.red));
     }
 
     public static ShapeContainer getInstance(){
@@ -68,29 +68,12 @@ public final class ShapeContainer {
         moveableShapes.add(moveableShape);
     }
 
-
-    public void detectCollisionShapes(MoveableShape moveableShape){
-        //System.out.println("Im called here dude!");
-        for(ColoredShape coloredShape : coloredShapes) {
-            if(coloredShape != moveableShape && moveableShape.intersects(coloredShape.getBounds())){
-                //System.out.println("Why the hell true?");
-            }
-        }
-    }
-
-    public void detectCollisionPlayers(MoveableShape moveableShape){
-        for(MoveableShape m : moveableShapes) {
-            if(m != moveableShape && m.intersects(moveableShape.getBounds())) {
-
-            }
-        }
-    }
-
     public void doGameCycle(){
-        getPlayer().move();
-        getPlayer().detectCollisionShapes(coloredShapes);
-        getPlayer().addLines();
+        updatePlayer();
+    }
 
+    private void updatePlayer(){
+        getPlayer().updatePlayer(coloredShapes, moveableShapes );
     }
 
     public ArrayList<Point> getLines(){

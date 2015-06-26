@@ -14,7 +14,7 @@ public class Board extends JPanel implements ActionListener{
 
     public static final int WIDTH = 200;
     public static final int HEIGHT = 200;
-    private final int DELAY = 10;
+    private final int DELAY = 2;
     private Timer timer;
     private ShapeContainer shapeContainer;
 
@@ -35,8 +35,20 @@ public class Board extends JPanel implements ActionListener{
 
     @Override
     public void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
         super.paintComponent(g);
+        doDrawing(g);
+        Toolkit.getDefaultToolkit().sync();
+    }
+
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        repaint();
+        shapeContainer.doGameCycle();
+    }
+
+    private void doDrawing(Graphics g){
+        Graphics2D g2d = (Graphics2D) g;
         if(!shapeContainer.getColoredShapes().isEmpty()) {
             for(ColoredShape coloredShape : shapeContainer.getColoredShapes()){
                 g2d.setColor(coloredShape.getColor());
@@ -51,28 +63,6 @@ public class Board extends JPanel implements ActionListener{
                 g2d.fill(moveableShape);
             }
         }
-        if(!shapeContainer.getLines().isEmpty()){
-            for(int i = 0; i < shapeContainer.getLines().size(); i++){
-                if(shapeContainer.getLines().size() > i+1) {
-                    int x1 = (int) shapeContainer.getLines().get(i).getX();
-                    int y1 = (int) shapeContainer.getLines().get(i).getY();
-                    int x2 = (int) shapeContainer.getLines().get(i+1).getX();
-                    int y2 = (int) shapeContainer.getLines().get(i+1).getY();
-                    g2d.drawLine(x1, y1, x2, y2);
-                }
-            }
-        }
-
-        Toolkit.getDefaultToolkit().sync();
-    }
-
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        repaint();
-        shapeContainer.doGameCycle();
-
-
     }
 
     private class TAdapter extends KeyAdapter {
@@ -87,6 +77,8 @@ public class Board extends JPanel implements ActionListener{
         public void keyPressed(KeyEvent e) {
             shapeContainer.getPlayer().keyPressed(e);
         }
+
+
     }
 
 }

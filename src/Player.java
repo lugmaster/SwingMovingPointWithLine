@@ -1,3 +1,5 @@
+import javafx.scene.input.KeyCode;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -7,14 +9,16 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private boolean isColliding = false;
     private boolean isDrawingLines = false;
+    private boolean isMoving = false;
     private ArrayList<Point> lines = new ArrayList<>();
     private Stack<Integer[]> stack = new Stack<>();
+    private float dx,dy;
 
-    public Player(int x, int y, int width, int height, float moveSpeed){
-        this(x, y, width, height, moveSpeed, Color.blue);
+    public Player(float x, float y, float width, float height, float moveSpeed){
+        this(x, y, width, height, moveSpeed, Color.GREEN);
     }
 
-    public Player(int x, int y, int width, int height, float moveSpeed, Color color){
+    public Player(float x, float y, float width, float height, float moveSpeed, Color color){
         super(x, y, width, height, moveSpeed, color);
     }
 
@@ -47,7 +51,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     public void onCollisionExitColoredShape(){
         System.out.println("cEX");
-        stack.push(new Integer[]{((int) this.x), ((int) this.y)});
+        stack.push(new Integer[]{((int) (this.x > (Board.WIDTH/2) ? this.x-5:this.x+5) ), ((int) this.y)});
         isDrawingLines = true;
     }
 
@@ -88,43 +92,65 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         lines.clear();
     }
 
+    public void updatePlayer(ArrayList<ColoredShape> coloredShapes, ArrayList<MoveableShape> moveableShapes){
+        move();
+        detectCollisionShapes(coloredShapes);
+        addLines();
+    }
+
+    public void move(){
+        super.move(dx,dy);
+    }
+
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
 
-        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+        if(!isMoving && (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT)) {
             dx = -moveSpeed;
+            isMoving = true;
+
         }
 
-        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+        if (!isMoving && (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT)) {
             dx = moveSpeed;
+            isMoving = true;
         }
 
-        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
+        if (!isMoving && (key == KeyEvent.VK_W || key == KeyEvent.VK_UP)) {
             dy = -moveSpeed;
+            isMoving = true;
         }
 
-        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
+        if (!isMoving && (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN)) {
             dy = moveSpeed;
+            isMoving = true;
         }
     }
 
     public void keyReleased(KeyEvent e) {
+        isMoving = false;
         int key = e.getKeyCode();
 
         if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
+
             dx = 0;
+
         }
 
         if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
+
             dx = 0;
+
         }
 
         if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
             dy = 0;
+
         }
 
         if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
             dy = 0;
+
         }
     }
 

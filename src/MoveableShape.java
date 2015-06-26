@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 public interface MoveableShape extends ColoredShape {
 
-    public void move();
+    public void move(float dx, float dy);
 
 
 }

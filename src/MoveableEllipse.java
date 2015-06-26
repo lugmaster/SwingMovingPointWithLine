@@ -6,36 +6,35 @@ import java.util.ArrayList;
  */
 public abstract class MoveableEllipse extends ColoredEllipse implements MoveableShape {
 
-    protected float dx, dy;
-    protected float moveSpeed;
+   protected float moveSpeed;
 
-    public MoveableEllipse(int x, int y, int width, int height, float moveSpeed){
+    public MoveableEllipse(float x, float y, float width, float height, float moveSpeed){
         this(x, y, width, height, moveSpeed, Color.blue);
     }
 
-    public MoveableEllipse(int x, int y, int width, int height, float moveSpeed, Color color){
+    public MoveableEllipse(float x, float y, float width, float height, float moveSpeed, Color color){
         super(x, y, width, height, color);
         this.moveSpeed = moveSpeed;
     }
 
     @Override
-    public void move() {
+    public void move(float dx, float dy) {
 
-        if(x + dx < 0) {
-            x = 0;
+        if(super.x + dx < 0) {
+            super.x = 0;
         }
-        else if(x + dx > Board.WIDTH-1) {
-            x = Board.WIDTH-1;
+        else if(super.x + dx > Board.WIDTH-1) {
+            super.x = Board.WIDTH-1;
         }
-        else x += dx;
+        else super.x += dx;
 
-        if(y + dy < 0) {
-            y = 0;
+        if(super.y + dy < 0) {
+            super.y = 0;
         }
-        else if (y + dy > Board.HEIGHT-1) {
-            y = Board.HEIGHT-1;
+        else if (super.y + dy > Board.HEIGHT-1) {
+            super.y = Board.HEIGHT-1;
         }
-        else y+= dy;
+        else super.y+= dy;
         //System.out.println("X: " + x + ", Y: " +y);
     }
 
