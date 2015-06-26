@@ -52,7 +52,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     public void onCollisionEnterMoveableShape(){
-
+        //simple
     }
 
     public void detectCollisionShapes(ArrayList<ColoredShape> coloredShapes) {
