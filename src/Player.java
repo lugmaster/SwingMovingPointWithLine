@@ -5,12 +5,11 @@ import java.util.Stack;
 
 public class Player extends MoveableEllipse implements MoveableShape, LineDrawingShape{
 
-    LineDrawing lineDrawing = LineDrawing.IsNotDrawingLines;
-    private boolean isColliding = true;
+    private boolean isColliding = false;
+    private boolean isDrawingLines = false;
     private ArrayList<Point> lines = new ArrayList<>();
     private Stack<Integer[]> stack = new Stack<>();
-    private int[] onCollisionEnter;
-    private int[] getOnCollisionExit;
+    private Integer[] onCollisionExit;
 
     private static int collCount = 0;
 
@@ -20,11 +19,6 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     public Player(int x, int y, int width, int height, float moveSpeed, Color color){
         super(x, y, width, height, moveSpeed, color);
-    }
-
-    private enum LineDrawing{
-        IsDrawingLines,
-        IsNotDrawingLines
     }
 
     public void keyPressed(KeyEvent e) {
@@ -70,68 +64,65 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         }
     }
 
-    public void onCollisionEnterColoredShape(int x1, int y1){
-        int x2 = onCollisionEnter[0];
-        int y2 = onCollisionEnter[1];
-        int swap;
-        if(x1 < x2) {
-            swap = x2;
-            x1 = x2;
-            x2 = x1;
-        }
-        if(y1 < y2){
-            swap = y2;
-            y1 = y2;
-            y2 = y1;
-        }
-        int xfinal = x2;
-        int yfinal = y2;
-        int w = x1-x2;
-        int h = y1-y2;
-        collCount++;
-        System.out.println(collCount + " - cEnter: (" + xfinal + ", " + yfinal +") w:" + w +" h:" + h);
-        ShapeContainer.getInstance().addColoredShape(new ColouredRectangle(xfinal, yfinal, w, h));
-
-
-        disableLineDrawing();
+    public void onCollisionEnterColoredShape(){
+        System.out.println("cEnter");
+        isDrawingLines = false;
         clearLines();
+        if(!stack.isEmpty()) {
+            createNewShape(stack.pop());
+        }
+
+
+
     }
 
-    public void onCollisionExitColoredShape(int x, int y){
+    private void createNewShape(Integer[] position) {
+        int x1 = position[0];
+        int x2 = (int)this.x;
+        int y1 = position[1];
+        int y2 = (int)this.y;
+        if(x1 > x2) {
+            int tmp = x1;
+            x1 = x2;
+            x2 = tmp;
+        }
+        if(y1 > y2) {
+            int tmp = y1;
+            y1 = y2;
+            y2 = tmp;
+        }
+        ShapeContainer.getInstance().createRectangle(x1,y1,(x2-x1)+2,(y2-y1)+2);
+    }
+
+    public void onCollisionExitColoredShape(){
         System.out.println("cEX");
-        enableLineDrawing();
-        Integer[] integers = {x,y};
-        stack.push(integers);
-        isColliding = false;
+        stack.push(new Integer[]{((int) this.x), ((int) this.y)});
+        isDrawingLines = true;
     }
 
     public void onCollisionEnterMoveableShape(){
 
     }
 
-    public void onCollisionExitMoveableShape(){
-
-    }
-
     public void detectCollisionShapes(ArrayList<ColoredShape> coloredShapes) {
         for(int i = 0; i < coloredShapes.size(); i++) {
             if (this != coloredShapes.get(i) && coloredShapes.get(i).intersects(this.getBounds())) {
-                if(onCollisionEnter == null) {
-                    onCollisionEnter = new int[] {(int) this.x, (int) this.y};
-                    onCollisionEnterColoredShape(onCollisionEnter[0], onCollisionEnter[1]);
+                if(!isColliding) {
+                    isColliding = true;
+                    onCollisionEnterColoredShape();
                 }
                 return;
             }
         }
-        if(onCollisionEnter != null) {
-            onCollisionExitColoredShape(0,0);
+        if(isColliding) {
+            onCollisionExitColoredShape();
         }
-        onCollisionEnter = null;
+        isColliding = false;
     }
 
     @Override
     public void addLines() {
-        if(isDrawingLines()) {
+        if(isDrawingLines) {
             lines.add(new Point((int) this.x, (int) this.y));
         }
     }
@@ -146,16 +137,12 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         lines.clear();
     }
 
-    private boolean isDrawingLines(){
-        return lineDrawing == LineDrawing.IsDrawingLines;
-    }
-
     private void enableLineDrawing(){
-        lineDrawing = LineDrawing.IsDrawingLines;
+        isDrawingLines = true;
     }
 
     private void disableLineDrawing(){
-        lineDrawing = LineDrawing.IsNotDrawingLines;
+        isDrawingLines = false;
     }
 
 
