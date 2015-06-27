@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -12,7 +13,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private int direction;
     private int lastdirection;
     private ArrayList<Point> lines = new ArrayList<>();
-    private Stack<Integer[]> stack = new Stack<>();
+    private Stack<java.lang.Float[]> stack = new Stack<>();
     private float dx,dy;
 
     public Player(float x, float y, float width, float height, float moveSpeed){
@@ -28,13 +29,21 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         isDrawingLines = false;
         clearLines();
         if(!stack.isEmpty()) {
-            createNewShape(stack.pop());
+            createNewShape();
         }
     }
 
-    private void createNewShape(Integer[] position) {
+    private void createNewShape() {
         if(onCollisionExitDirection != direction) {
-            float x1 = roundfloat(position[0]);
+            Line2D.Float line2D;
+            for (int i = 0; i < stack.size(); i++) {
+                Float[] floats = stack.pop();
+                if(i == 0) {
+                    line2D = new Line2D.Float(floats[0].floatValue, (float)floats[1]);
+                }
+            }
+            //not relevant ATM
+            /*float x1 = roundfloat(position[0]);
             float x2 = roundfloat(this.x);
             float y1 = roundfloat(position[1]);
             float y2 = roundfloat(this.y);
@@ -48,7 +57,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
                 y1 = y2;
                 y2 = tmp;
             }
-            ShapeContainer.getInstance().createRectangle(x1,y1,(x2-x1),(y2-y1));
+            ShapeContainer.getInstance().createRectangle(x1,y1,(x2-x1),(y2-y1));*/
         }
     }
 
@@ -68,7 +77,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     private void pushPoint(){
-        stack.push(new Integer[]{(int) this.x, (int) this.y});
+        stack.push(new Float[]{this.x, this.y});
         //stack.push(new Integer[]{((int) (this.x > (Board.WIDTH/2) ? this.x-5:this.x+5) ), ((int) this.y)});
     }
 

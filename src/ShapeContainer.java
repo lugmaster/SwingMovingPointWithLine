@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 public final class ShapeContainer {
@@ -58,6 +59,10 @@ public final class ShapeContainer {
 
     public void createRectangle(float x, float y, float width, float height) {
        addColoredShape(new ColouredRectangle(x,y,width,height));
+    }
+
+    public void createPolygon(Line2D.Float line2D){
+
     }
 
     public void addColoredShape(ColoredShape coloredShape){
