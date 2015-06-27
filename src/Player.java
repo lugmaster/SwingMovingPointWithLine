@@ -9,13 +9,17 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private boolean isColliding = false;
     private boolean isDrawingLines = true;
     private boolean isFirstMove = true;
-    private int onCollisionExitDirection;
+
     private int direction;
     private int startDirection;
+    private int angularSum = 0;
+
+    private float dx,dy;
+
     private ArrayList<Point.Float> lines = new ArrayList<>();
     private Stack<java.lang.Float[]> stack = new Stack<>();
-    private float dx,dy;
-    private int angularSum = 0;
+
+
 
     public Player(float x, float y, float width, float height, float moveSpeed){
         this(x, y, width, height, moveSpeed, Color.GREEN);
@@ -25,21 +29,19 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         super(x, y, width, height, moveSpeed, color);
     }
 
-    public void onCollisionEnterColoredShape(){
+    private void onCollisionEnterColoredShape(){
         pushPoint();
-        System.out.println("cEnter");
-        isDrawingLines = false;
         clearLines();
         if(!stack.isEmpty()) {
             createNewShape();
             stack.clear();
         }
         angularSum = 0;
-
+        isDrawingLines = false;
     }
 
     private void createNewShape() {
-        if(onCollisionExitDirection != direction) {
+        if(startDirection != direction) {
             Path2D.Float path2D = new Path2D.Float();
             for (int i = 0; i < stack.size(); i++) {
                 java.lang.Float[] floats = stack.pop();
@@ -50,53 +52,22 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
             }
             path2D.closePath();
             ShapeContainer.getInstance().createPath2D(path2D);
-            //not relevant ATM
-            /*float x1 = roundfloat(position[0]);
-            float x2 = roundfloat(this.x);
-            float y1 = roundfloat(position[1]);
-            float y2 = roundfloat(this.y);
-            if(x1 > x2) {
-                float tmp = x1;
-                x1 = x2;
-                x2 = tmp;
-            }
-            if(y1 > y2) {
-                float tmp = y1;
-                y1 = y2;
-                y2 = tmp;
-            }
-            ShapeContainer.getInstance().createRectangle(x1,y1,(x2-x1),(y2-y1));*/
         }
     }
 
-    private static float roundfloat(float f){
-        return Math.round(f*100)/100;
-    }
-
-    public void onCollisionExitColoredShape(){
+    private void onCollisionExitColoredShape(){
         stack.clear();
-        onCollisionExitDirection = direction;
-        isFirstMove = true;
+        startDirection = direction;
         angularSum = 0;
-        System.out.println("cEX");
-        pushPoint();
         isDrawingLines = true;
-    }
-
-    public void onCollisionEnterMoveableShape(){
-        //simple
+        pushPoint();
     }
 
     private void pushPoint(){
         stack.push(new java.lang.Float[]{this.x, this.y});
-        /*System.out.println("\n #######################################");
-        for(java.lang.Float[] floats : stack){
-            System.out.println("X:" + floats[0] + ",Y:" +floats[1]);
-        }*/
-        //stack.push(new Integer[]{((int) (this.x > (Board.WIDTH/2) ? this.x-5:this.x+5) ), ((int) this.y)});
     }
 
-    public void detectCollisionShapes(ArrayList<ColoredShape> coloredShapes) {
+    private void detectCollisionShapes(ArrayList<ColoredShape> coloredShapes) {
         for(int i = 0; i < coloredShapes.size(); i++) {
             if (this != coloredShapes.get(i) && coloredShapes.get(i).intersects(this.getBounds2D())) {
                 if(!isColliding) {
@@ -115,6 +86,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     @Override
     public void addLines() {
         if(isDrawingLines) {
+            if(lines.get(lines.size()-1).getX() != this.x && lines.get(lines.size()-1).getY() != this.y );
             lines.add(new Point.Float(this.x, this.y));
         }
     }
@@ -135,7 +107,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         addLines();
     }
 
-    public void move(){
+    private void move(){
        super.move(dx,dy);
     }
 
@@ -148,11 +120,10 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
                 startDirection = key;
             }
             if(key != direction && !isOpositeDirection(key)){
-                pushPoint();
                 direction = key;
+                pushPoint();
                 calculateAngularsum(direction);
             }
-
             adjustMovement();
         }
     }
@@ -160,7 +131,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
         if(key == direction){
-            stopMovement();
+            //stopMovement();
         }
     }
 
@@ -248,7 +219,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
             }
         }
         angularSum += tmp;
-        System.out.println("AS:" + angularSum);
+        //System.out.println("AS:" + angularSum);
     }
 
     private boolean isOpositeDirection(int newDirection){
