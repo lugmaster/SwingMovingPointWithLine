@@ -7,23 +7,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class Board extends JPanel implements ActionListener{
 
-    private final int WIDTH = 200;
-    private final int HEIGHT = 200;
-    private final int DELAY = 10;
+    public static final int WIDTH = 200;
+    public static final int HEIGHT = 200;
+    private final int DELAY = 2;
     private Timer timer;
-    private ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
-    private ArrayList<MoveableShape> moveableShapes = new ArrayList<>();
-    private Player player;
+    private ShapeContainer shapeContainer;
 
     public Board() {
         super();
-        player = new Player(60, 50, 3, 3, 1.5f);
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setDoubleBuffered(true);
@@ -33,44 +29,14 @@ public class Board extends JPanel implements ActionListener{
         setBackground(Color.BLACK);
         timer = new Timer(DELAY, this);
         timer.start();
-        coloredShapes.add(new ColouredRectangle(0, 0, 10, 10));
-        coloredShapes.add(new ColouredRectangle(40, 40, 10, 10));
-        coloredShapes.add(new ColouredRectangle(80, 80, 10, 10));
-        coloredShapes.add(new ColouredRectangle(100, 100, 50, 50));
-        moveableShapes.add(player);
-        moveableShapes.add(new AIPlayer(50,50,3,3, Color.red));
+
+        shapeContainer = ShapeContainer.getInstance();
     }
 
     @Override
     public void paintComponent(Graphics g) {
-        Graphics2D g2d = (Graphics2D) g;
         super.paintComponent(g);
-        if(!coloredShapes.isEmpty()) {
-            for(ColoredShape coloredShape : coloredShapes){
-                g2d.setColor(coloredShape.getColor());
-                g2d.draw(coloredShape);
-                g2d.fill(coloredShape);
-            }
-        }
-        if(!moveableShapes.isEmpty()) {
-            for(MoveableShape moveableShape : moveableShapes){
-                g2d.setColor(moveableShape.getColor());
-                g2d.draw(moveableShape);
-                g2d.fill(moveableShape);
-                if(!moveableShape.getLines().isEmpty()) {
-                    for(int i = 0; i < moveableShape.getLines().size(); i++){
-                        if(moveableShape.getLines().size() > i+1) {
-                            int x1 = (int) moveableShape.getLines().get(i).getX();
-                            int y1 = (int) moveableShape.getLines().get(i).getY();
-                            int x2 = (int) moveableShape.getLines().get(i+1).getX();
-                            int y2 = (int) moveableShape.getLines().get(i+1).getY();
-                            g2d.drawLine(x1, y1, x2, y2);
-                        }
-                    }
-                }
-            }
-        }
-
+        doDrawing(g);
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -78,54 +44,52 @@ public class Board extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
-        player.move();
-        //detectCollisionPlayers();
-        //detectCollisionShapes();
-        System.out.println(getMaximumSize());
+        shapeContainer.doGameCycle();
+    }
+
+    private void doDrawing(Graphics g){
+        Graphics2D g2d = (Graphics2D) g;
+        if(!shapeContainer.getColoredShapes().isEmpty()) {
+            for(ColoredShape coloredShape : shapeContainer.getColoredShapes()){
+                g2d.setColor(coloredShape.getColor());
+                g2d.draw(coloredShape);
+                g2d.fill(coloredShape);
+            }
+        }
+        if(!shapeContainer.getMoveableShapes().isEmpty()) {
+            for (MoveableShape moveableShape : shapeContainer.getMoveableShapes()) {
+                g2d.setColor(moveableShape.getColor());
+                g2d.draw(moveableShape);
+                g2d.fill(moveableShape);
+                if (moveableShape == shapeContainer.getPlayer()) {
+                    for (int i = 0; i < shapeContainer.getLines().size(); i++) {
+                        if (shapeContainer.getLines().size() > i + 1) {
+                            int x1 = (int) shapeContainer.getLines().get(i).getX();
+                            int y1 = (int) shapeContainer.getLines().get(i).getY();
+                            int x2 = (int) shapeContainer.getLines().get(i + 1).getX();
+                            int y2 = (int) shapeContainer.getLines().get(i + 1).getY();
+                            g2d.drawLine(x1, y1, x2, y2);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private class TAdapter extends KeyAdapter {
 
         @Override
         public void keyReleased(KeyEvent e) {
-            //call event in objects
-            player.keyReleased(e);
+            shapeContainer.getPlayer().keyReleased(e);
 
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            //call event in objects
-            player.keyPressed(e);
-        }
-    }
-
-
-    private void detectCollisionShapes(){
-        for(ColoredShape coloredShape : coloredShapes) {
-            for(MoveableShape moveableShape : moveableShapes) {
-                if (coloredShape.getColor().equals(moveableShape.getColor())) {
-                    if(moveableShape.intersects(coloredShape.getBounds())){
-                        System.out.println("COLLISION");
-                    }
-                }
-            }
+            shapeContainer.getPlayer().keyPressed(e);
         }
 
+
     }
 
-    private void detectCollisionPlayers(){
-        for(MoveableShape m : moveableShapes) {
-            for(MoveableShape mS : moveableShapes) {
-                if(m != mS && m.intersects(mS.getBounds())) {
-                    System.out.println("COLL MOVEABLESHAPES");
-                }
-            }
-        }
-    }
-
-    @Override
-    public Dimension getMaximumSize() {
-        return super.getMaximumSize();
-    }
 }

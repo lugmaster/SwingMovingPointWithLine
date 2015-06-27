@@ -2,9 +2,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 public interface MoveableShape extends ColoredShape {
-    public void move();
 
-    public void stopMoving();
+    public void move(float dx, float dy);
 
-    public ArrayList<Point> getLines();
+
 }
