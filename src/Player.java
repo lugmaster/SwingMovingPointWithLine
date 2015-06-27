@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -25,23 +26,28 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     public void onCollisionEnterColoredShape(){
+        pushPoint();
         System.out.println("cEnter");
         isDrawingLines = false;
         clearLines();
         if(!stack.isEmpty()) {
             createNewShape();
+            stack.clear();
         }
+
     }
 
     private void createNewShape() {
         if(onCollisionExitDirection != direction) {
-            Line2D.Float line2D;
+            Path2D.Float path2D = new Path2D.Float();
             for (int i = 0; i < stack.size(); i++) {
-                Float[] floats = stack.pop();
+                java.lang.Float[] floats = stack.pop();
                 if(i == 0) {
-                    line2D = new Line2D.Float(floats[0].floatValue, (float)floats[1]);
+                    path2D.moveTo(floats[0].intValue(), floats[1].intValue());
                 }
+                else path2D.lineTo(floats[0].intValue(), floats[1].intValue());
             }
+            ShapeContainer.getInstance().createPath2D(path2D);
             //not relevant ATM
             /*float x1 = roundfloat(position[0]);
             float x2 = roundfloat(this.x);
@@ -77,7 +83,11 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     private void pushPoint(){
-        stack.push(new Float[]{this.x, this.y});
+        stack.push(new java.lang.Float[]{this.x, this.y});
+        System.out.println("\n #######################################");
+        for(java.lang.Float[] floats : stack){
+            System.out.println("X:" + floats[0] + ",Y:" +floats[1]);
+        }
         //stack.push(new Integer[]{((int) (this.x > (Board.WIDTH/2) ? this.x-5:this.x+5) ), ((int) this.y)});
     }
 
@@ -128,7 +138,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         int key = e.getKeyCode();
         if(isValidKey(key)) {
             if(key != direction){
-                //pushPoint();
+                pushPoint();
             }
             direction = key;
             adjustMovement();
