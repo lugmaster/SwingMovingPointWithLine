@@ -1,5 +1,3 @@
-import javafx.scene.input.KeyCode;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -9,9 +7,12 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private boolean isColliding = false;
     private boolean isDrawingLines = false;
-    private boolean isMoving = false;
+    private boolean isfirstMove = true;
+    private Integer nextDirection;
+    private Integer direction;
     private ArrayList<Point> lines = new ArrayList<>();
     private Stack<Integer[]> stack = new Stack<>();
+    private Stack<Integer> keyCodes = new Stack<>();
     private float dx,dy;
 
     public Player(float x, float y, float width, float height, float moveSpeed){
@@ -96,63 +97,106 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         move();
         detectCollisionShapes(coloredShapes);
         addLines();
+        System.out.println(nextDirection);
     }
 
     public void move(){
-        super.move(dx,dy);
+       super.move(dx,dy);
     }
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
 
-        if(!isMoving && (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT)) {
-            dx = -moveSpeed;
-            isMoving = true;
-
-        }
-
-        if (!isMoving && (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT)) {
-            dx = moveSpeed;
-            isMoving = true;
-        }
-
-        if (!isMoving && (key == KeyEvent.VK_W || key == KeyEvent.VK_UP)) {
-            dy = -moveSpeed;
-            isMoving = true;
-        }
-
-        if (!isMoving && (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN)) {
-            dy = moveSpeed;
-            isMoving = true;
+        if(isValidKey(key)) {
+            if(isfirstMove) {
+                isfirstMove = false;
+                direction = key;
+            }
+            else {
+                if(nextDirection == null) {
+                    direction = key;
+                    nextDirection = key;
+                }
+                else nextDirection = key;
+            }
+            adjustMovement();
         }
     }
 
     public void keyReleased(KeyEvent e) {
-        isMoving = false;
         int key = e.getKeyCode();
-
-        if (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) {
-
-            dx = 0;
-
-        }
-
-        if (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) {
-
-            dx = 0;
-
-        }
-
-        if (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) {
-            dy = 0;
-
-        }
-
-        if (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN) {
-            dy = 0;
-
+        if(key == direction){
+            stopMovement();
+            if(nextDirection != null) {
+                System.out.println(key);
+                direction = nextDirection;
+                nextDirection = null;
+            }
         }
     }
+
+    private void addKeyCode(int keyCode) {
+        if(!keyCodes.isEmpty() && keyCodes.peek() != keyCode){
+            keyCodes.push(keyCode);
+        }
+        else keyCodes.push(keyCode);
+    }
+
+    private void removeKeyCode(int keyCode){
+        if(keyCodes.contains(keyCode)) {
+            keyCodes.remove(keyCode);
+        }
+    }
+
+    private boolean isValidKey(int key){
+        return (key == KeyEvent.VK_A || key == KeyEvent.VK_LEFT) || (key == KeyEvent.VK_D || key == KeyEvent.VK_RIGHT) ||
+                (key == KeyEvent.VK_W || key == KeyEvent.VK_UP) || (key == KeyEvent.VK_S || key == KeyEvent.VK_DOWN);
+    }
+
+    private void stopMovement(){
+        /*if(direction != null) {
+            if(direction == KeyEvent.VK_A) {
+                dx = 0;
+            }
+
+            if (direction == KeyEvent.VK_D) {
+                dx = 0;
+            }
+
+            if (direction == KeyEvent.VK_W) {
+                dy = 0;
+            }
+
+            if (direction == KeyEvent.VK_S) {
+                dy = 0;
+            }
+        }*/
+
+        dx = 0;
+        dy = 0;
+    }
+
+    private void adjustMovement() {
+        stopMovement();
+        if(direction!= null){
+            if(direction == KeyEvent.VK_A) {
+                dx = -moveSpeed;
+            }
+
+            if (direction == KeyEvent.VK_D) {
+                dx = moveSpeed;
+            }
+
+            if (direction == KeyEvent.VK_W) {
+                dy = -moveSpeed;
+            }
+
+            if (direction == KeyEvent.VK_S) {
+                dy = moveSpeed;
+            }
+        }
+    }
+
 
 
 
