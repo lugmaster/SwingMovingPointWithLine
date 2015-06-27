@@ -81,7 +81,7 @@ public final class ShapeContainer {
         getPlayer().updatePlayer(coloredShapes, moveableShapes );
     }
 
-    public ArrayList<Point> getLines(){
+    public ArrayList<Point.Float> getLines(){
             return player.getLines();
     }
 }

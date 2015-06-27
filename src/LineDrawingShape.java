@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public interface LineDrawingShape {
     public void clearLines();
 
-    public ArrayList<Point> getLines();
+    public ArrayList<Point.Float> getLines();
 
     public void addLines();
 }

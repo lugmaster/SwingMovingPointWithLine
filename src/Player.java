@@ -13,7 +13,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private int onCollisionExitDirection;
     private int direction;
     private int lastdirection;
-    private ArrayList<Point> lines = new ArrayList<>();
+    private ArrayList<Point.Float> lines = new ArrayList<>();
     private Stack<java.lang.Float[]> stack = new Stack<>();
     private float dx,dy;
 
@@ -73,6 +73,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     public void onCollisionExitColoredShape(){
+        stack.clear();
         onCollisionExitDirection = direction;
         System.out.println("cEX");
         pushPoint();
@@ -111,12 +112,12 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     @Override
     public void addLines() {
         if(isDrawingLines) {
-            lines.add(new Point((int) this.x, (int) this.y));
+            lines.add(new Point.Float(this.x, this.y));
         }
     }
 
     @Override
-    public ArrayList<Point> getLines() {
+    public ArrayList<Point.Float> getLines() {
         return lines;
     }
 
