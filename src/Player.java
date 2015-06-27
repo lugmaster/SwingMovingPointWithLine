@@ -8,11 +8,9 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private boolean isColliding = false;
     private boolean isDrawingLines = false;
     private boolean isfirstMove = true;
-    private Integer nextDirection;
-    private Integer direction;
+    private int direction;
     private ArrayList<Point> lines = new ArrayList<>();
     private Stack<Integer[]> stack = new Stack<>();
-    private Stack<Integer> keyCodes = new Stack<>();
     private float dx,dy;
 
     public Player(float x, float y, float width, float height, float moveSpeed){
@@ -97,7 +95,6 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         move();
         detectCollisionShapes(coloredShapes);
         addLines();
-        System.out.println(nextDirection);
     }
 
     public void move(){
@@ -106,19 +103,8 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-
         if(isValidKey(key)) {
-            if(isfirstMove) {
-                isfirstMove = false;
-                direction = key;
-            }
-            else {
-                if(nextDirection == null) {
-                    direction = key;
-                    nextDirection = key;
-                }
-                else nextDirection = key;
-            }
+            direction = key;
             adjustMovement();
         }
     }
@@ -127,24 +113,6 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         int key = e.getKeyCode();
         if(key == direction){
             stopMovement();
-            if(nextDirection != null) {
-                System.out.println(key);
-                direction = nextDirection;
-                nextDirection = null;
-            }
-        }
-    }
-
-    private void addKeyCode(int keyCode) {
-        if(!keyCodes.isEmpty() && keyCodes.peek() != keyCode){
-            keyCodes.push(keyCode);
-        }
-        else keyCodes.push(keyCode);
-    }
-
-    private void removeKeyCode(int keyCode){
-        if(keyCodes.contains(keyCode)) {
-            keyCodes.remove(keyCode);
         }
     }
 
@@ -154,50 +122,15 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     private void stopMovement(){
-        /*if(direction != null) {
-            if(direction == KeyEvent.VK_A) {
-                dx = 0;
-            }
-
-            if (direction == KeyEvent.VK_D) {
-                dx = 0;
-            }
-
-            if (direction == KeyEvent.VK_W) {
-                dy = 0;
-            }
-
-            if (direction == KeyEvent.VK_S) {
-                dy = 0;
-            }
-        }*/
-
         dx = 0;
         dy = 0;
     }
 
     private void adjustMovement() {
         stopMovement();
-        if(direction!= null){
-            if(direction == KeyEvent.VK_A) {
-                dx = -moveSpeed;
-            }
-
-            if (direction == KeyEvent.VK_D) {
-                dx = moveSpeed;
-            }
-
-            if (direction == KeyEvent.VK_W) {
-                dy = -moveSpeed;
-            }
-
-            if (direction == KeyEvent.VK_S) {
-                dy = moveSpeed;
-            }
-        }
+        if(direction == KeyEvent.VK_A) dx = -moveSpeed;
+        if(direction == KeyEvent.VK_D) dx = moveSpeed;
+        if(direction == KeyEvent.VK_W) dy = -moveSpeed;
+        if(direction == KeyEvent.VK_S) dy = moveSpeed;
     }
-
-
-
-
 }
