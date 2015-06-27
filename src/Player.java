@@ -8,7 +8,9 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private boolean isColliding = false;
     private boolean isDrawingLines = false;
     private boolean isfirstMove = true;
+    private int onCollisionExitDirection;
     private int direction;
+    private int lastdirection;
     private ArrayList<Point> lines = new ArrayList<>();
     private Stack<Integer[]> stack = new Stack<>();
     private float dx,dy;
@@ -31,26 +33,33 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     private void createNewShape(Integer[] position) {
-        int x1 = position[0]+1;
-        int x2 = (int)this.x;
-        int y1 = position[1];
-        int y2 = (int)this.y;
-        if(x1 > x2) {
-            int tmp = x1;
-            x1 = x2;
-            x2 = tmp;
+        if(onCollisionExitDirection != direction) {
+            float x1 = roundfloat(position[0]);
+            float x2 = roundfloat(this.x);
+            float y1 = roundfloat(position[1]);
+            float y2 = roundfloat(this.y);
+            if(x1 > x2) {
+                float tmp = x1;
+                x1 = x2;
+                x2 = tmp;
+            }
+            if(y1 > y2) {
+                float tmp = y1;
+                y1 = y2;
+                y2 = tmp;
+            }
+            ShapeContainer.getInstance().createRectangle(x1,y1,(x2-x1),(y2-y1));
         }
-        if(y1 > y2) {
-            int tmp = y1;
-            y1 = y2;
-            y2 = tmp;
-        }
-        ShapeContainer.getInstance().createRectangle(x1,y1,(x2-x1),(y2-y1));
+    }
+
+    private static float roundfloat(float f){
+        return Math.round(f*100)/100;
     }
 
     public void onCollisionExitColoredShape(){
+        onCollisionExitDirection = direction;
         System.out.println("cEX");
-        stack.push(new Integer[]{((int) (this.x > (Board.WIDTH/2) ? this.x-5:this.x+5) ), ((int) this.y)});
+        pushPoint();
         isDrawingLines = true;
     }
 
@@ -58,9 +67,14 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         //simple
     }
 
+    private void pushPoint(){
+        stack.push(new Integer[]{(int) this.x, (int) this.y});
+        //stack.push(new Integer[]{((int) (this.x > (Board.WIDTH/2) ? this.x-5:this.x+5) ), ((int) this.y)});
+    }
+
     public void detectCollisionShapes(ArrayList<ColoredShape> coloredShapes) {
         for(int i = 0; i < coloredShapes.size(); i++) {
-            if (this != coloredShapes.get(i) && coloredShapes.get(i).intersects(this.getBounds())) {
+            if (this != coloredShapes.get(i) && coloredShapes.get(i).intersects(this.getBounds2D())) {
                 if(!isColliding) {
                     isColliding = true;
                     onCollisionEnterColoredShape();
@@ -104,6 +118,9 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if(isValidKey(key)) {
+            if(key != direction){
+                //pushPoint();
+            }
             direction = key;
             adjustMovement();
         }

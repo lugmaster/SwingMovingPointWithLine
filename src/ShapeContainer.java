@@ -56,7 +56,7 @@ public final class ShapeContainer {
         }
     }
 
-    public void createRectangle(int x, int y, int width, int height) {
+    public void createRectangle(float x, float y, float width, float height) {
        addColoredShape(new ColouredRectangle(x,y,width,height));
     }
 
