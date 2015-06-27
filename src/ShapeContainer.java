@@ -11,7 +11,7 @@ public final class ShapeContainer {
     private AIPlayer aiPlayer;
 
     private ShapeContainer() {
-        player = new Player(60, 50, 3, 3, 0.2f);
+        player = new Player(60, 50, 4, 4, 2f);
 
         coloredShapes.add(new ColouredRectangle(0, 0, 10, 210));
         coloredShapes.add(new ColouredRectangle(190, 0, 10, 210));
