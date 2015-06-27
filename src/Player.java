@@ -47,6 +47,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
                 }
                 else path2D.lineTo(floats[0].intValue(), floats[1].intValue());
             }
+            path2D.closePath();
             ShapeContainer.getInstance().createPath2D(path2D);
             //not relevant ATM
             /*float x1 = roundfloat(position[0]);

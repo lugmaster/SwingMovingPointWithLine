@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
@@ -63,7 +62,7 @@ public final class ShapeContainer {
     }
 
     public void createPath2D(Path2D.Float path2D){
-        addColoredShape(new ColoredPath2D(path2D));
+        addColoredShape(new ColoredPath(path2D));
     }
 
     public void addColoredShape(ColoredShape coloredShape){
