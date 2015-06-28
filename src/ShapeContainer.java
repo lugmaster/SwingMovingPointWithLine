@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public final class ShapeContainer {
 
