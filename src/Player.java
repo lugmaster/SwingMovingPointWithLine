@@ -75,13 +75,16 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private void addLines() {
         if(isDrawingLines) {
-            if(!lines.isEmpty() && lines.get(lines.size()-1).getX() != this.x && lines.get(lines.size()-1).getY() != this.y);
-            lines.add(new Point.Float(this.x, this.y));
+            if(!lines.isEmpty() && lines.get(lines.size()-1).getX() != this.x && lines.get(lines.size() - 1).getY() != this.y){
+                lines.add(lines.size()-1, new Point.Float(this.x, this.y));
+            }
+            else lines.add(new Point.Float(this.x, this.y));
+
         }
     }
 
-    private void addLinesOnPosition(int pos){
-
+    private void addPlayerPos(){
+        if(!isColliding) lines.add(new Point.Float(this.x, this.y));
     }
 
     @Override
@@ -96,7 +99,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     public void updatePlayer(ArrayList<ColoredShape> coloredShapes, ArrayList<MoveableShape> moveableShapes){
         move();
         detectCollisionShapes(coloredShapes);
-        //addLines();
+        addPlayerPos();
     }
 
     private void move(){
