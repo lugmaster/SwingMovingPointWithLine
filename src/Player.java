@@ -1,17 +1,13 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.Stack;
 
 public class Player extends MoveableEllipse implements MoveableShape, LineDrawingShape{
 
     private boolean isColliding = false;
     private boolean isDrawingLines = true;
     private boolean isFirstMove = true;
+    private boolean beforeFirstCollision = true;
 
     private int direction;
     private int startDirection;
@@ -19,35 +15,81 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private float dx,dy;
 
-    private ArrayList<Point.Float> lines = new ArrayList<>();
+    private ArrayList<Point> lines = new ArrayList<>();
 
 
 
     public Player(float x, float y, float width, float height, float moveSpeed){
-        this(x, y, width, height, moveSpeed, Color.GREEN);
+        this(x, y, width, height, moveSpeed, Color.BLUE);
     }
 
     public Player(float x, float y, float width, float height, float moveSpeed, Color color){
         super(x, y, width, height, moveSpeed, color);
+        clearLines();
     }
 
     private void onCollisionEnterColoredShape(){
-        addLines();
-        if(!lines.isEmpty()) {
-            createNewShape();
-            clearLines();
+        if(beforeFirstCollision){
+            return;
+        }
+        else {
+            addLines();
+            if(!lines.isEmpty()) {
+                createNewShape();
+                clearLines();
+            }
         }
         angularSum = 0;
         isDrawingLines = false;
     }
 
     private void createNewShape() {
-        if(startDirection != direction) {
-
+        System.out.println("Nee: " + beforeFirstCollision);
+        int[] intsX = new int[lines.size()+1];
+        int[] intsY = new int[lines.size()+1];
+        for(int i = 0; i < intsX.length; i++){
+            if(i == intsX.length-1){
+                if(isVerticalDirection(startDirection)){
+                    if(angularSum % 2 == 0){
+                        //swap Y
+                        intsX[i] = (int) lines.get(i-1).getX();
+                        intsY[i] = (int) lines.get(0).getY();
+                        System.out.println("1");
+                    }
+                    else {
+                        //swap X
+                        intsX[i] = (int) lines.get(i-1).getX();
+                        intsY[i] = (int) lines.get(0).getY();
+                        System.out.println("2");
+                    }
+                }
+                if(isHorizontalDirection(startDirection)) {
+                    if(angularSum % 2 == 0){
+                        //swap X
+                        intsX[i] = (int) lines.get(0).getX();
+                        intsY[i] = (int) lines.get(i-1).getY();
+                        System.out.println("3");
+                    }
+                    else {
+                        //swap Y
+                        intsX[i] = (int) lines.get(0).getX();
+                        intsY[i] = (int) lines.get(i-1).getY();
+                        System.out.println("4");
+                    }
+                }
+            }
+            else {
+                intsX[i] = (int) lines.get(i).getX();
+                intsY[i] = (int) lines.get(i).getY();
+            }
         }
+        ShapeContainer.getInstance().createPolygon(intsX, intsY);
     }
 
     private void onCollisionExitColoredShape(){
+        if(beforeFirstCollision){
+            beforeFirstCollision = false;
+        }
         clearLines();
         startDirection = direction;
         angularSum = 0;
@@ -74,32 +116,42 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     private void addLines() {
-        if(isDrawingLines) {
+        if(isDrawingLines && !beforeFirstCollision) {
             if(!lines.isEmpty() && lines.get(lines.size()-1).getX() != this.x && lines.get(lines.size() - 1).getY() != this.y){
-                lines.add(lines.size()-1, new Point.Float(this.x, this.y));
+                lines.add(lines.size()-2, createNewPoint());
             }
-            else lines.add(new Point.Float(this.x, this.y));
+            else lines.add(createNewPoint());
 
         }
     }
 
+    private Point createNewPoint(){
+        return new Point((int)this.x, (int)this.y);
+    }
+
     private void addPlayerPos(){
-        if(!isColliding) lines.add(new Point.Float(this.x, this.y));
+        if(isDrawingLines && !beforeFirstCollision){
+            if(lines.isEmpty()) lines.add(createNewPoint());
+            else lines.set(lines.size()-1, createNewPoint());
+        }
     }
 
     @Override
-    public ArrayList<Point.Float> getLines() {
+    public ArrayList<Point> getLines() {
         return lines;
     }
 
     private void clearLines() {
         lines.clear();
+        lines.add(createNewPoint());
+        System.out.println("CLEARED");
     }
 
     public void updatePlayer(ArrayList<ColoredShape> coloredShapes, ArrayList<MoveableShape> moveableShapes){
         move();
         detectCollisionShapes(coloredShapes);
         addPlayerPos();
+        //if(!beforeFirstCollision) System.out.println("FirstCollHERE");
     }
 
     private void move(){
@@ -116,7 +168,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
             }
             if(key != direction && !isOpositeDirection(key)){
                 direction = key;
-                addLines();
+                if(!beforeFirstCollision) addLines();
                 calculateAngularsum(direction);
             }
             adjustMovement();
@@ -220,5 +272,13 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private boolean isOpositeDirection(int newDirection){
         return  (direction == KeyEvent.VK_A && newDirection == KeyEvent.VK_D) || (direction == KeyEvent.VK_D && newDirection == KeyEvent.VK_A) ||
         (direction == KeyEvent.VK_W && newDirection == KeyEvent.VK_S) || (direction == KeyEvent.VK_S && newDirection == KeyEvent.VK_W);
+    }
+
+    private boolean isHorizontalDirection(int direction){
+        return direction == KeyEvent.VK_A || direction == KeyEvent.VK_D;
+    }
+
+    private boolean isVerticalDirection(int direction){
+        return direction == KeyEvent.VK_W || direction == KeyEvent.VK_S;
     }
 }

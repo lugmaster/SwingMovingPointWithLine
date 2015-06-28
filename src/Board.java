@@ -51,7 +51,7 @@ public class Board extends JPanel implements ActionListener{
         Graphics2D g2d = (Graphics2D) g;
         if(!shapeContainer.getColoredShapes().isEmpty()) {
             for(ColoredShape coloredShape : shapeContainer.getColoredShapes()){
-                g2d.setColor(coloredShape.getColor());
+                g2d.setColor(coloredShape.generateRandomColor());
                 g2d.draw(coloredShape);
                 g2d.fill(coloredShape);
             }

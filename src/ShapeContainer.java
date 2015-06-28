@@ -13,7 +13,7 @@ public final class ShapeContainer {
     private AIPlayer aiPlayer;
 
     private ShapeContainer() {
-        player = new Player(60, 50, 4, 4, 2f);
+        player = new Player(192, 150, 4, 4, 2f);
 
         coloredShapes.add(new ColouredRectangle(0, 0, 10, 210));
         coloredShapes.add(new ColouredRectangle(190, 0, 10, 210));
@@ -63,8 +63,11 @@ public final class ShapeContainer {
        addColoredShape(new ColouredRectangle(x,y,width,height));
     }
 
-    public void createPath2D(Path2D.Float path2D){
-        addColoredShape(new ColoredPath(path2D));
+    public void createPolygon(int[] intsX, int[] intsY){
+        addColoredShape(new ColoredPolygon(intsX, intsY));
+        for (int i = 0; i < intsX.length; i++) {
+            System.out.println("X:" + intsX[i] + ", Y:" + intsY[i]);
+        }
     }
 
     public void addColoredShape(ColoredShape coloredShape){
@@ -83,7 +86,7 @@ public final class ShapeContainer {
         getPlayer().updatePlayer(coloredShapes, moveableShapes );
     }
 
-    public ArrayList<Point.Float> getLines(){
+    public ArrayList<Point> getLines(){
             return player.getLines();
     }
 }

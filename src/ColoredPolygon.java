@@ -1,33 +1,21 @@
+
+
 import java.awt.*;
 import java.util.Random;
 
-public class ColouredRectangle extends Rectangle.Float implements ColoredShape {
-    private final Color color;
-    //private Player owner;
+public class ColoredPolygon extends Polygon implements ColoredShape{
+    private Color color;
 
-    public ColouredRectangle(float x, float y, float width, float height) {
-        this(x,y,width,height, Color.blue);
-    }
-
-    public ColouredRectangle(float x, float y, float width, float height, Color color) {
-        super(x,y,width,height);
+    public ColoredPolygon(int[] intsX, int[] intsY, Color color){
+        super(intsX, intsY, intsX.length);
         this.color = color;
     }
 
-    /*public ColouredRectangle(int x, int y, int width, int height) {
-        super(x,y,width,height);
-        //this.owner = owner;
-        Random rnd = new Random();
-        this.color = new Color(rnd.nextFloat(),rnd.nextFloat(), rnd.nextFloat());
-    }*/
+    public ColoredPolygon(int[] intsX, int[] intsY){
+        this(intsX, intsY, Color.BLUE);
 
-
-    @Override
-    public Color getColor() {
-        return color;
     }
 
-    @Override
     public Color generateRandomColor(){
         Random r = new Random();
         int colorIndex = r.nextInt(7);
@@ -58,6 +46,11 @@ public class ColouredRectangle extends Rectangle.Float implements ColoredShape {
                 color = Color.WHITE;
                 break;
         }
+        return color;
+    }
+
+    @Override
+    public Color getColor() {
         return color;
     }
 }
