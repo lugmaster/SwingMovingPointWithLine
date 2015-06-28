@@ -1,13 +1,9 @@
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
 
-/**
- * Created by Lukas Normal on 25.06.2015.
- */
 public interface LineDrawingShape {
-    public void clearLines();
-
     public ArrayList<Point> getLines();
-
-    public void addLines();
 }

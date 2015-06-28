@@ -14,7 +14,7 @@ public class Board extends JPanel implements ActionListener{
 
     public static final int WIDTH = 200;
     public static final int HEIGHT = 200;
-    private final int DELAY = 2;
+    private final int DELAY = 40;
     private Timer timer;
     private ShapeContainer shapeContainer;
 

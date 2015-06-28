@@ -1,7 +1,8 @@
 import java.awt.*;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 public final class ShapeContainer {
 
@@ -12,7 +13,7 @@ public final class ShapeContainer {
     private AIPlayer aiPlayer;
 
     private ShapeContainer() {
-        player = new Player(60, 50, 3, 3, 0.2f);
+        player = new Player(192, 150, 4, 4, 2f);
 
         coloredShapes.add(new ColouredRectangle(0, 0, 10, 210));
         coloredShapes.add(new ColouredRectangle(190, 0, 10, 210));
@@ -62,8 +63,11 @@ public final class ShapeContainer {
        addColoredShape(new ColouredRectangle(x,y,width,height));
     }
 
-    public void createPath2D(Path2D.Float path2D){
-        addColoredShape(new ColoredPath2D(path2D));
+    public void createPolygon(int[] intsX, int[] intsY){
+        addColoredShape(new ColoredPolygon(intsX, intsY));
+        for (int i = 0; i < intsX.length; i++) {
+            System.out.println("X:" + intsX[i] + ", Y:" + intsY[i]);
+        }
     }
 
     public void addColoredShape(ColoredShape coloredShape){
