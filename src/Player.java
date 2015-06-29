@@ -33,6 +33,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         points = new ArrayList<>();
         points.add(createNewPoint());
         path = new ColoredPath(color);
+        path.moveTo(0,0);
     }
 
     private void onCollisionExitColoredShape(){
@@ -237,7 +238,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     public ColoredPath getPlayerPath(){
-        path.setNewPath(points,this);
+        if(!points.isEmpty()) path.setNewPath(points,this);
         return path;
     }
 }

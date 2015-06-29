@@ -8,26 +8,20 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
     private ArrayList<Point2D.Float> points;
     private Color color;
 
-    public ColoredPath(){
-        super();
-    }
-
-    public ColoredPath(ColoredShape coloredShape){
-        super(coloredShape);
-        this.color = coloredShape.getColor();
-    }
-
     public ColoredPath(Color color){
         super();
         this.color = color;
+        this.points = new ArrayList<>();
     }
 
     public ColoredPath(Shape s){
         super(s);
         this.color = RandomColorGenerator.generateRandomColor();
+        this.points = new ArrayList<>();
     }
 
     public ColoredPath(ArrayList<Point2D.Float> points, Color color, boolean closed){
+        this.points = points;
         for (int i = 0; i < points.size(); i++) {
             if(i == 0) this.moveTo(points.get(i).getX(), points.get(i).getY());
             else this.lineTo(points.get(i).getX(), points.get(i).getY());
@@ -45,7 +39,7 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
         for (int i = 0; i < newPoints.size(); i++) {
             if(i==0)this.moveTo(newPoints.get(i).getX(), newPoints.get(i).getY());
             else this.lineTo(newPoints.get(i).getX(), newPoints.get(i).getY());
-            points.add(new Point2D.Float((float) points.get(i).getX(), (float) points.get(i).getY()));
+            points.add(new Point2D.Float((float) newPoints.get(i).getX(), (float) newPoints.get(i).getY()));
         }
     }
 

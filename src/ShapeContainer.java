@@ -41,8 +41,8 @@ public final class ShapeContainer {
         innerPoints.add(p6);
         innerPoints.add(p7);
 
-        outerShape = new ColoredPath(outerPoints);
-        innerShape = new ColoredPath(innerPoints);
+        outerShape = new ColoredPath(outerPoints, true);
+        innerShape = new ColoredPath(innerPoints, true);
 
         Area a0 = new Area(outerShape);
         Area a1 = new Area(innerShape);
@@ -94,7 +94,7 @@ public final class ShapeContainer {
     }
 
     public void createColoredPath(ArrayList<Point2D.Float> points) {
-        addColoredShape(new ColoredPath(points, Color.RED));
+        addColoredShape(new ColoredPath(points, Color.RED, true));
     }
 
     public void createPolygon(int[] intsX, int[] intsY){
@@ -118,9 +118,5 @@ public final class ShapeContainer {
 
     private void updatePlayer(){
         getPlayer().updatePlayer(innerShape, outerShape);
-    }
-
-    public ArrayList<Point2D.Float> getPoints(){
-            return player.getPoints();
     }
 }
