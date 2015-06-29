@@ -64,14 +64,23 @@ public class Board extends JPanel implements ActionListener{
                 g2d.setColor(moveableShape.getColor());
                 g2d.draw(moveableShape);
                 g2d.fill(moveableShape);
-                if (moveableShape == shapeContainer.getPlayer()) {
-                    Path2D.Float p2d = new Path2D.Float();
+                if (moveableShape == shapeContainer.getPlayer() && !shapeContainer.getPoints().isEmpty()) {
                     for (int i = 0; i < shapeContainer.getPoints().size(); i++) {
-                        Point2D.Float p = shapeContainer.getPoints().get(i);
-                        if(i==0) p2d.moveTo(p.getX(), p.getY());
-                        else p2d.lineTo(p.getX(),p.getY());
+                        int x1,x2,y1,y2;
+                        if (shapeContainer.getPoints().size() > i + 1) {
+                            x1 = (int) shapeContainer.getPoints().get(i).getX();
+                            y1 = (int) shapeContainer.getPoints().get(i).getY();
+                            x2 = (int) shapeContainer.getPoints().get(i + 1).getX();
+                            y2 = (int) shapeContainer.getPoints().get(i + 1).getY();
+                        }
+                        else {
+                            x1 = (int) shapeContainer.getPoints().get(i).getX();
+                            y1 = (int) shapeContainer.getPoints().get(i).getY();
+                            x2 = (int) shapeContainer.getPlayer().getPosition().getX();
+                            y2 = (int) shapeContainer.getPlayer().getPosition().getY();
+                        }
+                        g2d.drawLine(x1, y1, x2, y2);
                     }
-                    p2d.lineTo(shapeContainer.getPlayer().getX(),shapeContainer.getPlayer().getY());
                 }
             }
         }

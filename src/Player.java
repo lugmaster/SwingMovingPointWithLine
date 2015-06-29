@@ -17,6 +17,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private float dx,dy;
 
     private Point2D.Float position;
+    private ColoredPath path;
 
     private ArrayList<Point2D.Float> points;
 
@@ -31,6 +32,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         position = new Point2D.Float(x,y);
         points = new ArrayList<>();
         points.add(createNewPoint());
+        path = new ColoredPath(color);
     }
 
     private void onCollisionExitColoredShape(){
@@ -58,6 +60,9 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         if(!isColliding && !outer.contains(position)){
             onCollisionEnterColoredShape();
             isColliding = true;
+            for (Point2D.Float point : points) {
+                System.out.println(point);
+            }
         }
         if(isColliding && !inner.contains(position)){
             onCollisionExitColoredShape();
@@ -229,5 +234,10 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     public Point2D.Float getPosition(){
         return position;
+    }
+
+    public ColoredPath getPlayerPath(){
+        path.setNewPath(points,this);
+        return path;
     }
 }
