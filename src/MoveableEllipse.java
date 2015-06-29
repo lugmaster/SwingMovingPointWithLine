@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
@@ -6,7 +7,8 @@ import java.util.ArrayList;
  */
 public abstract class MoveableEllipse extends ColoredEllipse implements MoveableShape {
 
-   protected float moveSpeed;
+    private Point2D.Float position;
+    protected float moveSpeed;
 
     public MoveableEllipse(float x, float y, float width, float height, float moveSpeed){
         this(x, y, width, height, moveSpeed, Color.blue);
@@ -15,6 +17,7 @@ public abstract class MoveableEllipse extends ColoredEllipse implements Moveable
     public MoveableEllipse(float x, float y, float width, float height, float moveSpeed, Color color){
         super(x, y, width, height, color);
         this.moveSpeed = moveSpeed;
+        position = new Point2D.Float(x,y);
     }
 
     @Override
@@ -35,7 +38,15 @@ public abstract class MoveableEllipse extends ColoredEllipse implements Moveable
             super.y = Board.HEIGHT-1;
         }
         else super.y+= dy;
-        //System.out.println("X: " + x + ", Y: " +y);
+    }
+
+    public Point2D.Float getPosition(){
+        updatePosition();
+        return position;
+    }
+
+    private void updatePosition(){
+        position.setLocation(x,y);
     }
 
 

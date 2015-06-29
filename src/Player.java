@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -29,7 +30,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         clearLines();
     }
 
-    private void onCollisionEnterColoredShape(){
+    private void onCollisionExitColoredShape(){
         if(beforeFirstCollision){
             return;
         }
@@ -48,7 +49,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         ShapeContainer.getInstance().createColoredPath(lines);
     }
 
-    private void onCollisionExitColoredShape(){
+    private void onCollisionEnterColoredShape(){
         if(beforeFirstCollision){
             beforeFirstCollision = false;
         }
@@ -61,20 +62,11 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
 
 
-    private void detectCollisionShapes(ArrayList<ColoredShape> coloredShapes) {
-        for(int i = 0; i < coloredShapes.size(); i++) {
-            if (this != coloredShapes.get(i) && this.intersects(coloredShapes.get(i).getBounds2D())) {
-                if(!isColliding) {
-                    isColliding = true;
-                    onCollisionEnterColoredShape();
-                }
-                return;
-            }
+    private void detectCollisionShapes(ColoredPath inner, ColoredPath outer) {
+        if(inner.contains(getPosition())){
+            onCollisionEnterColoredShape();
         }
-        if(isColliding) {
-            onCollisionExitColoredShape();
-        }
-        isColliding = false;
+        else onCollisionExitColoredShape();
     }
 
     private void addLines() {
@@ -109,9 +101,9 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         System.out.println("CLEARED");
     }
 
-    public void updatePlayer(ArrayList<ColoredShape> coloredShapes, ArrayList<MoveableShape> moveableShapes){
+    public void updatePlayer(ColoredPath inner, ColoredPath outer){
         move();
-        detectCollisionShapes(coloredShapes);
+        detectCollisionShapes(inner, outer);
         addPlayerPos();
         //if(!beforeFirstCollision) System.out.println("FirstCollHERE");
     }

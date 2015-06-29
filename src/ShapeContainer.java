@@ -10,37 +10,49 @@ public final class ShapeContainer {
     private static ShapeContainer shapeContainer = new ShapeContainer();
     private ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
     private ArrayList<MoveableShape> moveableShapes = new ArrayList<>();
+    private ArrayList<Point2D.Float> innerPoints = new ArrayList<>();
+    private ArrayList<Point2D.Float> outerPoints = new ArrayList<>();
     private Player player;
     private AIPlayer aiPlayer;
+    private ColoredPath innerShape;
+    private ColoredPath outerShape;
 
     private ShapeContainer() {
         // Player and AI
         player = new Player(192, 150, 4, 4, 2f);
         moveableShapes.add(player);
         moveableShapes.add(new AIPlayer(50,50,3,3,1.0f, Color.red));
+        //outer
+        Point2D.Float p0 = new Point2D.Float(0,0);
+        Point2D.Float p1 = new Point2D.Float(200,0);
+        Point2D.Float p2 = new Point2D.Float(200,200);
+        Point2D.Float p3 = new Point2D.Float(0,200);
 
-        //Inner and Outer Shape
-        Path2D.Float p2d = new Path2D.Float();
-        p2d.moveTo(0,0);
-        p2d.lineTo(200,0);
-        p2d.lineTo(200,200);
-        p2d.lineTo(0,200);
-        p2d.closePath();
-
-        Path2D.Float p2d1 = new Path2D.Float();
         //inner
-        p2d1.moveTo(9, 190);
-        p2d1.lineTo(9,9);
-        p2d1.lineTo(190,9);
-        p2d1.lineTo(190,190);
-        p2d1.closePath();
+        Point2D.Float p4 = new Point2D.Float(9,190);
+        Point2D.Float p5 = new Point2D.Float(9,9);
+        Point2D.Float p6 = new Point2D.Float(190,9);
+        Point2D.Float p7 = new Point2D.Float(190,190);
+        outerPoints.add(p0);
+        outerPoints.add(p1);
+        outerPoints.add(p2);
+        outerPoints.add(p3);
 
-        Area a0 = new Area(p2d);
-        Area a1 = new Area(p2d1);
-        ColoredPath cpath0 = new ColoredPath(a0);
-        ColoredPath cpath1 = new ColoredPath(a1);
-        addColoredShape(cpath0);
-        addColoredShape(cpath1);
+        innerPoints.add(p4);
+        innerPoints.add(p5);
+        innerPoints.add(p6);
+        innerPoints.add(p7);
+
+        outerShape = new ColoredPath(outerPoints);
+        innerShape = new ColoredPath(innerPoints);
+
+        Area a0 = new Area(outerShape);
+        Area a1 = new Area(innerShape);
+        a0.subtract(a1);
+        outerShape = new ColoredPath(a0);
+
+        addColoredShape(outerShape);
+        addColoredShape(innerShape);
     }
 
     public static ShapeContainer getInstance(){
@@ -107,7 +119,7 @@ public final class ShapeContainer {
     }
 
     private void updatePlayer(){
-        getPlayer().updatePlayer(coloredShapes, moveableShapes );
+        getPlayer().updatePlayer(innerShape, outerShape);
     }
 
     public ArrayList<Point2D.Float> getLines(){

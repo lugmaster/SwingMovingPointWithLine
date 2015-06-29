@@ -29,6 +29,7 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
             else this.lineTo(points.get(i).getX(), points.get(i).getY());
         }
         this.closePath();
+        this.color = color;
     }
 
     public ColoredPath(ArrayList<Point2D.Float> points){
