@@ -1,9 +1,7 @@
 import java.awt.*;
 import java.awt.geom.Area;
-import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 public final class ShapeContainer {
 
@@ -96,7 +94,7 @@ public final class ShapeContainer {
     }
 
     public void createColoredPath(ArrayList<Point2D.Float> points) {
-        addColoredShape(new ColoredPath(points, RandomColorGenerator.generateRandomColor()));
+        addColoredShape(new ColoredPath(points, Color.RED));
     }
 
     public void createPolygon(int[] intsX, int[] intsY){
@@ -122,7 +120,7 @@ public final class ShapeContainer {
         getPlayer().updatePlayer(innerShape, outerShape);
     }
 
-    public ArrayList<Point2D.Float> getLines(){
-            return player.getLines();
+    public ArrayList<Point2D.Float> getPoints(){
+            return player.getPoints();
     }
 }

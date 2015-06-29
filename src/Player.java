@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -17,7 +16,9 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private float dx,dy;
 
-    private ArrayList<Point2D.Float> lines = new ArrayList<>();
+    private Point2D.Float position;
+
+    private ArrayList<Point2D.Float> points;
 
 
 
@@ -27,85 +28,68 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     public Player(float x, float y, float width, float height, float moveSpeed, Color color){
         super(x, y, width, height, moveSpeed, color);
-        clearLines();
+        position = new Point2D.Float(x,y);
+        points = new ArrayList<>();
+        points.add(createNewPoint());
     }
 
     private void onCollisionExitColoredShape(){
-        if(beforeFirstCollision){
-            return;
-        }
-        else {
-            addLines();
-            if(!lines.isEmpty()) {
-                createNewShape();
-                clearLines();
-            }
-        }
-        angularSum = 0;
-        isDrawingLines = false;
+        addPoint();
+        resetAngularSum();
+        createNewShape();
+        clearPoints();
     }
 
     private void createNewShape() {
-        ShapeContainer.getInstance().createColoredPath(lines);
+        ShapeContainer.getInstance().createColoredPath(points);
     }
 
     private void onCollisionEnterColoredShape(){
-        if(beforeFirstCollision){
-            beforeFirstCollision = false;
-        }
-        clearLines();
-        startDirection = direction;
-        angularSum = 0;
-        isDrawingLines = true;
-        addLines();
+        resetAngularSum();
+        Point2D.Float p2d = points.get(points.size()-1);
+        clearPoints();
+        addPoint(p2d);
+        addPoint();
     }
 
 
 
     private void detectCollisionShapes(ColoredPath inner, ColoredPath outer) {
-        if(inner.contains(getPosition())){
+        if(!isColliding && !outer.contains(position)){
             onCollisionEnterColoredShape();
+            isColliding = true;
         }
-        else onCollisionExitColoredShape();
+        if(isColliding && !inner.contains(position)){
+            onCollisionExitColoredShape();
+            isColliding = false;
+        }
     }
 
-    private void addLines() {
-        if(isDrawingLines && !beforeFirstCollision) {
-            if(!lines.isEmpty() && lines.get(lines.size()-1).getX() != this.x && lines.get(lines.size() - 1).getY() != this.y){
-                lines.add(lines.size()-2, createNewPoint());
-            }
-            else lines.add(createNewPoint());
+    private void addPoint() {
+        points.add(createNewPoint());
+    }
 
-        }
+    private void addPoint(Point2D.Float p2d) {
+        points.add(p2d);
     }
 
     private Point2D.Float createNewPoint(){
         return new Point2D.Float(this.x, this.y);
     }
 
-    private void addPlayerPos(){
-        if(isDrawingLines && !beforeFirstCollision){
-            if(lines.isEmpty()) lines.add(createNewPoint());
-            else lines.set(lines.size()-1, createNewPoint());
-        }
-    }
-
     @Override
-    public ArrayList<Point2D.Float> getLines() {
-        return lines;
+    public ArrayList<Point2D.Float> getPoints() {
+        return points;
     }
 
-    private void clearLines() {
-        lines.clear();
-        lines.add(createNewPoint());
-        System.out.println("CLEARED");
+    private void clearPoints() {
+        points.clear();
     }
 
     public void updatePlayer(ColoredPath inner, ColoredPath outer){
         move();
+        updatePosition();
         detectCollisionShapes(inner, outer);
-        addPlayerPos();
-        //if(!beforeFirstCollision) System.out.println("FirstCollHERE");
     }
 
     private void move(){
@@ -122,8 +106,8 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
             }
             if(key != direction && !isOpositeDirection(key)){
                 direction = key;
-                if(!beforeFirstCollision) addLines();
-                calculateAngularsum(direction);
+                addPoint();
+                calculateAngularSum(direction);
             }
             adjustMovement();
         }
@@ -153,7 +137,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         if(direction == KeyEvent.VK_S) dy = moveSpeed;
     }
 
-    private void calculateAngularsum(int direction) {
+    private void calculateAngularSum(int direction) {
         int keyLeft = -1;
         int keyRight = -1;
         int keyUp = -1;
@@ -220,7 +204,10 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
             }
         }
         angularSum += tmp;
-        //System.out.println("AS:" + angularSum);
+    }
+
+    private void resetAngularSum(){
+        angularSum = 0;
     }
 
     private boolean isOpositeDirection(int newDirection){
@@ -234,5 +221,13 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private boolean isVerticalDirection(int direction){
         return direction == KeyEvent.VK_W || direction == KeyEvent.VK_S;
+    }
+
+    private void updatePosition(){
+        position.setLocation(x,y);
+    }
+
+    public Point2D.Float getPosition(){
+        return position;
     }
 }

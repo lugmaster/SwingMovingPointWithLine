@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public abstract class MoveableEllipse extends ColoredEllipse implements MoveableShape {
 
-    private Point2D.Float position;
+
     protected float moveSpeed;
 
     public MoveableEllipse(float x, float y, float width, float height, float moveSpeed){
@@ -17,7 +17,6 @@ public abstract class MoveableEllipse extends ColoredEllipse implements Moveable
     public MoveableEllipse(float x, float y, float width, float height, float moveSpeed, Color color){
         super(x, y, width, height, color);
         this.moveSpeed = moveSpeed;
-        position = new Point2D.Float(x,y);
     }
 
     @Override
@@ -40,14 +39,7 @@ public abstract class MoveableEllipse extends ColoredEllipse implements Moveable
         else super.y+= dy;
     }
 
-    public Point2D.Float getPosition(){
-        updatePosition();
-        return position;
-    }
 
-    private void updatePosition(){
-        position.setLocation(x,y);
-    }
 
 
 

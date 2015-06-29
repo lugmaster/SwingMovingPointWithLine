@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -62,15 +65,13 @@ public class Board extends JPanel implements ActionListener{
                 g2d.draw(moveableShape);
                 g2d.fill(moveableShape);
                 if (moveableShape == shapeContainer.getPlayer()) {
-                    for (int i = 0; i < shapeContainer.getLines().size(); i++) {
-                        if (shapeContainer.getLines().size() > i + 1) {
-                            int x1 = (int) shapeContainer.getLines().get(i).getX();
-                            int y1 = (int) shapeContainer.getLines().get(i).getY();
-                            int x2 = (int) shapeContainer.getLines().get(i + 1).getX();
-                            int y2 = (int) shapeContainer.getLines().get(i + 1).getY();
-                            g2d.drawLine(x1, y1, x2, y2);
-                        }
+                    Path2D.Float p2d = new Path2D.Float();
+                    for (int i = 0; i < shapeContainer.getPoints().size(); i++) {
+                        Point2D.Float p = shapeContainer.getPoints().get(i);
+                        if(i==0) p2d.moveTo(p.getX(), p.getY());
+                        else p2d.lineTo(p.getX(),p.getY());
                     }
+                    p2d.lineTo(shapeContainer.getPlayer().getX(),shapeContainer.getPlayer().getY());
                 }
             }
         }
