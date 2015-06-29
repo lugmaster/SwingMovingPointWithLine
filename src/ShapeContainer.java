@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.geom.Area;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -13,14 +14,33 @@ public final class ShapeContainer {
     private AIPlayer aiPlayer;
 
     private ShapeContainer() {
+        // Player and AI
         player = new Player(192, 150, 4, 4, 2f);
-
-        coloredShapes.add(new ColouredRectangle(0, 0, 10, 210));
-        coloredShapes.add(new ColouredRectangle(190, 0, 10, 210));
-        coloredShapes.add(new ColouredRectangle(0, 190, 210, 10));
-        coloredShapes.add(new ColouredRectangle(0, 0, 210, 10));
         moveableShapes.add(player);
-        //moveableShapes.add(new AIPlayer(50,50,3,3,1.0f, Color.red));
+        moveableShapes.add(new AIPlayer(50,50,3,3,1.0f, Color.red));
+
+        //Inner and Outer Shape
+        Path2D.Float p2d = new Path2D.Float();
+        p2d.moveTo(0,0);
+        p2d.lineTo(200,0);
+        p2d.lineTo(200,200);
+        p2d.lineTo(0,200);
+        p2d.closePath();
+
+        Path2D.Float p2d1 = new Path2D.Float();
+        //inner
+        p2d1.moveTo(9, 190);
+        p2d1.lineTo(9,9);
+        p2d1.lineTo(190,9);
+        p2d1.lineTo(190,190);
+        p2d1.closePath();
+
+        Area a0 = new Area(p2d);
+        Area a1 = new Area(p2d1);
+        ColoredPath cpath0 = new ColoredPath(a0);
+        ColoredPath cpath1 = new ColoredPath(a1);
+        addColoredShape(cpath0);
+        addColoredShape(cpath1);
     }
 
     public static ShapeContainer getInstance(){
@@ -63,6 +83,10 @@ public final class ShapeContainer {
        addColoredShape(new ColouredRectangle(x,y,width,height));
     }
 
+    public void createColoredPath(ArrayList<Point2D.Float> points) {
+        addColoredShape(new ColoredPath(points, RandomColorGenerator.generateRandomColor()));
+    }
+
     public void createPolygon(int[] intsX, int[] intsY){
         addColoredShape(new ColoredPolygon(intsX, intsY));
         for (int i = 0; i < intsX.length; i++) {
@@ -86,7 +110,7 @@ public final class ShapeContainer {
         getPlayer().updatePlayer(coloredShapes, moveableShapes );
     }
 
-    public ArrayList<Point> getLines(){
+    public ArrayList<Point2D.Float> getLines(){
             return player.getLines();
     }
 }

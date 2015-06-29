@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class Player extends MoveableEllipse implements MoveableShape, LineDrawingShape{
@@ -15,7 +16,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private float dx,dy;
 
-    private ArrayList<Point> lines = new ArrayList<>();
+    private ArrayList<Point2D.Float> lines = new ArrayList<>();
 
 
 
@@ -44,46 +45,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     private void createNewShape() {
-        System.out.println("Nee: " + beforeFirstCollision);
-        int[] intsX = new int[lines.size()+1];
-        int[] intsY = new int[lines.size()+1];
-        for(int i = 0; i < intsX.length; i++){
-            if(i == intsX.length-1){
-                if(isVerticalDirection(startDirection)){
-                    if(angularSum % 2 == 0){
-                        //swap Y
-                        intsX[i] = (int) lines.get(i-1).getX();
-                        intsY[i] = (int) lines.get(0).getY();
-                        System.out.println("1");
-                    }
-                    else {
-                        //swap X
-                        intsX[i] = (int) lines.get(i-1).getX();
-                        intsY[i] = (int) lines.get(0).getY();
-                        System.out.println("2");
-                    }
-                }
-                if(isHorizontalDirection(startDirection)) {
-                    if(angularSum % 2 == 0){
-                        //swap X
-                        intsX[i] = (int) lines.get(0).getX();
-                        intsY[i] = (int) lines.get(i-1).getY();
-                        System.out.println("3");
-                    }
-                    else {
-                        //swap Y
-                        intsX[i] = (int) lines.get(0).getX();
-                        intsY[i] = (int) lines.get(i-1).getY();
-                        System.out.println("4");
-                    }
-                }
-            }
-            else {
-                intsX[i] = (int) lines.get(i).getX();
-                intsY[i] = (int) lines.get(i).getY();
-            }
-        }
-        ShapeContainer.getInstance().createPolygon(intsX, intsY);
+        ShapeContainer.getInstance().createColoredPath(lines);
     }
 
     private void onCollisionExitColoredShape(){
@@ -101,7 +63,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private void detectCollisionShapes(ArrayList<ColoredShape> coloredShapes) {
         for(int i = 0; i < coloredShapes.size(); i++) {
-            if (this != coloredShapes.get(i) && coloredShapes.get(i).intersects(this.getBounds2D())) {
+            if (this != coloredShapes.get(i) && this.intersects(coloredShapes.get(i).getBounds2D())) {
                 if(!isColliding) {
                     isColliding = true;
                     onCollisionEnterColoredShape();
@@ -125,8 +87,8 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         }
     }
 
-    private Point createNewPoint(){
-        return new Point((int)this.x, (int)this.y);
+    private Point2D.Float createNewPoint(){
+        return new Point2D.Float(this.x, this.y);
     }
 
     private void addPlayerPos(){
@@ -137,7 +99,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     @Override
-    public ArrayList<Point> getLines() {
+    public ArrayList<Point2D.Float> getLines() {
         return lines;
     }
 
