@@ -148,10 +148,11 @@ public final class ShapeContainer {
 
     }
 
-    public void splitInnerShape(ArrayList<Point2D.Float> splitPoints) {
+    /*public void splitInnerShape(ArrayList<Point2D.Float> splitPoints) {
         removeColoredShape(innerShape);
         removeColoredShape(outerShape);
         ColoredPath[] coloredPath = innerShape.splitpath(splitPoints);
-        addColoredShape(coloredPath[1]);
-    }
+        addColoredShape(coloredPath[0]);
+        //addColoredShape(coloredPath[1]);
+    }*/
 }
