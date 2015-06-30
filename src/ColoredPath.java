@@ -22,7 +22,7 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
     }
 
     public ColoredPath(ArrayList<Point2D.Float> pathPoints, Color color, boolean closed){
-        super();
+        //super();
         this.pathPoints = pathPoints;
         setNewPath(this.pathPoints, closed);
         this.color = color;
@@ -49,38 +49,57 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
 
     }
 
-    public ColoredPath[] splitpath(ArrayList<Point2D.Float> splitPath){
+    /*public ColoredPath[] splitpath(ArrayList<Point2D.Float> splitPath){
         ColoredPath[] coloredPaths = new ColoredPath[2];
         if(splitPath.isEmpty()) coloredPaths[0] = this;
         else {
             ArrayList<Point2D.Float> pathA = new ArrayList<>();
             ArrayList<Point2D.Float> pathB = new ArrayList<>();
             boolean finishedPathA = false;
-            boolean finishedPathB = false;
+            boolean finishedPathB = true;
             int pointsBetween = 0;
             for (int i = 0; i < this.pathPoints.size()-1; i++) {
                 Point2D.Float p1 = this.pathPoints.get(i);
                 Point2D.Float p2 = this.pathPoints.get(i+1);
                 Line2D.Float line = new Line2D.Float(p1, p2);
-                if(!finishedPathA) {
-                    pathA.add(p1);
-                    if(line.contains(splitPath.get(i))){
+                if(!finishedPathA) pathA.add(p1);
+                if(!finishedPathB) pathB.add(p1);
+                if(line.contains(splitPath.get(i))){
+                    pathA.add(splitPath.get(i));
+                    for (int i1 = 1; i1 < splitPath.size(); i1++) {
                         pathA.add(splitPath.get(i));
-                        for (int i1 = 1; i1 < splitPath.size(); i1++) {
-                            pathA.add(splitPath.get(i));
-                            finishedPathA = true;
-                        }
+                        finishedPathA = true;
+                        finishedPathB = false;
                     }
                 }
-
+                if(line.contains(splitPath.get(splitPath.size()))){
+                    pathA.add(splitPath.get(splitPath.size()));
+                    finishedPathA = false;
+                    finishedPathB = true;
+                    for (int i1 = splitPath.size()-1; i1 > 0; i1--) {
+                        pathB.add(splitPath.get(i));
+                    }
+                }
             }
+            coloredPaths[0] = new ColoredPath(pathA, true);
+            coloredPaths[1] = new ColoredPath(pathB, true);
         }
+        System.out.println(coloredPaths[0]);
+        System.out.println(coloredPaths[1]);
         return coloredPaths;
-    }
+    }*/
 
 
     @Override
     public Color getColor() {
         return color;
+    }
+
+    public String toString(){
+        String s = "";
+        for (Point2D.Float pathPoint : pathPoints) {
+            s += pathPoint + "\n";
+        }
+        return s;
     }
 }
