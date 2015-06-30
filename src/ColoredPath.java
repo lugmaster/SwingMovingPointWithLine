@@ -22,18 +22,19 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
     }
 
     public ColoredPath(ArrayList<Point2D.Float> pathPoints, Color color, boolean closed){
-        //super();
-        this.pathPoints = pathPoints;
-        setNewPath(this.pathPoints, closed);
+        super();
+        this.pathPoints = new ArrayList<>();
+        setNewPath(pathPoints, closed);
         this.color = color;
     }
+
 
     public ColoredPath(ArrayList<Point2D.Float> pathPoints, boolean closed){
         this(pathPoints, RandomColorGenerator.generateRandomColor(), closed);
     }
 
     public void setNewPath(ArrayList<Point2D.Float> newPoints, boolean closed){
-        pathPoints.clear();
+        if(!pathPoints.isEmpty()) pathPoints.clear();
         if(newPoints.isEmpty()){
             moveTo(0,0);
             pathPoints.add(new Point2D.Float(0, 0));
@@ -49,7 +50,7 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
 
     }
 
-    /*public ColoredPath[] splitpath(ArrayList<Point2D.Float> splitPath){
+    public ColoredPath[] splitpath(ArrayList<Point2D.Float> splitPath){
         ColoredPath[] coloredPaths = new ColoredPath[2];
         if(splitPath.isEmpty()) coloredPaths[0] = this;
         else {
@@ -58,36 +59,51 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
             boolean finishedPathA = false;
             boolean finishedPathB = true;
             int pointsBetween = 0;
-            for (int i = 0; i < this.pathPoints.size()-1; i++) {
+            for (int i = 0; i < this.pathPoints.size(); i++) {
                 Point2D.Float p1 = this.pathPoints.get(i);
-                Point2D.Float p2 = this.pathPoints.get(i+1);
-                Line2D.Float line = new Line2D.Float(p1, p2);
-                if(!finishedPathA) pathA.add(p1);
-                if(!finishedPathB) pathB.add(p1);
-                if(line.contains(splitPath.get(i))){
-                    pathA.add(splitPath.get(i));
-                    for (int i1 = 1; i1 < splitPath.size(); i1++) {
+                Point2D.Float p2 = null;
+                if(i == pathPoints.size()-1){
+                    p2 = pathPoints.get(0);
+                }
+                else {
+                    p2 = this.pathPoints.get(i+1);
+                }
+                if(p2 != null){
+                    Line2D.Float line = new Line2D.Float(p1, p2);
+                    if(!finishedPathA) pathA.add(p1);
+                    if(!finishedPathB) pathB.add(p1);
+                    if(line.contains(splitPath.get(i))){
                         pathA.add(splitPath.get(i));
-                        finishedPathA = true;
-                        finishedPathB = false;
+                        for (int i1 = 1; i1 < splitPath.size(); i1++) {
+                            pathA.add(splitPath.get(i));
+                            finishedPathA = true;
+                            finishedPathB = false;
+                        }
+                    }
+                    if(line.contains(splitPath.get(splitPath.size()-1))){
+                        pathA.add(splitPath.get(splitPath.size()));
+                        finishedPathA = false;
+                        finishedPathB = true;
+                        for (int i1 = splitPath.size()-1; i1 > 0; i1--) {
+                            pathB.add(splitPath.get(i));
+                        }
                     }
                 }
-                if(line.contains(splitPath.get(splitPath.size()))){
-                    pathA.add(splitPath.get(splitPath.size()));
-                    finishedPathA = false;
-                    finishedPathB = true;
-                    for (int i1 = splitPath.size()-1; i1 > 0; i1--) {
-                        pathB.add(splitPath.get(i));
-                    }
-                }
+
+            }
+            for (Point2D.Float aFloat : pathB) {
+                System.out.println("bl" + aFloat);
             }
             coloredPaths[0] = new ColoredPath(pathA, true);
             coloredPaths[1] = new ColoredPath(pathB, true);
         }
+        for (Point2D.Float aFloat : splitPath) {
+            System.out.println("bl" + aFloat);
+        }
         System.out.println(coloredPaths[0]);
         System.out.println(coloredPaths[1]);
         return coloredPaths;
-    }*/
+    }
 
 
     @Override

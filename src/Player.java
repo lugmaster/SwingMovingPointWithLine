@@ -33,13 +33,14 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         points = new ArrayList<>();
         points.add(createNewPoint());
         path = new ColoredPath(color);
-        path = getPlayerPath();
+        //path = getPlayerPath();
     }
 
     private void onCollisionExitColoredShape(){
         addPoint();
         resetAngularSum();
-        createNewShape();
+        //createNewShape();
+        ShapeContainer.getInstance().splitInnerShape(points);
         clearPoints();
     }
 
@@ -96,6 +97,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private void clearPoints() {
         points.clear();
+        path.reset();
     }
 
     public void updatePlayer(ColoredPath inner, ColoredPath outer){
@@ -244,7 +246,9 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     public ColoredPath getPlayerPath(){
-        path.setNewPath(points,this);
+        ArrayList<Point2D.Float> playerPath = new ArrayList<>(points);
+        playerPath.add(createNewPoint());
+        path.setNewPath(playerPath, false);
         return path;
     }
 }

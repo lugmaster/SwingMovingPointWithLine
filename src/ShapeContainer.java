@@ -115,6 +115,10 @@ public final class ShapeContainer {
         moveableShapes.add(moveableShape);
     }
 
+    public void removeColoredShape(ColoredShape coloredShape){
+        if(coloredShapes.contains(coloredShape)) coloredShapes.remove(coloredShape);
+    }
+
     public void doGameCycle(){
         updatePlayer();
     }
@@ -132,6 +136,8 @@ public final class ShapeContainer {
                 g2d.fill(coloredShape);
             }
         }
+        g2d.setColor(player.getColor());
+        g2d.draw(player.getPlayerPath());
         if(!moveableShapes.isEmpty()) {
             for (MoveableShape moveableShape : moveableShapes) {
                 g2d.setColor(moveableShape.getColor());
@@ -139,6 +145,13 @@ public final class ShapeContainer {
                 g2d.fill(moveableShape);
             }
         }
-        g2d.draw(player.getPlayerPath());
+
+    }
+
+    public void splitInnerShape(ArrayList<Point2D.Float> splitPoints) {
+        removeColoredShape(innerShape);
+        removeColoredShape(outerShape);
+        ColoredPath[] coloredPath = innerShape.splitpath(splitPoints);
+        addColoredShape(coloredPath[1]);
     }
 }
