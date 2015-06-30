@@ -56,8 +56,10 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
         ArrayList<Point2D.Float> pathB = new ArrayList<>();
         boolean finishedPathA = false;
         boolean finishedPathB = true;
+        boolean firstPointFound= false;
         int pointsBetween = 0;
         for (int i = 0; i < this.pathPoints.size(); i++) {
+            //getPoints
             Point2D.Float p1 = this.pathPoints.get(i);
             Point2D.Float p2 = null;
             if(i == pathPoints.size()-1){
@@ -66,15 +68,27 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
             else {
                 p2 = this.pathPoints.get(i+1);
             }
+            //checkPoints
             if(p2 != null){
                 if(!finishedPathA) pathA.add(p1);
                 if(!finishedPathB) pathB.add(p1);
-                if(pointIsInLine(p1,p2,splitPath.get(0))){
-                    pathA.add(splitPath.get(i));
+                if(!firstPointFound && pointIsInLine(p1,p2,splitPath.get(0))) {
+                    connectPath(pathA,splitPath);
+                    firstPointFound = true;
+                }
+                if(!firstPointFound && pointIsInLine(p1,p1,splitPath.get(splitPath.size()-1))) {
+                    connectPathReverse(pathA,splitPath);
+                    firstPointFound = true;
+                }
+                if(firstPointFound){
+                    finishedPathA = true;
+                    finishedPathB = false;
+                }
+                    System.out.println(p1 +" // " + p2);
+                    pathA.add(splitPath.get(0));
                     for (int i1 = 1; i1 < splitPath.size(); i1++) {
-                        pathA.add(splitPath.get(i));
-                        finishedPathA = true;
-                        finishedPathB = false;
+                        pathA.add(splitPath.get(i1));
+
                     }
                 }
                 if(pointIsInLine(p1,p2,splitPath.get(splitPath.size()-1))){
@@ -87,8 +101,8 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
                 }
             }
 
-        }
-        for (Point2D.Float aFloat : pathB) {
+
+        for (Point2D.Float aFloat : pathA) {
             System.out.println("bl" + aFloat);
         }
         coloredPaths[0] = new ColoredPath(pathA, true);
@@ -96,6 +110,17 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
         //System.out.println(coloredPaths[0]);
         System.out.println(coloredPaths[1]);
         return coloredPaths;
+    }
+
+    private void connectPathReverse(ArrayList<Point2D.Float> originalPath, ArrayList<Point2D.Float> extension){
+        for(int i = extension.size()-1; i > 0; i--){
+            originalPath.add(extension.get(i));
+        }
+    }
+    private void connectPath(ArrayList<Point2D.Float> originalPath, ArrayList<Point2D.Float> extension){
+        for (int i = 0; i < extension.size(); i++) {
+            originalPath.add(extension.get(i));
+        }
     }
 
     private boolean pointIsInLine(Point2D.Float p1, Point2D.Float p2, Point2D.Float between){
