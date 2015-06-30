@@ -52,57 +52,70 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
 
     public ColoredPath[] splitpath(ArrayList<Point2D.Float> splitPath){
         ColoredPath[] coloredPaths = new ColoredPath[2];
-        if(splitPath.isEmpty()) coloredPaths[0] = this;
-        else {
-            ArrayList<Point2D.Float> pathA = new ArrayList<>();
-            ArrayList<Point2D.Float> pathB = new ArrayList<>();
-            boolean finishedPathA = false;
-            boolean finishedPathB = true;
-            int pointsBetween = 0;
-            for (int i = 0; i < this.pathPoints.size(); i++) {
-                Point2D.Float p1 = this.pathPoints.get(i);
-                Point2D.Float p2 = null;
-                if(i == pathPoints.size()-1){
-                    p2 = pathPoints.get(0);
-                }
-                else {
-                    p2 = this.pathPoints.get(i+1);
-                }
-                if(p2 != null){
-                    Line2D.Float line = new Line2D.Float(p1, p2);
-                    if(!finishedPathA) pathA.add(p1);
-                    if(!finishedPathB) pathB.add(p1);
-                    if(line.contains(splitPath.get(i))){
+        ArrayList<Point2D.Float> pathA = new ArrayList<>();
+        ArrayList<Point2D.Float> pathB = new ArrayList<>();
+        boolean finishedPathA = false;
+        boolean finishedPathB = true;
+        int pointsBetween = 0;
+        for (int i = 0; i < this.pathPoints.size(); i++) {
+            Point2D.Float p1 = this.pathPoints.get(i);
+            Point2D.Float p2 = null;
+            if(i == pathPoints.size()-1){
+                p2 = pathPoints.get(0);
+            }
+            else {
+                p2 = this.pathPoints.get(i+1);
+            }
+            if(p2 != null){
+                if(!finishedPathA) pathA.add(p1);
+                if(!finishedPathB) pathB.add(p1);
+                if(pointIsInLine(p1,p2,splitPath.get(0))){
+                    pathA.add(splitPath.get(i));
+                    for (int i1 = 1; i1 < splitPath.size(); i1++) {
                         pathA.add(splitPath.get(i));
-                        for (int i1 = 1; i1 < splitPath.size(); i1++) {
-                            pathA.add(splitPath.get(i));
-                            finishedPathA = true;
-                            finishedPathB = false;
-                        }
-                    }
-                    if(line.contains(splitPath.get(splitPath.size()-1))){
-                        pathA.add(splitPath.get(splitPath.size()));
-                        finishedPathA = false;
-                        finishedPathB = true;
-                        for (int i1 = splitPath.size()-1; i1 > 0; i1--) {
-                            pathB.add(splitPath.get(i));
-                        }
+                        finishedPathA = true;
+                        finishedPathB = false;
                     }
                 }
+                if(pointIsInLine(p1,p2,splitPath.get(splitPath.size()-1))){
+                    pathA.add(splitPath.get(splitPath.size()-1));
+                    finishedPathA = false;
+                    finishedPathB = true;
+                    for (int i1 = splitPath.size()-1; i1 > 0; i1--) {
+                        pathB.add(splitPath.get(i));
+                    }
+                }
+            }
 
-            }
-            for (Point2D.Float aFloat : pathB) {
-                System.out.println("bl" + aFloat);
-            }
-            coloredPaths[0] = new ColoredPath(pathA, true);
-            coloredPaths[1] = new ColoredPath(pathB, true);
         }
-        for (Point2D.Float aFloat : splitPath) {
+        for (Point2D.Float aFloat : pathB) {
             System.out.println("bl" + aFloat);
         }
-        System.out.println(coloredPaths[0]);
+        coloredPaths[0] = new ColoredPath(pathA, true);
+        coloredPaths[1] = new ColoredPath(pathB, true);
+        //System.out.println(coloredPaths[0]);
         System.out.println(coloredPaths[1]);
         return coloredPaths;
+    }
+
+    private boolean pointIsInLine(Point2D.Float p1, Point2D.Float p2, Point2D.Float between){
+        if(p1.getX() == between.getX()){
+            int y1 = (int)p1.getY();
+            int y2 = (int) between.getY();
+            int y3 = (int) p2.getY();
+            if(Math.abs(y1-y2) + Math.abs(y2-y3) == Math.abs(y1-y3)){
+                return true;
+            }
+        }
+        if(p1.getY() == between.getY()){
+            int x1 = (int) p1.getX();
+            int x2 = (int) between.getX();
+            int x3 = (int) p2.getX();
+            if(Math.abs(x1-x2) + Math.abs(x2-x3) == Math.abs(x1-x3)){
+                return true;
+            }
+        }
+        return false;
     }
 
 
