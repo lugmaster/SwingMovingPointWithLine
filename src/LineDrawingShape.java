@@ -5,5 +5,5 @@ import java.util.Deque;
 import java.util.LinkedList;
 
 public interface LineDrawingShape {
-    public ArrayList<Point2D.Float> getPoints();
+    public ArrayList<Point> getPoints();
 }

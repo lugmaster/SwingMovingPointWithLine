@@ -8,8 +8,8 @@ public final class ShapeContainer {
     private static ShapeContainer shapeContainer = new ShapeContainer();
     private ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
     private ArrayList<MoveableShape> moveableShapes = new ArrayList<>();
-    private ArrayList<Point2D.Float> innerPoints = new ArrayList<>();
-    private ArrayList<Point2D.Float> outerPoints = new ArrayList<>();
+    private ArrayList<Point> innerPoints = new ArrayList<>();
+    private ArrayList<Point> outerPoints = new ArrayList<>();
     private Player player;
     private AIPlayer aiPlayer;
     private ColoredPath innerShape;
@@ -17,23 +17,23 @@ public final class ShapeContainer {
 
     private ShapeContainer() {
         // Player and AI
-        player = new Player(192, 150, 3, 3, 2f);
+        player = new Player(192, 150, 3, 3, 1f);
         //player = new Player(5, 58, 3, 3, 2f);
         //player = new Player(58, 5, 3, 3, 2f);
         //player = new Player(150, 192, 3, 3, 2f);
         moveableShapes.add(player);
         moveableShapes.add(new AIPlayer(50,50,3,3,1.0f, Color.red));
         //outer
-        Point2D.Float p0 = new Point2D.Float(-3,-3);
-        Point2D.Float p1 = new Point2D.Float(203,-3);
-        Point2D.Float p2 = new Point2D.Float(203,203);
-        Point2D.Float p3 = new Point2D.Float(-3,203);
+        Point p0 = new Point(-3,-3);
+        Point p1 = new Point(203,-3);
+        Point p2 = new Point(203,203);
+        Point p3 = new Point(-3,203);
 
         //inner
-        Point2D.Float p4 = new Point2D.Float(9,190);
-        Point2D.Float p5 = new Point2D.Float(9,9);
-        Point2D.Float p6 = new Point2D.Float(190,9);
-        Point2D.Float p7 = new Point2D.Float(190,190);
+        Point p4 = new Point(9,190);
+        Point p5 = new Point(9,9);
+        Point p6 = new Point(190,9);
+        Point p7 = new Point(190,190);
         outerPoints.add(p0);
         outerPoints.add(p1);
         outerPoints.add(p2);
@@ -96,7 +96,7 @@ public final class ShapeContainer {
        addColoredShape(new ColouredRectangle(x,y,width,height));
     }
 
-    public void createColoredPath(ArrayList<Point2D.Float> points) {
+    public void createColoredPath(ArrayList<Point> points) {
         addColoredShape(new ColoredPath(points, Color.RED, true));
     }
 
@@ -148,11 +148,11 @@ public final class ShapeContainer {
 
     }
 
-    /*public void splitInnerShape(ArrayList<Point2D.Float> splitPoints) {
+    public void splitInnerShape(ArrayList<Point> splitPoints) {
         removeColoredShape(innerShape);
         removeColoredShape(outerShape);
         ColoredPath[] coloredPath = innerShape.splitpath(splitPoints);
         addColoredShape(coloredPath[0]);
         //addColoredShape(coloredPath[1]);
-    }*/
+    }
 }
