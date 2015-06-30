@@ -38,10 +38,12 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private void onCollisionExitColoredShape(){
         addPoint();
+        System.out.println(getPosition());
         resetAngularSum();
         //createNewShape();
-        ShapeContainer.getInstance().splitInnerShape(points);
+        //ShapeContainer.getInstance().splitInnerShape(points);
         clearPoints();
+
     }
 
     private void createNewShape() {
@@ -54,7 +56,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private void onCollisionEnterColoredShape(){
         resetAngularSum();
         clearPoints();
-        addPoint(direction);
+        addPointOnCollEnter(direction);
     }
 
 
@@ -73,14 +75,21 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private void addPoint() {
         points.add(createNewPoint());
     }
-    private void addPoint(int direction){
+    private void addPointOnCollEnter(int direction){
         if(direction == KeyEvent.VK_A) points.add(createPointOffset(2,0));
         if(direction == KeyEvent.VK_D) points.add(createPointOffset(-2,0));
         if(direction == KeyEvent.VK_W) points.add(createPointOffset(0,2));
         if(direction == KeyEvent.VK_S) points.add(createPointOffset(0,-2));
     }
 
-    private void addPoint(Point2D.Float p2d) {
+    private void addPointOnCollExit(int direction){
+        if(direction == KeyEvent.VK_A) points.add(createPointOffset(2,0));
+        if(direction == KeyEvent.VK_D) points.add(createPointOffset(-2,0));
+        if(direction == KeyEvent.VK_W) points.add(createPointOffset(0,2));
+        if(direction == KeyEvent.VK_S) points.add(createPointOffset(0,-2));
+    }
+
+    private void addPointOnCollEnter(Point2D.Float p2d) {
         points.add(p2d);
     }
 
