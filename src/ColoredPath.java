@@ -102,7 +102,12 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
 
                 if (!secondPointFound && (pointIsInLine(p1, p2, splitPath.get(0)) || pointIsInLine(p1, p1, splitPath.get(splitPath.size() - 1)))) {
                     secondPointFound = true;
-                    finishedPathA = false;
+                    if(i == pathPoints.size()-1){
+                        pathA.add(p2);
+                    }
+                    else {
+                        finishedPathA = false;
+                    }
                     finishedPathB = true;
                     if(isReversed){
                         connectPath(pathB,splitPath);
