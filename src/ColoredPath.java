@@ -57,7 +57,8 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
         boolean finishedPathA = false;
         boolean finishedPathB = true;
         boolean firstPointFound= false;
-        int pointsBetween = 0;
+        boolean secondPointFound = false;
+        boolean isReversed = false;
         for (int i = 0; i < this.pathPoints.size(); i++) {
             //getPoints
             Point2D.Float p1 = this.pathPoints.get(i);
@@ -69,51 +70,57 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
                 p2 = this.pathPoints.get(i+1);
             }
             //checkPoints
-            if(p2 != null){
-                if(!finishedPathA) pathA.add(p1);
-                if(!finishedPathB) pathB.add(p1);
-                if(!firstPointFound && pointIsInLine(p1,p2,splitPath.get(0))) {
-                    connectPath(pathA,splitPath);
+            if(p2 != null) {
+                if (!finishedPathA) pathA.add(p1);
+                if (!finishedPathB) pathB.add(p1);
+                //both points on same line
+                if(!firstPointFound && !secondPointFound && pointIsInLine(p1,p2,splitPath.get(0)) && pointIsInLine(p1,p2,splitPath.get(splitPath.size()-1))){
+                    if(p1.distance(splitPath.get(0)) < p1.distance(splitPath.get(splitPath.size()-1))){
+                       connectPath(pathA, splitPath);
+                    }
+                    else connectPathReverse(pathA, splitPath);
+                    coloredPaths[1] = new ColoredPath(splitPath,true);
                     firstPointFound = true;
+                    secondPointFound = true;
                 }
-                if(!firstPointFound && pointIsInLine(p1,p1,splitPath.get(splitPath.size()-1))) {
-                    connectPathReverse(pathA,splitPath);
+
+                //points on different lines
+                if (!firstPointFound && pointIsInLine(p1, p2, splitPath.get(0))) {
+                    connectPath(pathA, splitPath);
                     firstPointFound = true;
-                }
-                if(firstPointFound){
                     finishedPathA = true;
                     finishedPathB = false;
                 }
-                    System.out.println(p1 +" // " + p2);
-                    pathA.add(splitPath.get(0));
-                    for (int i1 = 1; i1 < splitPath.size(); i1++) {
-                        pathA.add(splitPath.get(i1));
-
-                    }
+                if (!firstPointFound && pointIsInLine(p1, p1, splitPath.get(splitPath.size() - 1))) {
+                    connectPathReverse(pathA, splitPath);
+                    firstPointFound = true;
+                    finishedPathA = true;
+                    finishedPathB = false;
+                    isReversed = true;
                 }
-                if(pointIsInLine(p1,p2,splitPath.get(splitPath.size()-1))){
-                    pathA.add(splitPath.get(splitPath.size()-1));
+
+
+                if (!secondPointFound && (pointIsInLine(p1, p2, splitPath.get(0)) || pointIsInLine(p1, p1, splitPath.get(splitPath.size() - 1)))) {
+                    secondPointFound = true;
                     finishedPathA = false;
                     finishedPathB = true;
-                    for (int i1 = splitPath.size()-1; i1 > 0; i1--) {
-                        pathB.add(splitPath.get(i));
+                    if(isReversed){
+                        connectPath(pathB,splitPath);
                     }
+                    else connectPathReverse(pathB,splitPath);
                 }
             }
-
-
-        for (Point2D.Float aFloat : pathA) {
-            System.out.println("bl" + aFloat);
         }
-        coloredPaths[0] = new ColoredPath(pathA, true);
-        coloredPaths[1] = new ColoredPath(pathB, true);
-        //System.out.println(coloredPaths[0]);
+        coloredPaths[0] = new ColoredPath(pathA,true);
+        if(coloredPaths[1] == null) coloredPaths[1] = new ColoredPath(pathB,true);
+
+        System.out.println(coloredPaths[0]);
         System.out.println(coloredPaths[1]);
         return coloredPaths;
     }
 
     private void connectPathReverse(ArrayList<Point2D.Float> originalPath, ArrayList<Point2D.Float> extension){
-        for(int i = extension.size()-1; i > 0; i--){
+        for(int i = extension.size()-1; i >= 0; i--){
             originalPath.add(extension.get(i));
         }
     }
