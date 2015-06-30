@@ -22,19 +22,19 @@ public abstract class MoveableEllipse extends ColoredEllipse implements Moveable
     @Override
     public void move(float dx, float dy) {
 
-        if(super.x + dx < 0) {
-            super.x = 0;
+        if(super.x + dx < (int) (width/2)) {
+            super.x = (int) (width/2);
         }
-        else if(super.x + dx > Board.WIDTH-1) {
-            super.x = Board.WIDTH-1;
+        else if(super.x + dx > Board.WIDTH-(int)(width)) {
+            super.x = Board.WIDTH-(int) (width);
         }
         else super.x += dx;
 
-        if(super.y + dy < 0) {
-            super.y = 0;
+        if(super.y + dy < (int) (height/2)) {
+            super.y = (int) (height/2);
         }
-        else if (super.y + dy > Board.HEIGHT-1) {
-            super.y = Board.HEIGHT-1;
+        else if (super.y + dy > Board.HEIGHT-(int) (height)) {
+            super.y = Board.HEIGHT- (int) (height);
         }
         else super.y+= dy;
     }

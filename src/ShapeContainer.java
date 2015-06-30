@@ -17,14 +17,17 @@ public final class ShapeContainer {
 
     private ShapeContainer() {
         // Player and AI
-        player = new Player(192, 150, 4, 4, 2f);
+        player = new Player(192, 150, 3, 3, 2f);
+        //player = new Player(5, 58, 3, 3, 2f);
+        //player = new Player(58, 5, 3, 3, 2f);
+        //player = new Player(150, 192, 3, 3, 2f);
         moveableShapes.add(player);
         moveableShapes.add(new AIPlayer(50,50,3,3,1.0f, Color.red));
         //outer
-        Point2D.Float p0 = new Point2D.Float(0,0);
-        Point2D.Float p1 = new Point2D.Float(200,0);
-        Point2D.Float p2 = new Point2D.Float(200,200);
-        Point2D.Float p3 = new Point2D.Float(0,200);
+        Point2D.Float p0 = new Point2D.Float(-3,-3);
+        Point2D.Float p1 = new Point2D.Float(203,-3);
+        Point2D.Float p2 = new Point2D.Float(203,203);
+        Point2D.Float p3 = new Point2D.Float(-3,203);
 
         //inner
         Point2D.Float p4 = new Point2D.Float(9,190);
@@ -118,5 +121,24 @@ public final class ShapeContainer {
 
     private void updatePlayer(){
         getPlayer().updatePlayer(innerShape, outerShape);
+    }
+
+    public void doDrawing(Graphics g){
+        Graphics2D g2d = (Graphics2D) g;
+        if(!coloredShapes.isEmpty()) {
+            for(ColoredShape coloredShape : coloredShapes){
+                g2d.setColor(coloredShape.getColor());
+                g2d.draw(coloredShape);
+                g2d.fill(coloredShape);
+            }
+        }
+        if(!moveableShapes.isEmpty()) {
+            for (MoveableShape moveableShape : moveableShapes) {
+                g2d.setColor(moveableShape.getColor());
+                g2d.draw(moveableShape);
+                g2d.fill(moveableShape);
+            }
+        }
+        g2d.draw(player.getPlayerPath());
     }
 }

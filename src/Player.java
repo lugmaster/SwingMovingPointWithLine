@@ -33,7 +33,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         points = new ArrayList<>();
         points.add(createNewPoint());
         path = new ColoredPath(color);
-        path.moveTo(0,0);
+        path = getPlayerPath();
     }
 
     private void onCollisionExitColoredShape(){
@@ -44,28 +44,26 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     private void createNewShape() {
+        for (Point2D.Float point : points) {
+            System.out.println("newShape: " + point);
+        }
         ShapeContainer.getInstance().createColoredPath(points);
     }
 
     private void onCollisionEnterColoredShape(){
         resetAngularSum();
-        Point2D.Float p2d = points.get(points.size()-1);
         clearPoints();
-        addPoint(p2d);
-        addPoint();
+        addPoint(direction);
     }
 
 
 
     private void detectCollisionShapes(ColoredPath inner, ColoredPath outer) {
-        if(!isColliding && !outer.contains(position)){
+        if(!isColliding && inner.contains(position)){
             onCollisionEnterColoredShape();
             isColliding = true;
-            for (Point2D.Float point : points) {
-                System.out.println(point);
-            }
         }
-        if(isColliding && !inner.contains(position)){
+        if(isColliding && outer.contains(position)){
             onCollisionExitColoredShape();
             isColliding = false;
         }
@@ -73,6 +71,12 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private void addPoint() {
         points.add(createNewPoint());
+    }
+    private void addPoint(int direction){
+        if(direction == KeyEvent.VK_A) points.add(createPointOffset(2,0));
+        if(direction == KeyEvent.VK_D) points.add(createPointOffset(-2,0));
+        if(direction == KeyEvent.VK_W) points.add(createPointOffset(0,2));
+        if(direction == KeyEvent.VK_S) points.add(createPointOffset(0,-2));
     }
 
     private void addPoint(Point2D.Float p2d) {
@@ -83,7 +87,9 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         return new Point2D.Float(this.x, this.y);
     }
 
-    @Override
+    private Point2D.Float createPointOffset(int x, int y){
+        return new Point2D.Float(this.x + x, this.y + y);
+    }
     public ArrayList<Point2D.Float> getPoints() {
         return points;
     }
@@ -112,7 +118,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
             }
             if(key != direction && !isOpositeDirection(key)){
                 direction = key;
-                addPoint();
+                if(isColliding) addPoint();
                 calculateAngularSum(direction);
             }
             adjustMovement();
@@ -238,7 +244,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     public ColoredPath getPlayerPath(){
-        if(!points.isEmpty()) path.setNewPath(points,this);
+        path.setNewPath(points,this);
         return path;
     }
 }

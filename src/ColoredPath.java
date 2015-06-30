@@ -22,11 +22,14 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
 
     public ColoredPath(ArrayList<Point2D.Float> points, Color color, boolean closed){
         this.points = points;
+
         for (int i = 0; i < points.size(); i++) {
             if(i == 0) this.moveTo(points.get(i).getX(), points.get(i).getY());
             else this.lineTo(points.get(i).getX(), points.get(i).getY());
+            System.out.println("newPath:" + points.get(i));
         }
         if(closed) this.closePath();
+        System.out.println("#############################\n");
         this.color = color;
     }
 
@@ -36,18 +39,32 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
 
     public void setNewPath(ArrayList<Point2D.Float> newPoints){
         points.clear();
-        for (int i = 0; i < newPoints.size(); i++) {
-            if(i==0)this.moveTo(newPoints.get(i).getX(), newPoints.get(i).getY());
-            else this.lineTo(newPoints.get(i).getX(), newPoints.get(i).getY());
-            points.add(new Point2D.Float((float) newPoints.get(i).getX(), (float) newPoints.get(i).getY()));
+        if(newPoints.isEmpty()){
+            moveTo(0,0);
+            points.add(new Point2D.Float(0,0));
         }
+        else{
+            for (int i = 0; i < newPoints.size(); i++) {
+                if(i==0)this.moveTo(newPoints.get(i).getX(), newPoints.get(i).getY());
+                else this.lineTo(newPoints.get(i).getX(), newPoints.get(i).getY());
+                points.add(new Point2D.Float((float) newPoints.get(i).getX(), (float) newPoints.get(i).getY()));
+            }
+        }
+
     }
 
     public void setNewPath(ArrayList<Point2D.Float> newPoints, Player player){
-        setNewPath(newPoints);
         Point2D.Float p2d = new Point2D.Float((float) player.getPosition().getX(), (float) player.getPosition().getY());
-        this.lineTo(p2d.getX(),p2d.getY());
-        points.add(p2d);
+        if(newPoints.isEmpty()){
+            points.clear();
+            moveTo(p2d.getX(),p2d.getY());
+        }
+        else {
+            setNewPath(newPoints);
+            this.lineTo(p2d.getX(),p2d.getY());
+            points.add(p2d);
+        }
+
     }
 
 

@@ -39,7 +39,7 @@ public class Board extends JPanel implements ActionListener{
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        doDrawing(g);
+        shapeContainer.doDrawing(g);
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -50,39 +50,15 @@ public class Board extends JPanel implements ActionListener{
         shapeContainer.doGameCycle();
     }
 
-    private void doDrawing(Graphics g){
-        Graphics2D g2d = (Graphics2D) g;
-        if(!shapeContainer.getColoredShapes().isEmpty()) {
-            for(ColoredShape coloredShape : shapeContainer.getColoredShapes()){
-                g2d.setColor(coloredShape.getColor());
-                g2d.draw(coloredShape);
-                g2d.fill(coloredShape);
-            }
-        }
-        if(!shapeContainer.getMoveableShapes().isEmpty()) {
-            for (MoveableShape moveableShape : shapeContainer.getMoveableShapes()) {
-                g2d.setColor(moveableShape.getColor());
-                g2d.draw(moveableShape);
-                g2d.fill(moveableShape);
-            }
-        }
-        g2d.draw(shapeContainer.getPlayer().getPlayerPath());
-    }
-
     private class TAdapter extends KeyAdapter {
-
         @Override
         public void keyReleased(KeyEvent e) {
             shapeContainer.getPlayer().keyReleased(e);
-
         }
-
         @Override
         public void keyPressed(KeyEvent e) {
             shapeContainer.getPlayer().keyPressed(e);
         }
-
-
     }
 
 }
