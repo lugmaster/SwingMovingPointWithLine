@@ -100,27 +100,43 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
                 }
 
 
-                if (!secondPointFound && (pointIsInLine(p1, p2, splitPath.get(0)) || pointIsInLine(p1, p1, splitPath.get(splitPath.size() - 1)))) {
-                    secondPointFound = true;
-                    if(i == pathPoints.size()-1){
-                        pathA.add(p2);
+                if (!secondPointFound) {
+                    if(isReversed){
+                        if(pointIsInLine(p1,p2,splitPath.get(0))){
+                            secondPointFound = true;
+                            connectPath(pathB,splitPath);
+                            if(i == pathPoints.size()-1){
+                                pathA.add(p2);
+                            }
+                            else {
+                                finishedPathA = false;
+                                finishedPathB = true;
+                            }
+                        }
                     }
                     else {
-                        finishedPathA = false;
+                        if(pointIsInLine(p1,p2,splitPath.get(splitPath.size()-1))){
+                            secondPointFound = true;
+                            connectPathReverse(pathB, splitPath);
+                            if(i == pathPoints.size()-1){
+                                pathA.add(p2);
+                            }
+                            else {
+                                finishedPathA = false;
+                                finishedPathB = true;
+                            }
+                        }
                     }
-                    finishedPathB = true;
-                    if(isReversed){
-                        connectPath(pathB,splitPath);
-                    }
-                    else connectPathReverse(pathB,splitPath);
                 }
             }
         }
         coloredPaths[0] = new ColoredPath(pathA,true);
         if(coloredPaths[1] == null) coloredPaths[1] = new ColoredPath(pathB,true);
-
-        System.out.println(coloredPaths[0]);
-        System.out.println(coloredPaths[1]);
+        for (Point2D.Float aFloat : splitPath) {
+            System.out.println("splitPath: " + aFloat);
+        }
+        System.out.println("path0: \n" + coloredPaths[0]);
+        System.out.println("path1: \n" + coloredPaths[1]);
         return coloredPaths;
     }
 
