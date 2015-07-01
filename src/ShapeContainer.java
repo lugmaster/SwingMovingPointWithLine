@@ -137,8 +137,10 @@ public final class ShapeContainer {
                 g2d.fill(coloredShape);
             }
         }
-        g2d.setColor(player.getColor());
-        g2d.draw(player.getPlayerPath());
+        if(player.getPlayerPath() != null){
+            g2d.setColor(player.getColor());
+            g2d.draw(player.getPlayerPath());
+        }
         if(!moveableShapes.isEmpty()) {
             for (MoveableShape moveableShape : moveableShapes) {
                 g2d.setColor(moveableShape.getColor());
