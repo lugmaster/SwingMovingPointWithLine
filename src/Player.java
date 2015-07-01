@@ -43,7 +43,6 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         //createNewShape();
         ShapeContainer.getInstance().splitInnerShape(points);
         clearPoints();
-
     }
 
     private void createNewShape() {
@@ -65,6 +64,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         if(!isColliding && inner.contains(position)){
             onCollisionEnterColoredShape();
             isColliding = true;
+            System.out.println("newShape: ");
         }
         if(isColliding && outer.contains(position)){
             onCollisionExitColoredShape();

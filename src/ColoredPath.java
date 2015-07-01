@@ -17,7 +17,7 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
 
     public ColoredPath(Shape s){
         super(s);
-        this.color = RandomColorGenerator.generateRandomColor();
+        this.color = Color.GRAY;
         this.pathPoints = new ArrayList<>();
     }
 
@@ -30,7 +30,7 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
 
 
     public ColoredPath(ArrayList<Point> pathPoints, boolean closed){
-        this(pathPoints, RandomColorGenerator.generateRandomColor(), closed);
+        this(pathPoints, Color.YELLOW, closed);
     }
 
     public void setNewPath(ArrayList<Point> newPoints, boolean closed){

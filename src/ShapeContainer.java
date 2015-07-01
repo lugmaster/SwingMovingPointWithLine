@@ -17,12 +17,13 @@ public final class ShapeContainer {
 
     private ShapeContainer() {
         // Player and AI
-        player = new Player(192, 150, 3, 3, 1f);
+        player = new Player(194, 150, 3, 3, 1f);
+        aiPlayer = new AIPlayer(50,50,3,3,1.0f, Color.red);
         //player = new Player(5, 58, 3, 3, 2f);
         //player = new Player(58, 5, 3, 3, 2f);
         //player = new Player(150, 192, 3, 3, 2f);
         moveableShapes.add(player);
-        moveableShapes.add(new AIPlayer(50,50,3,3,1.0f, Color.red));
+        moveableShapes.add(aiPlayer);
         //outer
         Point p0 = new Point(-3,-3);
         Point p1 = new Point(203,-3);
@@ -149,10 +150,19 @@ public final class ShapeContainer {
     }
 
     public void splitInnerShape(ArrayList<Point> splitPoints) {
-        removeColoredShape(innerShape);
         removeColoredShape(outerShape);
+        removeColoredShape(innerShape);
         ColoredPath[] coloredPath = innerShape.splitpath(splitPoints);
-        addColoredShape(coloredPath[0]);
-        //addColoredShape(coloredPath[1]);
+        if(coloredPath[0].contains(aiPlayer.getPosition())){
+            innerShape = coloredPath[0];
+        }
+        else innerShape = coloredPath[1];
+        addColoredShape(innerShape);
+        outerShape = new ColoredPath(outerPoints,true);
+        Area a0 = new Area(outerShape);
+        Area a1 = new Area(innerShape);
+        a0.subtract(a1);
+        outerShape = new ColoredPath(a0);
+        addColoredShape(outerShape);
     }
 }
