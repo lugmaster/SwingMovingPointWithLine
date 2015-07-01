@@ -8,7 +8,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private boolean isColliding = false;
     private boolean isDrawingLines = true;
     private boolean isFirstMove = true;
-    private boolean beforeFirstCollision = true;
+    private boolean isMoving = false;
 
     private int direction;
     private int startDirection;
@@ -33,28 +33,20 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         points = new ArrayList<>();
         points.add(createNewPoint());
         path = new ColoredPath(color);
-        //path = getPlayerPath();
     }
 
     private void onCollisionExitColoredShape(){
-        //System.out.println("Exit:" + getPosition());
         addAdjustedPoint(direction);
         resetAngularSum();
-        //createNewShape();
         ShapeContainer.getInstance().splitInnerShape(points);
+        isDrawingLines = false;
         clearPoints();
-    }
-
-    private void createNewShape() {
-        for (Point point : points) {
-            System.out.println("newShape: " + point);
-        }
-        ShapeContainer.getInstance().createColoredPath(points);
     }
 
     private void onCollisionEnterColoredShape(){
         resetAngularSum();
         clearPoints();
+        isDrawingLines = true;
         addAdjustedPoint(direction);
     }
 
@@ -82,21 +74,6 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         if(direction == KeyEvent.VK_W) points.add(createPointOffset(0,1));
         if(direction == KeyEvent.VK_S) points.add(createPointOffset(0,0));
     }
-
-    private void addPointOnCollEnter(int direction){
-        if(direction == KeyEvent.VK_A) points.add(createPointOffset(2,0));
-        if(direction == KeyEvent.VK_D) points.add(createPointOffset(-2,0));
-        if(direction == KeyEvent.VK_W) points.add(createPointOffset(0,2));
-        if(direction == KeyEvent.VK_S) points.add(createPointOffset(0,-2));
-    }
-
-    private void addPointOnCollExit(int direction){
-        if(direction == KeyEvent.VK_A) points.add(createPointOffset(2,0));
-        if(direction == KeyEvent.VK_D) points.add(createPointOffset(-2,0));
-        if(direction == KeyEvent.VK_W) points.add(createPointOffset(0,2));
-        if(direction == KeyEvent.VK_S) points.add(createPointOffset(0,-2));
-    }
-
 
     private Point createNewPoint(){
         return new Point((int)this.x, (int)this.y);
@@ -138,15 +115,17 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
                 direction = key;
                 if(isColliding) addPoint();
                 calculateAngularSum(direction);
+
             }
             adjustMovement();
+
         }
     }
 
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
         if(key == direction){
-            //stopMovement();
+            stopMovement();
         }
     }
 
@@ -257,15 +236,13 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         position.setLocation(x,y);
     }
 
-    public Point getPosition(){
-        updatePosition();
-        return position;
-    }
-
     public ColoredPath getPlayerPath(){
-        ArrayList<Point> playerPath = new ArrayList<>(points);
-        playerPath.add(createNewPoint());
-        path.setNewPath(playerPath, false);
-        return path;
+        if(isDrawingLines){
+            ArrayList<Point> playerPath = new ArrayList<>(points);
+            playerPath.add(createNewPoint());
+            path.setNewPath(playerPath, false);
+            return path;
+        }
+        return null;
     }
 }
