@@ -46,6 +46,12 @@ public class Player extends ColoredEllipse{
         if(isValidKey(key)) {
             lastKeyPressed = key;
         }
+        if(key == KeyEvent.VK_ENTER){
+            for (Point point : points) {
+                System.out.println("NOW:" + point);
+            }
+            System.out.println("\n");
+        }
     }
 
     public void keyReleased(KeyEvent e) {
@@ -60,11 +66,8 @@ public class Player extends ColoredEllipse{
     public void updatePlayer(ColoredPath inner, ColoredPath outer){
         move();
         updatePosition();
-        if(positionHasChanged()){
-            updatePlayerPath();
-            lastPosition = position;
-        }
         detectSelfCollision();
+        updatePlayerPath();
         detectCollisionShapes(inner, outer);
     }
 
@@ -130,13 +133,16 @@ public class Player extends ColoredEllipse{
     }
 
     private void updatePlayerPath(){
-        ArrayList<Point> playerPath = new ArrayList<>();
-        for (Point point : points) {
-            playerPath.add(point);
-            System.out.println("Ppath: " + point);
+        if(positionHasChanged()){
+            lastPosition.setLocation(position);
+            ArrayList<Point> playerPath = new ArrayList<>();
+            for (Point point : points) {
+                playerPath.add(point);
+                //System.out.println("Ppath: " + point);
+            }
+            playerPath.add(new Point(position));
+            path.setNewPath(playerPath, false);
         }
-        playerPath.add(new Point(position));
-        path.setNewPath(playerPath, false);
     }
 
     private void move(){
@@ -152,7 +158,10 @@ public class Player extends ColoredEllipse{
             else if(direction == -1 && !isOpositeDirection(lastDirection, lastKeyPressed)){
                 direction = lastKeyPressed;
                 calculateAngularSum(direction);
-                addPoint(position);
+                if(direction != lastDirection){
+                    addPoint(position);
+                }
+
 
             }
             else if(direction != -1 && lastKeyPressed != direction && !isOpositeDirection(direction, lastKeyPressed)){
@@ -305,9 +314,9 @@ public class Player extends ColoredEllipse{
             }
         }
         if(foundSelfCollision){
-            /*for (Point point : points) {
+            for (Point point : points) {
                 System.out.println("points:" + point);
-            }*/
+            }
             //System.out.println("pos: " + position);
             addPoint(position);
         }
