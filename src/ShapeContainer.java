@@ -17,7 +17,7 @@ public final class ShapeContainer {
 
     private ShapeContainer() {
         // Player and AI
-        player = new Player(194, 150, 3, 3, 1f);
+        player = new Player(194, 150, 3, 3, 1f, Color.blue);
         aiPlayer = new AIPlayer(50,50,3,3,1.0f, Color.red);
         //player = new Player(5, 58, 3, 3, 2f);
         //player = new Player(58, 5, 3, 3, 2f);
@@ -93,19 +93,8 @@ public final class ShapeContainer {
         }
     }
 
-    public void createRectangle(float x, float y, float width, float height) {
-       addColoredShape(new ColouredRectangle(x,y,width,height));
-    }
-
     public void createColoredPath(ArrayList<Point> points) {
         addColoredShape(new ColoredPath(points, Color.RED, true));
-    }
-
-    public void createPolygon(int[] intsX, int[] intsY){
-        addColoredShape(new ColoredPolygon(intsX, intsY));
-        for (int i = 0; i < intsX.length; i++) {
-            System.out.println("X:" + intsX[i] + ", Y:" + intsY[i]);
-        }
     }
 
     public void addColoredShape(ColoredShape coloredShape){

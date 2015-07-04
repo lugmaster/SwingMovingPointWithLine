@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class AIPlayer extends MoveableEllipse{
+public class AIPlayer extends ColoredEllipse{
 
     private Point position;
 

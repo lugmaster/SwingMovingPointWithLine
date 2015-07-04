@@ -1,9 +1,13 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-public class Player extends MoveableEllipse implements MoveableShape, LineDrawingShape{
+public class Player extends ColoredEllipse{
+
+    private final int LEFT = KeyEvent.VK_A;
+    private final int RIGHT = KeyEvent.VK_D;
+    private final int UP = KeyEvent.VK_W;
+    private final int DOWN = KeyEvent.VK_S;
 
     private boolean isColliding = false;
     private boolean isDrawingLines = true;
@@ -13,10 +17,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private int direction;
     private int startDirection;
     private int angularSum = 0;
-    private final int LEFT = KeyEvent.VK_A;
-    private final int RIGHT = KeyEvent.VK_D;
-    private final int UP = KeyEvent.VK_W;
-    private final int DOWN = KeyEvent.VK_S;
+
 
     private float dx,dy;
 
@@ -26,85 +27,12 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private ArrayList<Point> points;
 
 
-
-    public Player(float x, float y, float width, float height, float moveSpeed){
-        this(x, y, width, height, moveSpeed, Color.BLUE);
-    }
-
     public Player(float x, float y, float width, float height, float moveSpeed, Color color){
         super(x, y, width, height, moveSpeed, color);
         position = new Point((int)x,(int)y);
         points = new ArrayList<>();
         points.add(createNewPoint());
         path = new ColoredPath(color);
-    }
-
-    private void onCollisionExitColoredShape(){
-        addAdjustedPoint(direction);
-        resetAngularSum();
-        ShapeContainer.getInstance().splitInnerShape(points);
-        isDrawingLines = false;
-        clearPoints();
-    }
-
-    private void onCollisionEnterColoredShape(){
-        resetAngularSum();
-        clearPoints();
-        isDrawingLines = true;
-        addAdjustedPoint(direction);
-    }
-
-
-
-    private void detectCollisionShapes(ColoredPath inner, ColoredPath outer) {
-        if(!isColliding && inner.contains(position)){
-            onCollisionEnterColoredShape();
-            isColliding = true;
-            System.out.println("newShape: ");
-        }
-        if(isColliding && outer.contains(position)){
-            onCollisionExitColoredShape();
-            isColliding = false;
-        }
-    }
-
-    private void addPoint() {
-        points.add(createNewPoint());
-    }
-
-    private void addAdjustedPoint(int direction){
-        if(direction == LEFT) points.add(createPointOffset(1,0));
-        if(direction == RIGHT) points.add(createPointOffset(0,0));
-        if(direction == UP) points.add(createPointOffset(0,1));
-        if(direction == DOWN) points.add(createPointOffset(0,0));
-    }
-
-    private Point createNewPoint(){
-        return new Point((int)this.x, (int)this.y);
-    }
-
-    private Point createPointOffset(int x, int y){
-        Point p = new Point((int)this.x + x, (int)this.y + y);
-        System.out.println(p);
-        return p;
-    }
-    public ArrayList<Point> getPoints() {
-        return points;
-    }
-
-    private void clearPoints() {
-        points.clear();
-        path.reset();
-    }
-
-    public void updatePlayer(ColoredPath inner, ColoredPath outer){
-        move();
-        updatePosition();
-        detectCollisionShapes(inner, outer);
-    }
-
-    private void move(){
-       super.move(dx,dy);
     }
 
     public void keyPressed(KeyEvent e) {
@@ -132,6 +60,85 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
             stopMovement();
         }
     }
+
+    public void updatePlayer(ColoredPath inner, ColoredPath outer){
+        move();
+        updatePosition();
+        detectCollisionShapes(inner, outer);
+    }
+
+    public ColoredPath getPlayerPath(){
+        if(isDrawingLines){
+            ArrayList<Point> playerPath = new ArrayList<>(points);
+            playerPath.add(createNewPoint());
+            path.setNewPath(playerPath, false);
+            return path;
+        }
+        return null;
+    }
+
+    public ArrayList<Point> getPoints() {
+        return points;
+    }
+
+    private void detectCollisionShapes(ColoredPath inner, ColoredPath outer) {
+        if(!isColliding && inner.contains(position)){
+            onCollisionEnterColoredShape();
+            isColliding = true;
+            System.out.println("newShape: ");
+        }
+        if(isColliding && outer.contains(position)){
+            onCollisionExitColoredShape();
+            isColliding = false;
+        }
+    }
+
+    private void onCollisionExitColoredShape(){
+        addAdjustedPoint(direction);
+        resetAngularSum();
+        ShapeContainer.getInstance().splitInnerShape(points);
+        isDrawingLines = false;
+        clearPoints();
+    }
+
+    private void onCollisionEnterColoredShape(){
+        resetAngularSum();
+        clearPoints();
+        isDrawingLines = true;
+        addAdjustedPoint(direction);
+    }
+
+    private void addPoint() {
+        points.add(createNewPoint());
+    }
+
+    private void addAdjustedPoint(int direction){
+        if(direction == LEFT) points.add(createPointOffset(1,0));
+        if(direction == RIGHT) points.add(createPointOffset(0,0));
+        if(direction == UP) points.add(createPointOffset(0,1));
+        if(direction == DOWN) points.add(createPointOffset(0,0));
+    }
+
+    private Point createNewPoint(){
+        return new Point((int)this.x, (int)this.y);
+    }
+
+    private Point createPointOffset(int x, int y){
+        Point p = new Point((int)this.x + x, (int)this.y + y);
+        System.out.println(p);
+        return p;
+    }
+
+    private void clearPoints() {
+        points.clear();
+        path.reset();
+    }
+
+    private void move(){
+       super.move(dx,dy);
+    }
+
+
 
     private boolean isValidKey(int key){
         return (key == LEFT || key == RIGHT || key == UP || key == DOWN );
@@ -240,13 +247,5 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         position.setLocation(x,y);
     }
 
-    public ColoredPath getPlayerPath(){
-        if(isDrawingLines){
-            ArrayList<Point> playerPath = new ArrayList<>(points);
-            playerPath.add(createNewPoint());
-            path.setNewPath(playerPath, false);
-            return path;
-        }
-        return null;
-    }
+
 }
