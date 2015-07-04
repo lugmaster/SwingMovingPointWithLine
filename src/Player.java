@@ -10,12 +10,16 @@ public class Player extends ColoredEllipse{
     private final int DOWN = KeyEvent.VK_S;
 
     private boolean isColliding = false;
+    private boolean isFirstCollision = false;
     private boolean isDrawingLines = true;
     private boolean isFirstMove = true;
     private boolean isMoving = false;
 
     private int direction;
-    private int startDirection;
+    private int startDirectionaferStop;
+    private int startDirectionAfterCol;
+    private int lastKeyPressed;
+    private int lastKeyReleased;
     private int angularSum = 0;
 
 
@@ -38,26 +42,14 @@ public class Player extends ColoredEllipse{
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if(isValidKey(key)) {
-            if(isFirstMove){
-                isFirstMove = false;
-                direction = key;
-                startDirection = key;
-            }
-            if(key != direction && !isOpositeDirection(key)){
-                direction = key;
-                if(isColliding) addPoint();
-                calculateAngularSum(direction);
-
-            }
-            adjustMovement();
-
+            lastKeyPressed = key;
         }
     }
 
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
-        if(key == direction){
-            stopMovement();
+        if(isValidKey(key)){
+            lastKeyReleased = key;
         }
     }
 
@@ -162,7 +154,7 @@ public class Player extends ColoredEllipse{
         int keyRight = -1;
         int keyUp = -1;
         int keyDown = -1;
-        switch(startDirection){
+        switch(startDirectionAfterCol){
             case LEFT :
                 keyLeft = LEFT;
                 keyRight = RIGHT;
@@ -244,8 +236,53 @@ public class Player extends ColoredEllipse{
     }
 
     private void updatePosition(){
+        if(isMoving){
+            position.setLocation(x,y);
+        }
+        else {
+            if(isFirstMove){
+                isFirstMove = false;
+                isMoving = true;
+                direction = lastKeyPressed;
+                startDirectionaferStop = lastKeyPressed;
+                if(isFirstCollision){
+                    startDirectionAfterCol = lastKeyPressed;
+                }
+            }
+            if(!isFirstMove && lastKeyPressed != direction && !isOpositeDirection(lastKeyPressed)){
+                direction = lastKeyPressed;
+                if(isColliding){
+                    addPoint();
+                    calculateAngularSum(direction);
+                }
+            }
+        }
         position.setLocation(x,y);
     }
+
+    /*
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        if(!isMoving){
+            if(isValidKey(key)) {
+                if(isFirstMove){
+                    isFirstMove = false;
+                    direction = key;
+                    startDirectionAfterCol = key;
+                }
+                if(key != direction && !isOpositeDirection(key)){
+                    direction = key;
+                    if(isColliding) addPoint();
+                    calculateAngularSum(direction);
+
+                }
+                adjustMovement();
+
+            }
+        }
+
+    }
+     */
 
 
 }
