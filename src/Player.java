@@ -35,34 +35,40 @@ public class Player extends ColoredEllipse{
         super(x, y, width, height, moveSpeed, color);
         position = new Point((int)x,(int)y);
         points = new ArrayList<>();
-        points.add(createNewPoint());
+        points.add(new Point(position));
         path = new ColoredPath(color);
     }
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        if(isValidKey(key)) {
+        if(isValidKey(key) && !isMoving) {
             lastKeyPressed = key;
+            isMoving = true;
         }
     }
 
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
-        if(isValidKey(key)){
+        if(isValidKey(key) && isMoving){
             lastKeyReleased = key;
+            isMoving = false;
         }
     }
 
     public void updatePlayer(ColoredPath inner, ColoredPath outer){
         move();
-        updatePosition();
+        if(isMoving){
+            updatePosition();
+        }
+        else stopMovement();
+
         detectCollisionShapes(inner, outer);
     }
 
     public ColoredPath getPlayerPath(){
         if(isDrawingLines){
             ArrayList<Point> playerPath = new ArrayList<>(points);
-            playerPath.add(createNewPoint());
+            playerPath.add(new Point(position));
             path.setNewPath(playerPath, false);
             return path;
         }
@@ -100,25 +106,16 @@ public class Player extends ColoredEllipse{
         addAdjustedPoint(direction);
     }
 
-    private void addPoint() {
-        points.add(createNewPoint());
+    private void addPoint(Point position) {
+        points.add(new Point(position));
     }
 
     private void addAdjustedPoint(int direction){
-        if(direction == LEFT) points.add(createPointOffset(1,0));
-        if(direction == RIGHT) points.add(createPointOffset(0,0));
-        if(direction == UP) points.add(createPointOffset(0,1));
-        if(direction == DOWN) points.add(createPointOffset(0,0));
-    }
-
-    private Point createNewPoint(){
-        return new Point((int)this.x, (int)this.y);
-    }
-
-    private Point createPointOffset(int x, int y){
-        Point p = new Point((int)this.x + x, (int)this.y + y);
-        //System.out.println(p);
-        return p;
+        int ax = 0;
+        int ay = 0;
+        if(direction == LEFT) ax++;
+        if(direction == UP) ay++;
+        points.add(new Point((int) this.x+ax, (int) this.y+ay));
     }
 
     private void clearPoints() {
@@ -129,8 +126,6 @@ public class Player extends ColoredEllipse{
     private void move(){
        super.move(dx,dy);
     }
-
-
 
     private boolean isValidKey(int key){
         return (key == LEFT || key == RIGHT || key == UP || key == DOWN );
@@ -236,6 +231,7 @@ public class Player extends ColoredEllipse{
     }
 
     private void updatePosition(){
+        position.setLocation(x,y);
         if(isFirstMove){
             isFirstMove = false;
             direction = lastKeyPressed;
@@ -245,37 +241,10 @@ public class Player extends ColoredEllipse{
         if(!isFirstMove && lastKeyPressed != direction && !isOpositeDirection(lastKeyPressed)){
             direction = lastKeyPressed;
             if(isColliding){
-                addPoint();
+                addPoint(position);
                 calculateAngularSum(direction);
             }
             adjustMovement(direction);
         }
-        position.setLocation(x,y);
     }
-
-    /*
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-        if(!isMoving){
-            if(isValidKey(key)) {
-                if(isFirstMove){
-                    isFirstMove = false;
-                    direction = key;
-                    startDirectionAfterCol = key;
-                }
-                if(key != direction && !isOpositeDirection(key)){
-                    direction = key;
-                    if(isColliding) addPoint();
-                    calculateAngularSum(direction);
-
-                }
-
-
-            }
-        }
-
-    }
-     */
-
-
 }
