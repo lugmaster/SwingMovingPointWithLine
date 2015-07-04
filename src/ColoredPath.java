@@ -1,6 +1,7 @@
 import com.sun.javafx.scene.paint.GradientUtils;
 
 import java.awt.*;
+import java.awt.geom.Area;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -17,9 +18,9 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
         this.pathPoints = new ArrayList<>();
     }
 
-    public ColoredPath(Shape s){
-        super(s);
-        this.color = Color.GRAY;
+    public ColoredPath(Area a, Color color){
+        super(a);
+        this.color = color;
         this.pathPoints = new ArrayList<>();
     }
 

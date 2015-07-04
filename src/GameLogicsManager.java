@@ -76,7 +76,6 @@ public class GameLogicsManager {
     }
 
     public void splitInnerShape(ArrayList<Point> splitPoints) {
-
         ColoredPath[] coloredPath = splitpath(innerShape, splitPoints);
         removeOldShapes(innerShape, outerShape);
         if(coloredPath[0].contains(aiPlayer.getPosition())){
@@ -87,7 +86,7 @@ public class GameLogicsManager {
         else{
             innerShape = new ColoredPath(coloredPath[1], true);
             ShapeContainer.getInstance().addColoredShape(innerShape);
-            ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true));
+            ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[0], RandomColorGenerator.generateRandomColor(), true));
         }
         outerShape = subtractInnerPath(innerShape);
         ShapeContainer.getInstance().addColoredShape(outerShape);
@@ -99,7 +98,7 @@ public class GameLogicsManager {
         Area a0 = new Area(outerShapeTemplate);
         Area a1 = new Area(innerShape);
         a0.subtract(a1);
-        return new ColoredPath(a0);
+        return new ColoredPath(a0, outerShapeTemplate.getColor());
     }
 
     private void removeOldShapes(ColoredShape innerShape, ColoredShape outerShape){
