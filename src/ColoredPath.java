@@ -23,6 +23,14 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
         this.pathPoints = new ArrayList<>();
     }
 
+    public ColoredPath(ColoredPath path, boolean closed){
+        this(path.pathPoints, path.color, closed);
+    }
+
+    public ColoredPath(ColoredPath path, Color color, boolean closed){
+        this(path.pathPoints, color, closed);
+    }
+
     public ColoredPath(ArrayList<Point> pathPoints, Color color, boolean closed){
         super();
         this.pathPoints = new ArrayList<>();
@@ -30,6 +38,9 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
         this.color = color;
     }
 
+    public ArrayList<Point> getPathPoints() {
+        return pathPoints;
+    }
 
     public ColoredPath(ArrayList<Point> pathPoints, boolean closed){
         this(pathPoints, Color.YELLOW, closed);

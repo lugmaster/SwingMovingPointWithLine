@@ -120,7 +120,7 @@ public final class Player extends ColoredEllipse{
                     if(i+1 < points.size()){
                         Point p1 = points.get(i);
                         Point p2 = points.get(i+1);
-                        if(ColoredPath.pointIsInLine(p1,p2,position)){
+                        if(GameLogicsManager.pointIsInLine(p1,p2,position)){
                             foundSelfCollision = true;
                         }
                     }
@@ -156,7 +156,7 @@ public final class Player extends ColoredEllipse{
 
     private void onCollisionExitColoredShape(){
         addAdjustedPoint(direction);
-        ShapeContainer.getInstance().splitInnerShape(points);
+        GameLogicsManager.getInstance().splitInnerShape(points);
         isDrawingLines = false;
         clearPoints();
     }
