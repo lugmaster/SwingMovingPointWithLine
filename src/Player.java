@@ -13,6 +13,10 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     private int direction;
     private int startDirection;
     private int angularSum = 0;
+    private final int LEFT = KeyEvent.VK_A;
+    private final int RIGHT = KeyEvent.VK_D;
+    private final int UP = KeyEvent.VK_W;
+    private final int DOWN = KeyEvent.VK_S;
 
     private float dx,dy;
 
@@ -69,10 +73,10 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     private void addAdjustedPoint(int direction){
-        if(direction == KeyEvent.VK_A) points.add(createPointOffset(1,0));
-        if(direction == KeyEvent.VK_D) points.add(createPointOffset(0,0));
-        if(direction == KeyEvent.VK_W) points.add(createPointOffset(0,1));
-        if(direction == KeyEvent.VK_S) points.add(createPointOffset(0,0));
+        if(direction == LEFT) points.add(createPointOffset(1,0));
+        if(direction == RIGHT) points.add(createPointOffset(0,0));
+        if(direction == UP) points.add(createPointOffset(0,1));
+        if(direction == DOWN) points.add(createPointOffset(0,0));
     }
 
     private Point createNewPoint(){
@@ -130,7 +134,7 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     private boolean isValidKey(int key){
-        return (key == KeyEvent.VK_A || key == KeyEvent.VK_D || key == KeyEvent.VK_W || key == KeyEvent.VK_S );
+        return (key == LEFT || key == RIGHT || key == UP || key == DOWN );
     }
 
     private void stopMovement(){
@@ -140,10 +144,10 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
 
     private void adjustMovement() {
         stopMovement();
-        if(direction == KeyEvent.VK_A) dx = -moveSpeed;
-        if(direction == KeyEvent.VK_D) dx = moveSpeed;
-        if(direction == KeyEvent.VK_W) dy = -moveSpeed;
-        if(direction == KeyEvent.VK_S) dy = moveSpeed;
+        if(direction == LEFT) dx = -moveSpeed;
+        if(direction == RIGHT) dx = moveSpeed;
+        if(direction == UP) dy = -moveSpeed;
+        if(direction == DOWN) dy = moveSpeed;
     }
 
     private void calculateAngularSum(int direction) {
@@ -152,25 +156,25 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         int keyUp = -1;
         int keyDown = -1;
         switch(startDirection){
-            case KeyEvent.VK_W :
-                keyLeft = KeyEvent.VK_A;
-                keyRight = KeyEvent.VK_D;
-                keyUp = KeyEvent.VK_W;
-                keyDown = KeyEvent.VK_S;
+            case LEFT :
+                keyLeft = LEFT;
+                keyRight = RIGHT;
+                keyUp = UP;
+                keyDown = DOWN;
                 break;
-            case KeyEvent.VK_A :
-                keyLeft = KeyEvent.VK_S;
+            case RIGHT :
+                keyLeft = DOWN;
                 keyRight = KeyEvent.VK_W;
                 keyUp = KeyEvent.VK_A;
                 keyDown = KeyEvent.VK_D;
                 break;
-            case KeyEvent.VK_D :
+            case UP :
                 keyLeft = KeyEvent.VK_W;
                 keyRight = KeyEvent.VK_S;
                 keyUp = KeyEvent.VK_D;
                 keyDown = KeyEvent.VK_A;
                 break;
-            case KeyEvent.VK_S :
+            case DOWN :
                 keyLeft = KeyEvent.VK_D;
                 keyRight = KeyEvent.VK_A;
                 keyUp = KeyEvent.VK_S;
@@ -220,16 +224,16 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
     }
 
     private boolean isOpositeDirection(int newDirection){
-        return  (direction == KeyEvent.VK_A && newDirection == KeyEvent.VK_D) || (direction == KeyEvent.VK_D && newDirection == KeyEvent.VK_A) ||
-        (direction == KeyEvent.VK_W && newDirection == KeyEvent.VK_S) || (direction == KeyEvent.VK_S && newDirection == KeyEvent.VK_W);
+        return  (direction == LEFT && newDirection == RIGHT) || (direction == RIGHT && newDirection == LEFT) ||
+        (direction == UP && newDirection == DOWN) || (direction == DOWN && newDirection == UP);
     }
 
     private boolean isHorizontalDirection(int direction){
-        return direction == KeyEvent.VK_A || direction == KeyEvent.VK_D;
+        return direction == RIGHT || direction == LEFT;
     }
 
     private boolean isVerticalDirection(int direction){
-        return direction == KeyEvent.VK_W || direction == KeyEvent.VK_S;
+        return direction == UP || direction == DOWN;
     }
 
     private void updatePosition(){
