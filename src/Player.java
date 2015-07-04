@@ -164,21 +164,21 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
                 break;
             case RIGHT :
                 keyLeft = DOWN;
-                keyRight = KeyEvent.VK_W;
-                keyUp = KeyEvent.VK_A;
-                keyDown = KeyEvent.VK_D;
+                keyRight = UP;
+                keyUp = RIGHT;
+                keyDown = LEFT;
                 break;
             case UP :
-                keyLeft = KeyEvent.VK_W;
-                keyRight = KeyEvent.VK_S;
-                keyUp = KeyEvent.VK_D;
-                keyDown = KeyEvent.VK_A;
+                keyLeft = UP;
+                keyRight = DOWN;
+                keyUp = LEFT;
+                keyDown = RIGHT;
                 break;
             case DOWN :
-                keyLeft = KeyEvent.VK_D;
-                keyRight = KeyEvent.VK_A;
-                keyUp = KeyEvent.VK_S;
-                keyDown = KeyEvent.VK_W;
+                keyLeft = LEFT;
+                keyRight = RIGHT;
+                keyUp = DOWN;
+                keyDown = UP;
                 break;
         }
         int tmp = 0;
