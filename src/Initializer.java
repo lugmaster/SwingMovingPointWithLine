@@ -38,7 +38,7 @@ public class Initializer {
         innerPoints.add(p5);
         innerPoints.add(p6);
         innerPoints.add(p7);
-        innerShape = new ColoredPath(innerPoints, Color.BLACK, true);
+        innerShape = new ColoredPath(innerPoints, Color.WHITE, true);
     }
 
     public static Initializer getInstance(){

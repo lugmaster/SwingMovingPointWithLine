@@ -32,7 +32,7 @@ public class GameLogicsManager {
         innerShape = new ColoredPath(Initializer.getInstance().getInnerShape(), true);
         outerShapeTemplate = new ColoredPath(outerShape, true);
         innerShapeTemplate = new ColoredPath(innerShape, true);
-        outerShape = subtractPaths(outerShape, innerShape);
+        outerShape = subtractInnerPath(innerShape);
 
         ShapeContainer.getInstance().addColoredShape(outerShape);
         ShapeContainer.getInstance().addColoredShape(innerShape);
@@ -48,11 +48,11 @@ public class GameLogicsManager {
     public void updateGame(){
         player.update(innerShape, outerShape);
         aiPlayer.update();
-        updateTotalAreaAdded();
-        if(maxTotalAreaReached()){
+        //updateTotalAreaAdded();
+        /*if(maxTotalAreaReached()){
             //finish game;
             System.out.println("WON THE FUCKING GAME!");
-        }
+        }*/
     }
 
     private void updateTotalAreaAdded(){
@@ -76,26 +76,38 @@ public class GameLogicsManager {
     }
 
     public void splitInnerShape(ArrayList<Point> splitPoints) {
+
         ColoredPath[] coloredPath = splitpath(innerShape, splitPoints);
+        removeOldShapes(innerShape, outerShape);
         if(coloredPath[0].contains(aiPlayer.getPosition())){
-            innerShape = coloredPath[0];
-            ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true));
+            innerShape = new ColoredPath(coloredPath[0]);
+            ShapeContainer.getInstance().addColoredShape(innerShape);
+            //ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true));
         }
         else{
-            innerShape = coloredPath[1];
-            ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true));
+            innerShape = new ColoredPath(coloredPath[1]);
+            ShapeContainer.getInstance().addColoredShape(innerShape);
+            //ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true));
         }
-        outerShape = subtractPaths(outerShape, innerShape);
+        outerShape = subtractInnerPath(innerShape);
+        ShapeContainer.getInstance().addColoredShape(outerShape);
     }
 
-    private ColoredPath subtractPaths(ColoredPath outerShape, ColoredPath innerShape){
+    private ColoredPath subtractInnerPath(ColoredPath innerShape){
         Area a0 = new Area(outerShapeTemplate);
+        System.out.println("\nB1:" + a0.getBounds());
         Area a1 = new Area(innerShape);
         a0.subtract(a1);
+        System.out.println("B2:" + a0.getBounds() + "\n");
         return new ColoredPath(a0);
     }
 
-    private ColoredPath[] splitpath(ColoredPath coloredPath, ArrayList<Point> splitPath){
+    private void removeOldShapes(ColoredShape innerShape, ColoredShape outerShape){
+        ShapeContainer.getInstance().removeColoredShape(innerShape);
+        ShapeContainer.getInstance().removeColoredShape(outerShape);
+    }
+
+    private ColoredPath[] splitpath(ColoredPath coloredPath, ArrayList<Point> splitPoints){
         ColoredPath[] coloredPaths = new ColoredPath[2];
         ArrayList<Point> pathA = new ArrayList<>();
         ArrayList<Point> pathB = new ArrayList<>();
@@ -120,26 +132,26 @@ public class GameLogicsManager {
                 if (!finishedPathA) pathA.add(p1);
                 if (!finishedPathB) pathB.add(p1);
                 //both points on same line
-                if(!firstPointFound && !secondPointFound && pointIsInLine(p1,p2,shapeToSplit.get(0)) && pointIsInLine(p1,p2,shapeToSplit.get(shapeToSplit.size()-1))){
-                    if(p1.distance(shapeToSplit.get(0)) < p1.distance(shapeToSplit.get(shapeToSplit.size()-1))){
-                        connectPath(pathA, shapeToSplit);
+                if(!firstPointFound && !secondPointFound && pointIsInLine(p1, p2, splitPoints.get(0)) && pointIsInLine(p1,p2,splitPoints.get(splitPoints.size()-1))){
+                    if(p1.distance(splitPoints.get(0)) < p1.distance(splitPoints.get(splitPoints.size()-1))){
+                        connectPath(pathA, splitPoints);
                     }
-                    else connectPathReverse(pathA, shapeToSplit);
-                    coloredPaths[1] = new ColoredPath(shapeToSplit,true);
+                    else connectPathReverse(pathA, splitPoints);
+                    coloredPaths[1] = new ColoredPath(splitPoints,true);
                     firstPointFound = true;
                     secondPointFound = true;
                 }
 
                 //points on different lines
-                if (!firstPointFound && pointIsInLine(p1, p2, shapeToSplit.get(0))) {
-                    connectPath(pathA, shapeToSplit);
+                if (!firstPointFound && pointIsInLine(p1, p2, splitPoints.get(0))) {
+                    connectPath(pathA, splitPoints);
                     firstPointFound = true;
                     finishedPathA = true;
                     finishedPathB = false;
                 }
-                if (!firstPointFound && pointIsInLine(p1, p2, shapeToSplit.get(shapeToSplit.size() - 1))) {
-                    //System.out.println("Found" + splitPath.get(splitPath.size()-1));
-                    connectPathReverse(pathA, shapeToSplit);
+                if (!firstPointFound && pointIsInLine(p1, p2, splitPoints.get(splitPoints.size() - 1))) {
+                    //System.out.println("Found" + splitPoints.get(splitPoints.size()-1));
+                    connectPathReverse(pathA, splitPoints);
                     firstPointFound = true;
                     finishedPathA = true;
                     finishedPathB = false;
@@ -149,9 +161,9 @@ public class GameLogicsManager {
 
                 if (!secondPointFound) {
                     if(isReversed){
-                        if(pointIsInLine(p1, p2, shapeToSplit.get(0))){
+                        if(pointIsInLine(p1, p2, splitPoints.get(0))){
                             secondPointFound = true;
-                            connectPath(pathB,shapeToSplit);
+                            connectPath(pathB,splitPoints);
                             if(i == shapeToSplit.size()-1){
                                 pathA.add(p2);
                             }
@@ -162,9 +174,9 @@ public class GameLogicsManager {
                         }
                     }
                     else {
-                        if(pointIsInLine(p1,p2,shapeToSplit.get(shapeToSplit.size()-1))){
+                        if(pointIsInLine(p1,p2,splitPoints.get(splitPoints.size()-1))){
                             secondPointFound = true;
-                            connectPathReverse(pathB, shapeToSplit);
+                            connectPathReverse(pathB, splitPoints);
                             if(i == shapeToSplit.size()-1){
                                 pathA.add(p2);
                             }
@@ -179,11 +191,11 @@ public class GameLogicsManager {
         }
         coloredPaths[0] = new ColoredPath(pathA,true);
         if(coloredPaths[1] == null) coloredPaths[1] = new ColoredPath(pathB,true);
-        /*for (Point aFloat : splitPath) {
-            System.out.println("splitPath: " + aFloat);
+        for (Point aFloat : splitPoints) {
+            System.out.println("splitPoints: " + aFloat);
         }
         System.out.println("path0: \n" + coloredPaths[0]);
-        System.out.println("path1: \n" + coloredPaths[1]);*/
+        System.out.println("path1: \n" + coloredPaths[1]);
         return coloredPaths;
     }
 

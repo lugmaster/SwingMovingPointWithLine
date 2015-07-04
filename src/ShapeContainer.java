@@ -35,6 +35,7 @@ public final class ShapeContainer {
 
 
     public void addColoredShape(ColoredShape coloredShape){
+        System.out.println("shape added");
         coloredShapes.add(coloredShape);
     }
 
@@ -44,6 +45,7 @@ public final class ShapeContainer {
 
     public void removeColoredShape(ColoredShape coloredShape){
         if(coloredShapes.contains(coloredShape)) coloredShapes.remove(coloredShape);
+        System.out.println("shape removed");
     }
 
     public void doDrawing(Graphics g){
