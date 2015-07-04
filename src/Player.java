@@ -11,12 +11,12 @@ public class Player extends ColoredEllipse{
 
     private boolean isColliding = false;
     private boolean isFirstCollision = false;
-    private boolean isDrawingLines = true;
+    private boolean isDrawingLines = false;
     private boolean isFirstMove = true;
     private boolean isMoving = false;
 
     private int direction = -1;
-    private int startDirectionaferStop = -1;
+    private int lastDirection = -1;
     private int startDirectionAfterCol = -1;
     private int lastKeyPressed = -1;
     private int lastKeyReleased = -1;
@@ -64,6 +64,9 @@ public class Player extends ColoredEllipse{
     public ColoredPath getPlayerPath(){
         if(isDrawingLines){
             ArrayList<Point> playerPath = new ArrayList<>(points);
+            /*for (Point point : playerPath) {
+                System.out.println("Ppath: " + point);
+            }*/
             playerPath.add(new Point(position));
             path.setNewPath(playerPath, false);
             return path;
@@ -90,14 +93,12 @@ public class Player extends ColoredEllipse{
     private void onCollisionExitColoredShape(){
         addAdjustedPoint(direction);
         ShapeContainer.getInstance().splitInnerShape(points);
-        resetAngularSum();
         isDrawingLines = false;
-        clearPoints();
+        resetPlayerStats();
     }
 
     private void onCollisionEnterColoredShape(){
-        resetAngularSum();
-        clearPoints();
+        resetPlayerStats();
         isDrawingLines = true;
         addAdjustedPoint(direction);
     }
@@ -121,20 +122,29 @@ public class Player extends ColoredEllipse{
 
     private void move(){
         if(lastKeyPressed == -1){
+            if(direction != -1) lastDirection = direction;
             direction = -1;
         }
         else {
-            if(direction == -1 && !isOpositeDirection(startDirectionaferStop)){
+            if(direction == -1 && lastDirection == -1){
+                lastDirection = lastKeyPressed;
                 direction = lastKeyPressed;
-                if(startDirectionaferStop == -1){
-                    startDirectionaferStop = lastKeyPressed;
-                }
+                System.out.println("1.)d:" + direction + ",ld:" +lastDirection);
             }
-            if(lastKeyPressed != direction && !isOpositeDirection(lastKeyPressed)){
+            else if(direction == -1 && !isOpositeDirection(lastDirection, lastKeyPressed)){
+                direction = lastKeyPressed;
+                addPoint(position);
+                calculateAngularSum(direction);
+                System.out.println("2.)d:" + direction + ",ld:" +lastDirection);
+            }
+            else if(direction != -1 && lastKeyPressed != direction && !isOpositeDirection(direction, lastKeyPressed)){
+                lastDirection = direction;
                 direction = lastKeyPressed;
                 System.out.println(lastKeyPressed);
+
                 calculateAngularSum(direction);
                 addPoint(position);
+                System.out.println("3.)d:" + direction + ",ld:" +lastDirection);
             }
         }
         adjustMovement(direction);
@@ -235,9 +245,9 @@ public class Player extends ColoredEllipse{
         angularSum = 0;
     }
 
-    private boolean isOpositeDirection(int newDirection){
-        return  (direction == LEFT && newDirection == RIGHT) || (direction == RIGHT && newDirection == LEFT) ||
-        (direction == UP && newDirection == DOWN) || (direction == DOWN && newDirection == UP);
+    private boolean isOpositeDirection(int oldDirection, int newDirection){
+        return  (oldDirection == LEFT && newDirection == RIGHT) || (oldDirection == RIGHT && newDirection == LEFT) ||
+        (oldDirection == UP && newDirection == DOWN) || (oldDirection == DOWN && newDirection == UP);
     }
 
     private boolean isHorizontalDirection(int direction){
@@ -250,6 +260,16 @@ public class Player extends ColoredEllipse{
 
     private void updatePosition(){
         position.setLocation(x,y);
+    }
 
+    private void resetPlayerStats(){
+        clearPoints();
+        resetAngularSum();
+    }
+
+    private void resetDirections(){
+        direction = -1;
+        lastDirection = -1;
+        lastKeyPressed = -1;
     }
 }
