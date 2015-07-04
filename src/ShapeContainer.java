@@ -6,12 +6,15 @@ import java.util.ArrayList;
 public final class ShapeContainer {
 
     private static ShapeContainer shapeContainer = new ShapeContainer();
+
     private ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
     private ArrayList<MoveableShape> moveableShapes = new ArrayList<>();
     private ArrayList<Point> innerPoints = new ArrayList<>();
     private ArrayList<Point> outerPoints = new ArrayList<>();
+
     private Player player;
     private AIPlayer aiPlayer;
+
     private ColoredPath innerShape;
     private ColoredPath outerShape;
 
@@ -19,11 +22,9 @@ public final class ShapeContainer {
         // Player and AI
         player = new Player(194, 150, 3, 3, 1f, Color.blue);
         aiPlayer = new AIPlayer(50,50,3,3,1.0f, Color.red);
-        //player = new Player(5, 58, 3, 3, 2f);
-        //player = new Player(58, 5, 3, 3, 2f);
-        //player = new Player(150, 192, 3, 3, 2f);
         moveableShapes.add(player);
         moveableShapes.add(aiPlayer);
+
         //outer
         Point p0 = new Point(-3,-3);
         Point p1 = new Point(203,-3);
@@ -71,28 +72,6 @@ public final class ShapeContainer {
         return aiPlayer;
     }
 
-    public ArrayList<ColoredShape> getColoredShapes() {
-        return coloredShapes;
-    }
-
-    public ArrayList<MoveableShape> getMoveableShapes() {
-        return moveableShapes;
-    }
-
-    public void createPlayer(Player player){
-        if(player == null){
-            this.player = player;
-            addMoveableShape(player);
-        }
-    }
-
-    public void createAIPlayer(AIPlayer aiPlayer){
-        if(player == null){
-            this.aiPlayer = aiPlayer;
-            addMoveableShape(aiPlayer);
-        }
-    }
-
     public void createColoredPath(ArrayList<Point> points) {
         addColoredShape(new ColoredPath(points, Color.RED, true));
     }
@@ -101,15 +80,11 @@ public final class ShapeContainer {
         coloredShapes.add(coloredShape);
     }
 
-    public void addMoveableShape(MoveableShape moveableShape){
-        moveableShapes.add(moveableShape);
-    }
-
     public void removeColoredShape(ColoredShape coloredShape){
         if(coloredShapes.contains(coloredShape)) coloredShapes.remove(coloredShape);
     }
 
-    public void doGameCycle(){
+    public void upDateGame(){
         updatePlayer();
     }
 
