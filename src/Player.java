@@ -77,7 +77,7 @@ public class Player extends ColoredEllipse{
         if(!isColliding && inner.contains(position)){
             onCollisionEnterColoredShape();
             isColliding = true;
-            System.out.println("newShape: ");
+            //System.out.println("newShape: ");
         }
         if(isColliding && outer.contains(position)){
             onCollisionExitColoredShape();
@@ -87,8 +87,8 @@ public class Player extends ColoredEllipse{
 
     private void onCollisionExitColoredShape(){
         addAdjustedPoint(direction);
-        resetAngularSum();
         ShapeContainer.getInstance().splitInnerShape(points);
+        resetAngularSum();
         isDrawingLines = false;
         clearPoints();
     }
@@ -117,7 +117,7 @@ public class Player extends ColoredEllipse{
 
     private Point createPointOffset(int x, int y){
         Point p = new Point((int)this.x + x, (int)this.y + y);
-        System.out.println(p);
+        //System.out.println(p);
         return p;
     }
 
@@ -141,7 +141,7 @@ public class Player extends ColoredEllipse{
         dy = 0;
     }
 
-    private void adjustMovement() {
+    private void adjustMovement(int direction) {
         stopMovement();
         if(direction == LEFT) dx = -moveSpeed;
         if(direction == RIGHT) dx = moveSpeed;
@@ -236,26 +236,19 @@ public class Player extends ColoredEllipse{
     }
 
     private void updatePosition(){
-        if(isMoving){
-            position.setLocation(x,y);
+        if(isFirstMove){
+            isFirstMove = false;
+            direction = lastKeyPressed;
+            startDirectionaferStop = lastKeyPressed;
+            adjustMovement(direction);
         }
-        else {
-            if(isFirstMove){
-                isFirstMove = false;
-                isMoving = true;
-                direction = lastKeyPressed;
-                startDirectionaferStop = lastKeyPressed;
-                if(isFirstCollision){
-                    startDirectionAfterCol = lastKeyPressed;
-                }
+        if(!isFirstMove && lastKeyPressed != direction && !isOpositeDirection(lastKeyPressed)){
+            direction = lastKeyPressed;
+            if(isColliding){
+                addPoint();
+                calculateAngularSum(direction);
             }
-            if(!isFirstMove && lastKeyPressed != direction && !isOpositeDirection(lastKeyPressed)){
-                direction = lastKeyPressed;
-                if(isColliding){
-                    addPoint();
-                    calculateAngularSum(direction);
-                }
-            }
+            adjustMovement(direction);
         }
         position.setLocation(x,y);
     }
@@ -276,7 +269,7 @@ public class Player extends ColoredEllipse{
                     calculateAngularSum(direction);
 
                 }
-                adjustMovement();
+
 
             }
         }
