@@ -59,6 +59,7 @@ public class Player extends ColoredEllipse{
         move();
         updatePosition();
         detectCollisionShapes(inner, outer);
+        detectSelfCollision();
     }
 
     public ColoredPath getPlayerPath(){
@@ -266,6 +267,26 @@ public class Player extends ColoredEllipse{
         direction = -1;
         lastDirection = -1;
         lastKeyPressed = -1;
+    }
+
+    private void detectSelfCollision(){
+        boolean foundselfCollision = false;
+        if(points.size() >= 2){
+            for (int i = 0; i < points.size()-1; i++) {
+                if(points.isEmpty() || i < 0)return;
+                if(foundselfCollision){
+                    points.remove(i);
+                    i--;
+                }
+                else{
+                    Point p1 = points.get(i);
+                    Point p2 = points.get(i+1);
+                    if(ColoredPath.pointIsInLine(p1,p2,position)){
+                        foundselfCollision = true;
+                    }
+                }
+            }
+        }
     }
 
 }

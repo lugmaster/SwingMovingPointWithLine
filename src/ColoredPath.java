@@ -1,3 +1,5 @@
+import com.sun.javafx.scene.paint.GradientUtils;
+
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -152,7 +154,7 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
         }
     }
 
-    private boolean pointIsInLine(Point p1, Point p2, Point between){
+    public static boolean pointIsInLine(Point p1, Point p2, Point between){
         if(p1.getX() == between.getX()){
             int y1 = (int)p1.getY();
             int y2 = (int) between.getY();
@@ -171,7 +173,6 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
         }
         return false;
     }
-
 
     @Override
     public Color getColor() {
