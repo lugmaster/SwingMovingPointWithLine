@@ -9,45 +9,24 @@ public final class ShapeContainer {
 
     private ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
     private ArrayList<MoveableShape> moveableShapes = new ArrayList<>();
-    private ArrayList<Point> innerPoints = new ArrayList<>();
-    private ArrayList<Point> outerPoints = new ArrayList<>();
 
     private Player player;
     private AIPlayer aiPlayer;
 
     private ColoredPath innerShape;
     private ColoredPath outerShape;
+    private final Area outerShapeTemplate;
 
     private ShapeContainer() {
         // Player and AI
-        player = new Player(194, 150, 3, 3, 1f, Color.blue);
-        aiPlayer = new AIPlayer(50,50,3,3,1.0f, Color.red);
+        player = Initializer.getInstance().getPlayer();
+        aiPlayer = Initializer.getInstance().getAiPlayer();
         moveableShapes.add(player);
         moveableShapes.add(aiPlayer);
 
-        //outer
-        Point p0 = new Point(-3,-3);
-        Point p1 = new Point(203,-3);
-        Point p2 = new Point(203,203);
-        Point p3 = new Point(-3,203);
-
-        //inner
-        Point p4 = new Point(9,190);
-        Point p5 = new Point(9,9);
-        Point p6 = new Point(190,9);
-        Point p7 = new Point(190,190);
-        outerPoints.add(p0);
-        outerPoints.add(p1);
-        outerPoints.add(p2);
-        outerPoints.add(p3);
-
-        innerPoints.add(p4);
-        innerPoints.add(p5);
-        innerPoints.add(p6);
-        innerPoints.add(p7);
-
-        outerShape = new ColoredPath(outerPoints, true);
-        innerShape = new ColoredPath(innerPoints, true);
+        outerShape = new ColoredPath(Initializer.getInstance().getOuterPoints(), true);
+        innerShape = new ColoredPath(Initializer.getInstance().getInnerPoints(), true);
+        outerShapeTemplate = new Area(outerShape);
 
         Area a0 = new Area(outerShape);
         Area a1 = new Area(innerShape);
