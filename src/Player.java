@@ -252,14 +252,6 @@ public class Player extends ColoredEllipse{
         (oldDirection == NORTH && newDirection == SOUTH) || (oldDirection == SOUTH && newDirection == NORTH);
     }
 
-    private boolean isHorizontalDirection(int direction){
-        return direction == EAST || direction == WEST;
-    }
-
-    private boolean isVerticalDirection(int direction){
-        return direction == NORTH || direction == SOUTH;
-    }
-
     private void updatePosition(){
         position.setLocation(x,y);
     }
@@ -267,6 +259,7 @@ public class Player extends ColoredEllipse{
     private void resetPlayerStats(){
         clearPoints();
         resetAngularSum();
+        //resetDirections();
     }
 
     private void resetDirections(){
@@ -274,4 +267,5 @@ public class Player extends ColoredEllipse{
         lastDirection = -1;
         lastKeyPressed = -1;
     }
+
 }

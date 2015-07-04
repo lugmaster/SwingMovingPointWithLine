@@ -92,7 +92,7 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
                     finishedPathB = false;
                 }
                 if (!firstPointFound && pointIsInLine(p1, p2, splitPath.get(splitPath.size() - 1))) {
-                    System.out.println("Found" + splitPath.get(splitPath.size()-1));
+                    //System.out.println("Found" + splitPath.get(splitPath.size()-1));
                     connectPathReverse(pathA, splitPath);
                     firstPointFound = true;
                     finishedPathA = true;
@@ -133,11 +133,11 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
         }
         coloredPaths[0] = new ColoredPath(pathA,true);
         if(coloredPaths[1] == null) coloredPaths[1] = new ColoredPath(pathB,true);
-        for (Point aFloat : splitPath) {
+        /*for (Point aFloat : splitPath) {
             System.out.println("splitPath: " + aFloat);
         }
         System.out.println("path0: \n" + coloredPaths[0]);
-        System.out.println("path1: \n" + coloredPaths[1]);
+        System.out.println("path1: \n" + coloredPaths[1]);*/
         return coloredPaths;
     }
 

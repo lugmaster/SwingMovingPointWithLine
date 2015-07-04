@@ -121,7 +121,7 @@ public final class ShapeContainer {
         Graphics2D g2d = (Graphics2D) g;
         if(!coloredShapes.isEmpty()) {
             for(ColoredShape coloredShape : coloredShapes){
-                g2d.setColor(RandomColorGenerator.generateRandomColor());
+                g2d.setColor(coloredShape.getColor());
                 g2d.draw(coloredShape);
                 g2d.fill(coloredShape);
             }
