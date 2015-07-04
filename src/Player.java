@@ -41,27 +41,28 @@ public class Player extends ColoredEllipse{
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
-        if(isValidKey(key) && !isMoving) {
-            lastKeyPressed = key;
+        if(isValidKey(key)) {
             isMoving = true;
+            lastKeyPressed = key;
         }
     }
 
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
-        if(isValidKey(key) && isMoving){
-            lastKeyReleased = key;
-            isMoving = false;
+        if(isValidKey(key)){
+            if(key == lastKeyPressed){
+                isMoving = false;
+                lastKeyPressed = -1;
+            }
         }
     }
 
     public void updatePlayer(ColoredPath inner, ColoredPath outer){
-        move();
         if(isMoving){
-            updatePosition();
+            move();
         }
         else stopMovement();
-
+        updatePosition();
         detectCollisionShapes(inner, outer);
     }
 
@@ -124,7 +125,21 @@ public class Player extends ColoredEllipse{
     }
 
     private void move(){
-       super.move(dx,dy);
+        if(isFirstMove){
+            isFirstMove = false;
+            direction = lastKeyPressed;
+            startDirectionaferStop = lastKeyPressed;
+            adjustMovement(direction);
+        }
+        if(!isFirstMove && lastKeyPressed != direction && !isOpositeDirection(lastKeyPressed)){
+            direction = lastKeyPressed;
+            if(isColliding){
+                addPoint(position);
+                calculateAngularSum(direction);
+            }
+            adjustMovement(direction);
+        }
+        super.move(dx,dy);
     }
 
     private boolean isValidKey(int key){
@@ -232,19 +247,6 @@ public class Player extends ColoredEllipse{
 
     private void updatePosition(){
         position.setLocation(x,y);
-        if(isFirstMove){
-            isFirstMove = false;
-            direction = lastKeyPressed;
-            startDirectionaferStop = lastKeyPressed;
-            adjustMovement(direction);
-        }
-        if(!isFirstMove && lastKeyPressed != direction && !isOpositeDirection(lastKeyPressed)){
-            direction = lastKeyPressed;
-            if(isColliding){
-                addPoint(position);
-                calculateAngularSum(direction);
-            }
-            adjustMovement(direction);
-        }
+
     }
 }
