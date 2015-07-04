@@ -36,6 +36,7 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
     }
 
     public void setNewPath(ArrayList<Point> newPoints, boolean closed){
+        this.reset();
         if(!pathPoints.isEmpty()) pathPoints.clear();
         if(newPoints.isEmpty()){
             moveTo(0,0);
