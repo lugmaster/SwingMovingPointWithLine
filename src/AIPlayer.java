@@ -13,4 +13,8 @@ public class AIPlayer extends ColoredEllipse{
         return position;
     }
 
+    public void update(){
+
+    }
+
 }

@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.geom.Area;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public final class ShapeContainer {
@@ -28,8 +27,9 @@ public final class ShapeContainer {
         innerShape = new ColoredPath(Initializer.getInstance().getInnerPoints(), true);
         outerShapeTemplate = new Area(outerShape);
 
-        Area a0 = new Area(outerShape);
+
         Area a1 = new Area(innerShape);
+        Area a0 = new Area(outerShapeTemplate);
         a0.subtract(a1);
         outerShape = new ColoredPath(a0);
 
@@ -68,7 +68,7 @@ public final class ShapeContainer {
     }
 
     private void updatePlayer(){
-        getPlayer().updatePlayer(innerShape, outerShape);
+        getPlayer().update(innerShape, outerShape);
     }
 
     public void doDrawing(Graphics g){

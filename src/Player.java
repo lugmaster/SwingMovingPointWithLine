@@ -67,7 +67,7 @@ public final class Player extends ColoredEllipse{
         }
     }
 
-    public void updatePlayer(ColoredPath inner, ColoredPath outer){
+    public void update(ColoredPath inner, ColoredPath outer){
         move();
         updatePosition();
         detectSelfCollision();
