@@ -80,25 +80,25 @@ public class GameLogicsManager {
         ColoredPath[] coloredPath = splitpath(innerShape, splitPoints);
         removeOldShapes(innerShape, outerShape);
         if(coloredPath[0].contains(aiPlayer.getPosition())){
-            innerShape = new ColoredPath(coloredPath[0]);
+            innerShape = new ColoredPath(coloredPath[0], true);
             ShapeContainer.getInstance().addColoredShape(innerShape);
-            //ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true));
+            ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true));
         }
         else{
-            innerShape = new ColoredPath(coloredPath[1]);
+            innerShape = new ColoredPath(coloredPath[1], true);
             ShapeContainer.getInstance().addColoredShape(innerShape);
-            //ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true));
+            ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true));
         }
         outerShape = subtractInnerPath(innerShape);
         ShapeContainer.getInstance().addColoredShape(outerShape);
+        //ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[0], RandomColorGenerator.generateRandomColor(), true));
+        //ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true));
     }
 
     private ColoredPath subtractInnerPath(ColoredPath innerShape){
         Area a0 = new Area(outerShapeTemplate);
-        System.out.println("\nB1:" + a0.getBounds());
         Area a1 = new Area(innerShape);
         a0.subtract(a1);
-        System.out.println("B2:" + a0.getBounds() + "\n");
         return new ColoredPath(a0);
     }
 
@@ -190,7 +190,7 @@ public class GameLogicsManager {
             }
         }
         coloredPaths[0] = new ColoredPath(pathA,true);
-        if(coloredPaths[1] == null) coloredPaths[1] = new ColoredPath(pathB,true);
+        coloredPaths[1] = new ColoredPath(pathB,true);
         for (Point aFloat : splitPoints) {
             System.out.println("splitPoints: " + aFloat);
         }
