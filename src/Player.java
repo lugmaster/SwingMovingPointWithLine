@@ -10,17 +10,13 @@ public class Player extends ColoredEllipse{
     private final int SOUTH = KeyEvent.VK_S;
 
     private boolean isColliding = false;
-    private boolean isFirstCollision = false;
     private boolean isDrawingLines = false;
-    private boolean isFirstMove = true;
     private boolean isMoving = false;
 
     private int direction = -1;
     private int lastDirection = -1;
-    private int startDirectionAfterCol = -2;
     private int lastKeyPressed = -1;
     private int lastKeyReleased = -1;
-    private int angularSum = 0;
 
 
     private float dx,dy;
@@ -50,7 +46,9 @@ public class Player extends ColoredEllipse{
             for (Point point : points) {
                 System.out.println("NOW:" + point);
             }
+            System.out.println("NOWPOS:" + position);
             System.out.println("\n");
+            updatePlayerPath();
         }
     }
 
@@ -78,10 +76,6 @@ public class Player extends ColoredEllipse{
         return null;
     }
 
-    public ArrayList<Point> getPoints() {
-        return points;
-    }
-
     private void detectCollisionShapes(ColoredPath inner, ColoredPath outer) {
         if(!isColliding && inner.contains(position)){
             onCollisionEnterColoredShape();
@@ -98,7 +92,6 @@ public class Player extends ColoredEllipse{
         addAdjustedPoint(direction);
         ShapeContainer.getInstance().splitInnerShape(points);
         isDrawingLines = false;
-        startDirectionAfterCol = -2;
         resetPlayerStats();
     }
 
@@ -106,8 +99,6 @@ public class Player extends ColoredEllipse{
         resetPlayerStats();
         isDrawingLines = true;
         addAdjustedPoint(direction);
-        startDirectionAfterCol = direction;
-        calculateAngularSum(direction);
     }
 
     private void addPoint(Point position) {
@@ -157,7 +148,6 @@ public class Player extends ColoredEllipse{
             }
             else if(direction == -1 && !isOpositeDirection(lastDirection, lastKeyPressed)){
                 direction = lastKeyPressed;
-                calculateAngularSum(direction);
                 if(direction != lastDirection){
                     addPoint(position);
                 }
@@ -167,7 +157,6 @@ public class Player extends ColoredEllipse{
             else if(direction != -1 && lastKeyPressed != direction && !isOpositeDirection(direction, lastKeyPressed)){
                 lastDirection = direction;
                 direction = lastKeyPressed;
-                calculateAngularSum(direction);
                 addPoint(position);
             }
         }
@@ -198,79 +187,6 @@ public class Player extends ColoredEllipse{
         if(direction == SOUTH) dy = moveSpeed;
     }
 
-    private void calculateAngularSum(int direction) {
-        int keyLeft = -2;
-        int keyRight = -2;
-        int keyUp = -2;
-        int keyDown = -2;
-        switch(startDirectionAfterCol){
-            case NORTH :
-                keyLeft = WEST;
-                keyRight = EAST;
-                keyUp = NORTH;
-                keyDown = SOUTH;
-                break;
-            case WEST :
-                keyLeft = SOUTH;
-                keyRight = NORTH;
-                keyUp = WEST;
-                keyDown = EAST;
-                break;
-            case EAST :
-                keyLeft = NORTH;
-                keyRight = SOUTH;
-                keyUp = EAST;
-                keyDown = WEST;
-                break;
-            case SOUTH :
-                keyLeft = EAST;
-                keyRight = WEST;
-                keyUp = SOUTH;
-                keyDown = NORTH;
-                break;
-        }
-        int tmp = 0;
-        if(Math.abs(angularSum)%4 == 0) angularSum = 0;
-
-        if(angularSum == 0) {
-            if(direction == keyLeft) tmp--;
-            if(direction == keyRight) tmp++;
-        }
-        if(angularSum > 0) {
-            if(angularSum == 1){
-                if(direction == keyDown) tmp++;
-                if(direction == keyUp) tmp--;
-            }
-            if(angularSum == 2) {
-                if(direction == keyLeft) tmp++;
-                if(direction == keyRight) tmp--;
-            }
-            if(angularSum == 3) {
-                if(direction == keyDown) tmp--;
-                if(direction == keyUp) tmp++;
-            }
-        }
-        if(angularSum < 0) {
-            if(angularSum == -1){
-                if(direction == keyDown) tmp--;
-                if(direction == keyUp) tmp++;
-            }
-            if(angularSum == -2) {
-                if(direction == keyLeft) tmp++;
-                if(direction == keyRight) tmp--;
-            }
-            if(angularSum == -3) {
-                if(direction == keyDown) tmp++;
-                if(direction == keyUp) tmp--;
-            }
-        }
-        angularSum += tmp;
-    }
-
-    private void resetAngularSum(){
-        angularSum = 0;
-    }
-
     private boolean isOpositeDirection(int oldDirection, int newDirection){
         return  (oldDirection == WEST && newDirection == EAST) || (oldDirection == EAST && newDirection == WEST) ||
         (oldDirection == NORTH && newDirection == SOUTH) || (oldDirection == SOUTH && newDirection == NORTH);
@@ -282,8 +198,6 @@ public class Player extends ColoredEllipse{
 
     private void resetPlayerStats(){
         clearPoints();
-        resetAngularSum();
-        //resetDirections();
     }
 
     private void resetDirections(){
