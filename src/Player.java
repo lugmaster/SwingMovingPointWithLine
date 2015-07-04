@@ -26,6 +26,7 @@ public class Player extends ColoredEllipse{
     private float dx,dy;
 
     private Point position;
+    private Point lastPosition;
     private ColoredPath path;
 
     private ArrayList<Point> points;
@@ -58,18 +59,13 @@ public class Player extends ColoredEllipse{
     public void updatePlayer(ColoredPath inner, ColoredPath outer){
         move();
         updatePosition();
-        detectCollisionShapes(inner, outer);
         detectSelfCollision();
+        updatePlayerPath();
+        detectCollisionShapes(inner, outer);
     }
 
     public ColoredPath getPlayerPath(){
         if(isDrawingLines){
-            ArrayList<Point> playerPath = new ArrayList<>(points);
-            /*for (Point point : playerPath) {
-                System.out.println("Ppath: " + point);
-            }*/
-            playerPath.add(new Point(position));
-            path.setNewPath(playerPath, false);
             return path;
         }
         return null;
@@ -123,6 +119,21 @@ public class Player extends ColoredEllipse{
     private void clearPoints() {
         points.clear();
         path.reset();
+    }
+
+    private boolean positionHasChanged(){
+        return !position.equals(lastPosition);
+    }
+
+    private void updatePlayerPath(){
+        if(positionHasChanged()){
+            ArrayList<Point> playerPath = new ArrayList<>(points);
+            for (Point point : playerPath) {
+                System.out.println("Ppath: " + point);
+            }
+            playerPath.add(new Point(position));
+            path.setNewPath(playerPath, false);
+        }
     }
 
     private void move(){
@@ -270,22 +281,32 @@ public class Player extends ColoredEllipse{
     }
 
     private void detectSelfCollision(){
-        boolean foundselfCollision = false;
+        boolean foundSelfCollision = false;
         if(points.size() >= 2){
-            for (int i = 0; i < points.size()-1; i++) {
+            for (int i = 0; i < points.size(); i++) {
                 if(points.isEmpty() || i < 0)return;
-                if(foundselfCollision){
+                if(foundSelfCollision){
                     points.remove(i);
                     i--;
                 }
                 else{
-                    Point p1 = points.get(i);
-                    Point p2 = points.get(i+1);
-                    if(ColoredPath.pointIsInLine(p1,p2,position)){
-                        foundselfCollision = true;
+                    if(i+1 < points.size()){
+                        Point p1 = points.get(i);
+                        Point p2 = points.get(i+1);
+                        if(ColoredPath.pointIsInLine(p1,p2,position)){
+                            foundSelfCollision = true;
+                            System.out.println("found selfcoll: \n" + p1 + "\n" + p2);
+                        }
                     }
                 }
             }
+        }
+        if(foundSelfCollision){
+            for (Point point : points) {
+                System.out.println("points:" + point);
+            }
+            System.out.println("pos: " + position);
+            addPoint(position);
         }
     }
 
