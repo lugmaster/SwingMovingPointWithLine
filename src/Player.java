@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 public class Player extends ColoredEllipse{
 
-    private final int LEFT = KeyEvent.VK_A;
-    private final int RIGHT = KeyEvent.VK_D;
-    private final int UP = KeyEvent.VK_W;
-    private final int DOWN = KeyEvent.VK_S;
+    private final int WEST = KeyEvent.VK_A;
+    private final int EAST = KeyEvent.VK_D;
+    private final int NORTH = KeyEvent.VK_W;
+    private final int SOUTH = KeyEvent.VK_S;
 
     private boolean isColliding = false;
     private boolean isFirstCollision = false;
@@ -17,7 +17,7 @@ public class Player extends ColoredEllipse{
 
     private int direction = -1;
     private int lastDirection = -1;
-    private int startDirectionAfterCol = -1;
+    private int startDirectionAfterCol = -2;
     private int lastKeyPressed = -1;
     private int lastKeyReleased = -1;
     private int angularSum = 0;
@@ -94,6 +94,7 @@ public class Player extends ColoredEllipse{
         addAdjustedPoint(direction);
         ShapeContainer.getInstance().splitInnerShape(points);
         isDrawingLines = false;
+        startDirectionAfterCol = -2;
         resetPlayerStats();
     }
 
@@ -101,20 +102,20 @@ public class Player extends ColoredEllipse{
         resetPlayerStats();
         isDrawingLines = true;
         addAdjustedPoint(direction);
-        //calculateAngularSum(direction);
         startDirectionAfterCol = direction;
+        calculateAngularSum(direction);
     }
 
     private void addPoint(Point position) {
         points.add(new Point(position));
-        System.out.println(angularSum);
+        //System.out.println(angularSum);
     }
 
     private void addAdjustedPoint(int direction){
         int ax = 0;
         int ay = 0;
-        if(direction == LEFT) ax++;
-        if(direction == UP) ay++;
+        if(direction == WEST) ax++;
+        if(direction == NORTH) ay++;
         points.add(new Point((int) this.x + ax, (int) this.y + ay));
     }
 
@@ -146,12 +147,14 @@ public class Player extends ColoredEllipse{
                 addPoint(position);
             }
         }
+        //System.out.println(direction);
+        //System.out.println(startDirectionAfterCol + "\n");
         adjustMovement(direction);
         super.move(dx,dy);
     }
 
     private boolean isValidKey(int key){
-        return (key == LEFT || key == RIGHT || key == UP || key == DOWN );
+        return (key == WEST || key == EAST || key == NORTH || key == SOUTH);
     }
 
     private boolean isValidDirection(int key){
@@ -165,41 +168,41 @@ public class Player extends ColoredEllipse{
 
     private void adjustMovement(int direction) {
         stopMovement();
-        if(direction == LEFT) dx = -moveSpeed;
-        if(direction == RIGHT) dx = moveSpeed;
-        if(direction == UP) dy = -moveSpeed;
-        if(direction == DOWN) dy = moveSpeed;
+        if(direction == WEST) dx = -moveSpeed;
+        if(direction == EAST) dx = moveSpeed;
+        if(direction == NORTH) dy = -moveSpeed;
+        if(direction == SOUTH) dy = moveSpeed;
     }
 
     private void calculateAngularSum(int direction) {
-        int keyLeft = -1;
-        int keyRight = -1;
-        int keyUp = -1;
-        int keyDown = -1;
+        int keyLeft = -2;
+        int keyRight = -2;
+        int keyUp = -2;
+        int keyDown = -2;
         switch(startDirectionAfterCol){
-            case LEFT :
-                keyLeft = LEFT;
-                keyRight = RIGHT;
-                keyUp = UP;
-                keyDown = DOWN;
+            case NORTH :
+                keyLeft = WEST;
+                keyRight = EAST;
+                keyUp = NORTH;
+                keyDown = SOUTH;
                 break;
-            case RIGHT :
-                keyLeft = DOWN;
-                keyRight = UP;
-                keyUp = RIGHT;
-                keyDown = LEFT;
+            case WEST :
+                keyLeft = SOUTH;
+                keyRight = NORTH;
+                keyUp = WEST;
+                keyDown = EAST;
                 break;
-            case UP :
-                keyLeft = UP;
-                keyRight = DOWN;
-                keyUp = LEFT;
-                keyDown = RIGHT;
+            case EAST :
+                keyLeft = NORTH;
+                keyRight = SOUTH;
+                keyUp = EAST;
+                keyDown = WEST;
                 break;
-            case DOWN :
-                keyLeft = LEFT;
-                keyRight = RIGHT;
-                keyUp = DOWN;
-                keyDown = UP;
+            case SOUTH :
+                keyLeft = EAST;
+                keyRight = WEST;
+                keyUp = SOUTH;
+                keyDown = NORTH;
                 break;
         }
         int tmp = 0;
@@ -245,16 +248,16 @@ public class Player extends ColoredEllipse{
     }
 
     private boolean isOpositeDirection(int oldDirection, int newDirection){
-        return  (oldDirection == LEFT && newDirection == RIGHT) || (oldDirection == RIGHT && newDirection == LEFT) ||
-        (oldDirection == UP && newDirection == DOWN) || (oldDirection == DOWN && newDirection == UP);
+        return  (oldDirection == WEST && newDirection == EAST) || (oldDirection == EAST && newDirection == WEST) ||
+        (oldDirection == NORTH && newDirection == SOUTH) || (oldDirection == SOUTH && newDirection == NORTH);
     }
 
     private boolean isHorizontalDirection(int direction){
-        return direction == RIGHT || direction == LEFT;
+        return direction == EAST || direction == WEST;
     }
 
     private boolean isVerticalDirection(int direction){
-        return direction == UP || direction == DOWN;
+        return direction == NORTH || direction == SOUTH;
     }
 
     private void updatePosition(){
