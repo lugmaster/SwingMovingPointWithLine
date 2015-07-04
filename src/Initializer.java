@@ -8,6 +8,9 @@ public class Initializer {
     private ArrayList<Point> innerPoints = new ArrayList<>();
     private ArrayList<Point> outerPoints = new ArrayList<>();
 
+    private ColoredPath outerShape;
+    private ColoredPath innerShape;
+
     private Player player;
     private AIPlayer aiPlayer;
 
@@ -24,6 +27,7 @@ public class Initializer {
         outerPoints.add(p1);
         outerPoints.add(p2);
         outerPoints.add(p3);
+        outerShape = new ColoredPath(outerPoints, Color.DARK_GRAY, true);
 
         //inner
         Point p4 = new Point(9,190);
@@ -34,6 +38,7 @@ public class Initializer {
         innerPoints.add(p5);
         innerPoints.add(p6);
         innerPoints.add(p7);
+        innerShape = new ColoredPath(innerPoints, Color.BLACK, true);
     }
 
     public static Initializer getInstance(){
@@ -50,12 +55,12 @@ public class Initializer {
         return aiPlayer;
     }
 
-    public ArrayList<Point> getInnerPoints(){
-        return innerPoints;
+    public ColoredPath getInnerShape(){
+        return innerShape;
     }
 
-    public ArrayList<Point> getOuterPoints(){
-        return outerPoints;
+    public ColoredPath getOuterShape(){
+        return outerShape;
     }
 
 }

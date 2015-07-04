@@ -28,8 +28,8 @@ public class GameLogicsManager {
         aiPlayer = Initializer.getInstance().getAiPlayer();
         ShapeContainer.getInstance().addAiPlayer(aiPlayer);
 
-        outerShape = new ColoredPath(Initializer.getInstance().getOuterPoints(), true);
-        innerShape = new ColoredPath(Initializer.getInstance().getInnerPoints(), true);
+        outerShape = new ColoredPath(Initializer.getInstance().getOuterShape(), true);
+        innerShape = new ColoredPath(Initializer.getInstance().getInnerShape(), true);
         outerShapeTemplate = new ColoredPath(outerShape, true);
         innerShapeTemplate = new ColoredPath(innerShape, true);
         outerShape = subtractPaths(outerShape, innerShape);

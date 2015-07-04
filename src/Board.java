@@ -44,7 +44,7 @@ public class Board extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
-        GameLogicsManager.getInstance().updateGame();
+        gameLogicsManager.updateGame();
     }
 
     private class TAdapter extends KeyAdapter {
