@@ -16,11 +16,9 @@ public final class Player extends ColoredEllipse{
     private int lastDirection = -1;
     private int lastKeyPressed = -1;
 
-
-    private float dx,dy;
-
     private Point position;
     private Point lastPosition;
+
     private ColoredPath path;
 
     private ArrayList<Point> points;
@@ -101,8 +99,8 @@ public final class Player extends ColoredEllipse{
                 addPoint(position);
             }
         }
-        adjustMovement(direction);
-        super.move(dx,dy);
+        float[] deltaPos = adjustMovement(direction);
+        super.move(deltaPos[0],deltaPos[1]);
     }
 
     private void updatePosition(){
@@ -194,17 +192,13 @@ public final class Player extends ColoredEllipse{
         return (key == WEST || key == EAST || key == NORTH || key == SOUTH);
     }
 
-    private void stopMovement(){
-        dx = 0;
-        dy = 0;
-    }
-
-    private void adjustMovement(int direction) {
-        stopMovement();
-        if(direction == WEST) dx = -moveSpeed;
-        if(direction == EAST) dx = moveSpeed;
-        if(direction == NORTH) dy = -moveSpeed;
-        if(direction == SOUTH) dy = moveSpeed;
+    private float[] adjustMovement(int direction) {
+        float[] deltaPos = {0,0};
+        if(direction == WEST) deltaPos[0] = -moveSpeed;
+        if(direction == EAST) deltaPos[0] = moveSpeed;
+        if(direction == NORTH) deltaPos[1] = -moveSpeed;
+        if(direction == SOUTH) deltaPos[1] = moveSpeed;
+        return deltaPos;
     }
 
     private boolean isOpositeDirection(int oldDirection, int newDirection){
