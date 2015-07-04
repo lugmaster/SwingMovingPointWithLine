@@ -101,10 +101,13 @@ public class Player extends ColoredEllipse{
         resetPlayerStats();
         isDrawingLines = true;
         addAdjustedPoint(direction);
+        //calculateAngularSum(direction);
+        startDirectionAfterCol = direction;
     }
 
     private void addPoint(Point position) {
         points.add(new Point(position));
+        System.out.println(angularSum);
     }
 
     private void addAdjustedPoint(int direction){
@@ -129,22 +132,18 @@ public class Player extends ColoredEllipse{
             if(direction == -1 && lastDirection == -1){
                 lastDirection = lastKeyPressed;
                 direction = lastKeyPressed;
-                System.out.println("1.)d:" + direction + ",ld:" +lastDirection);
             }
             else if(direction == -1 && !isOpositeDirection(lastDirection, lastKeyPressed)){
                 direction = lastKeyPressed;
-                addPoint(position);
                 calculateAngularSum(direction);
-                System.out.println("2.)d:" + direction + ",ld:" +lastDirection);
+                addPoint(position);
+
             }
             else if(direction != -1 && lastKeyPressed != direction && !isOpositeDirection(direction, lastKeyPressed)){
                 lastDirection = direction;
                 direction = lastKeyPressed;
-                System.out.println(lastKeyPressed);
-
                 calculateAngularSum(direction);
                 addPoint(position);
-                System.out.println("3.)d:" + direction + ",ld:" +lastDirection);
             }
         }
         adjustMovement(direction);
