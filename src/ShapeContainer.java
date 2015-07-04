@@ -18,7 +18,7 @@ public final class ShapeContainer {
 
     public static ShapeContainer getInstance(){
         if(shapeContainer == null)
-            return new ShapeContainer();
+            shapeContainer = new ShapeContainer();
         return shapeContainer;
     }
 

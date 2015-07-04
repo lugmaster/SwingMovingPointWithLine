@@ -41,7 +41,7 @@ public class GameLogicsManager {
 
     public static GameLogicsManager getInstance(){
         if(gameLogicsManager == null)
-            return new GameLogicsManager();
+            gameLogicsManager = new GameLogicsManager();
         return gameLogicsManager;
     }
 

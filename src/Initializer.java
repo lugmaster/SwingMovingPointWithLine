@@ -1,9 +1,6 @@
 import java.awt.*;
 import java.util.ArrayList;
 
-/**
- * Created by Lukas Normal on 29.06.2015.
- */
 public class Initializer {
 
     private static Initializer initializer = new Initializer();
@@ -41,7 +38,7 @@ public class Initializer {
 
     public static Initializer getInstance(){
         if(initializer == null)
-            return new Initializer();
+            initializer = new Initializer();
         return initializer;
     }
 
