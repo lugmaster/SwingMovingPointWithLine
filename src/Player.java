@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class Player extends ColoredEllipse{
+public final class Player extends ColoredEllipse{
 
     private final int WEST = KeyEvent.VK_A;
     private final int EAST = KeyEvent.VK_D;
@@ -11,12 +11,10 @@ public class Player extends ColoredEllipse{
 
     private boolean isColliding = false;
     private boolean isDrawingLines = false;
-    private boolean isMoving = false;
 
     private int direction = -1;
     private int lastDirection = -1;
     private int lastKeyPressed = -1;
-    private int lastKeyReleased = -1;
 
 
     private float dx,dy;
@@ -37,11 +35,15 @@ public class Player extends ColoredEllipse{
         path = new ColoredPath(color);
     }
 
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-        if(isValidKey(key)) {
-            lastKeyPressed = key;
+    public ColoredPath getPlayerPath(){
+        if(isDrawingLines){
+            return path;
         }
+        return null;
+    }
+
+    //Debug INFO remove before FINISH
+        /*
         if(key == KeyEvent.VK_ENTER){
             for (Point point : points) {
                 System.out.println("NOW:" + point);
@@ -49,6 +51,12 @@ public class Player extends ColoredEllipse{
             System.out.println("NOWPOS:" + position);
             System.out.println("\n");
             updatePlayerPath();
+        }*/
+
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        if(isValidKey(key)) {
+            lastKeyPressed = key;
         }
     }
 
@@ -67,73 +75,6 @@ public class Player extends ColoredEllipse{
         detectSelfCollision();
         updatePlayerPath();
         detectCollisionShapes(inner, outer);
-    }
-
-    public ColoredPath getPlayerPath(){
-        if(isDrawingLines){
-            return path;
-        }
-        return null;
-    }
-
-    private void detectCollisionShapes(ColoredPath inner, ColoredPath outer) {
-        if(!isColliding && inner.contains(position)){
-            onCollisionEnterColoredShape();
-            isColliding = true;
-            //System.out.println("newShape: ");
-        }
-        if(isColliding && outer.contains(position)){
-            onCollisionExitColoredShape();
-            isColliding = false;
-        }
-    }
-
-    private void onCollisionExitColoredShape(){
-        addAdjustedPoint(direction);
-        ShapeContainer.getInstance().splitInnerShape(points);
-        isDrawingLines = false;
-        resetPlayerStats();
-    }
-
-    private void onCollisionEnterColoredShape(){
-        resetPlayerStats();
-        isDrawingLines = true;
-        addAdjustedPoint(direction);
-    }
-
-    private void addPoint(Point position) {
-        points.add(new Point(position));
-        //System.out.println(angularSum);
-    }
-
-    private void addAdjustedPoint(int direction){
-        int ax = 0;
-        int ay = 0;
-        if(direction == WEST) ax++;
-        if(direction == NORTH) ay++;
-        points.add(new Point((int) this.x + ax, (int) this.y + ay));
-    }
-
-    private void clearPoints() {
-        points.clear();
-        path.reset();
-    }
-
-    private boolean positionHasChanged(){
-        return !position.equals(lastPosition);
-    }
-
-    private void updatePlayerPath(){
-        if(positionHasChanged()){
-            lastPosition.setLocation(position);
-            ArrayList<Point> playerPath = new ArrayList<>();
-            for (Point point : points) {
-                playerPath.add(point);
-                //System.out.println("Ppath: " + point);
-            }
-            playerPath.add(new Point(position));
-            path.setNewPath(playerPath, false);
-        }
     }
 
     private void move(){
@@ -160,18 +101,97 @@ public class Player extends ColoredEllipse{
                 addPoint(position);
             }
         }
-        //System.out.println(direction);
-        //System.out.println(startDirectionAfterCol + "\n");
         adjustMovement(direction);
         super.move(dx,dy);
     }
 
-    private boolean isValidKey(int key){
-        return (key == WEST || key == EAST || key == NORTH || key == SOUTH);
+    private void updatePosition(){
+        position.setLocation(x,y);
     }
 
-    private boolean isValidDirection(int key){
-        return isValidKey(key);
+    private void detectSelfCollision(){
+        boolean foundSelfCollision = false;
+        if(points.size() >= 2){
+            for (int i = 0; i < points.size(); i++) {
+                if(points.isEmpty() || i < 0)return;
+                if(foundSelfCollision){
+                    points.remove(i);
+                    i--;
+                }
+                else{
+                    if(i+1 < points.size()){
+                        Point p1 = points.get(i);
+                        Point p2 = points.get(i+1);
+                        if(ColoredPath.pointIsInLine(p1,p2,position)){
+                            foundSelfCollision = true;
+                        }
+                    }
+                }
+            }
+        }
+        if(foundSelfCollision){
+            addPoint(position);
+        }
+    }
+
+    private void updatePlayerPath(){
+        if(positionHasChanged()){
+            lastPosition.setLocation(position);
+            ArrayList<Point> playerPath = new ArrayList<>(points);
+            playerPath.add(new Point(position));
+            path.setNewPath(playerPath, false);
+        }
+    }
+
+
+
+    private void detectCollisionShapes(ColoredPath inner, ColoredPath outer) {
+        if(!isColliding && inner.contains(position)){
+            onCollisionEnterColoredShape();
+            isColliding = true;
+        }
+        if(isColliding && outer.contains(position)){
+            onCollisionExitColoredShape();
+            isColliding = false;
+        }
+    }
+
+    private void onCollisionExitColoredShape(){
+        addAdjustedPoint(direction);
+        ShapeContainer.getInstance().splitInnerShape(points);
+        isDrawingLines = false;
+        clearPoints();
+    }
+
+    private void onCollisionEnterColoredShape(){
+        clearPoints();
+        isDrawingLines = true;
+        addAdjustedPoint(direction);
+    }
+
+    private void addPoint(Point position) {
+        points.add(new Point(position));
+    }
+
+    private void addAdjustedPoint(int direction){
+        int ax = 0;
+        int ay = 0;
+        if(direction == WEST) ax++;
+        if(direction == NORTH) ay++;
+        points.add(new Point((int) this.x + ax, (int) this.y + ay));
+    }
+
+    private void clearPoints() {
+        points.clear();
+        path.reset();
+    }
+
+    private boolean positionHasChanged(){
+        return !position.equals(lastPosition);
+    }
+
+    private boolean isValidKey(int key){
+        return (key == WEST || key == EAST || key == NORTH || key == SOUTH);
     }
 
     private void stopMovement(){
@@ -190,50 +210,6 @@ public class Player extends ColoredEllipse{
     private boolean isOpositeDirection(int oldDirection, int newDirection){
         return  (oldDirection == WEST && newDirection == EAST) || (oldDirection == EAST && newDirection == WEST) ||
         (oldDirection == NORTH && newDirection == SOUTH) || (oldDirection == SOUTH && newDirection == NORTH);
-    }
-
-    private void updatePosition(){
-        position.setLocation(x,y);
-    }
-
-    private void resetPlayerStats(){
-        clearPoints();
-    }
-
-    private void resetDirections(){
-        direction = -1;
-        lastDirection = -1;
-        lastKeyPressed = -1;
-    }
-
-    private void detectSelfCollision(){
-        boolean foundSelfCollision = false;
-        if(points.size() >= 2){
-            for (int i = 0; i < points.size(); i++) {
-                if(points.isEmpty() || i < 0)return;
-                if(foundSelfCollision){
-                    points.remove(i);
-                    i--;
-                }
-                else{
-                    if(i+1 < points.size()){
-                        Point p1 = points.get(i);
-                        Point p2 = points.get(i+1);
-                        if(ColoredPath.pointIsInLine(p1,p2,position)){
-                            foundSelfCollision = true;
-                            //System.out.println("found selfcoll: \n" + p1 + "\n" + p2);
-                        }
-                    }
-                }
-            }
-        }
-        if(foundSelfCollision){
-            for (Point point : points) {
-                System.out.println("points:" + point);
-            }
-            //System.out.println("pos: " + position);
-            addPoint(position);
-        }
     }
 
 }
