@@ -6,7 +6,7 @@ import java.util.ArrayList;
  */
 public class Initializer {
 
-    private static Initializer initializer;
+    private static Initializer initializer = new Initializer();
 
     private ArrayList<Point> innerPoints = new ArrayList<>();
     private ArrayList<Point> outerPoints = new ArrayList<>();

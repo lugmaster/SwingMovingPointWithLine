@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class GameLogicsManager {
 
-    private static GameLogicsManager gameLogicsManager;
+    private static GameLogicsManager gameLogicsManager = new GameLogicsManager();
 
     private byte[][] totalAreaAdded;
 
@@ -13,8 +13,8 @@ public class GameLogicsManager {
 
     private ColoredPath innerShape;
     private ColoredPath outerShape;
-    private final ColoredPath outerShapeTemplate;
-    private final ColoredPath innerShapeTemplate;
+    public final ColoredPath outerShapeTemplate;
+    public final ColoredPath innerShapeTemplate;
 
     private int totalAreaInPoints = 0;
     private final int winningCondition;
@@ -24,12 +24,18 @@ public class GameLogicsManager {
         totalAreaAdded = new byte[Board.WIDTH][Board.HEIGHT];
 
         player = Initializer.getInstance().getPlayer();
+        ShapeContainer.getInstance().addPlayer(player);
         aiPlayer = Initializer.getInstance().getAiPlayer();
+        ShapeContainer.getInstance().addAiPlayer(aiPlayer);
 
         outerShape = new ColoredPath(Initializer.getInstance().getOuterPoints(), true);
         innerShape = new ColoredPath(Initializer.getInstance().getInnerPoints(), true);
         outerShapeTemplate = new ColoredPath(outerShape, true);
         innerShapeTemplate = new ColoredPath(innerShape, true);
+        outerShape = subtractPaths(outerShape, innerShape);
+
+        ShapeContainer.getInstance().addColoredShape(outerShape);
+        ShapeContainer.getInstance().addColoredShape(innerShape);
 
     }
 
@@ -79,10 +85,14 @@ public class GameLogicsManager {
             innerShape = coloredPath[1];
             ShapeContainer.getInstance().addColoredShape(new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true));
         }
+        outerShape = subtractPaths(outerShape, innerShape);
+    }
+
+    private ColoredPath subtractPaths(ColoredPath outerShape, ColoredPath innerShape){
         Area a0 = new Area(outerShapeTemplate);
         Area a1 = new Area(innerShape);
         a0.subtract(a1);
-        outerShape = new ColoredPath(a0);
+        return new ColoredPath(a0);
     }
 
     private ColoredPath[] splitpath(ColoredPath coloredPath, ArrayList<Point> splitPath){
@@ -206,6 +216,14 @@ public class GameLogicsManager {
             }
         }
         return false;
+    }
+
+    public Player getPlayer(){
+        return player;
+    }
+
+    public AIPlayer getAiPlayer(){
+        return aiPlayer;
     }
 
 }

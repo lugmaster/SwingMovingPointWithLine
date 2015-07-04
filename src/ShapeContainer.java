@@ -12,29 +12,8 @@ public final class ShapeContainer {
     private Player player;
     private AIPlayer aiPlayer;
 
-    private ColoredPath innerShape;
-    private ColoredPath outerShape;
-    private final Area outerShapeTemplate;
-
     private ShapeContainer() {
-        // Player and AI
-        player = Initializer.getInstance().getPlayer();
-        aiPlayer = Initializer.getInstance().getAiPlayer();
-        moveableShapes.add(player);
-        moveableShapes.add(aiPlayer);
 
-        outerShape = new ColoredPath(Initializer.getInstance().getOuterPoints(), true);
-        innerShape = new ColoredPath(Initializer.getInstance().getInnerPoints(), true);
-        outerShapeTemplate = new Area(outerShape);
-
-
-        Area a1 = new Area(innerShape);
-        Area a0 = new Area(outerShapeTemplate);
-        a0.subtract(a1);
-        outerShape = new ColoredPath(a0);
-
-        addColoredShape(outerShape);
-        addColoredShape(innerShape);
     }
 
     public static ShapeContainer getInstance(){
@@ -43,32 +22,28 @@ public final class ShapeContainer {
         return shapeContainer;
     }
 
-    public Player getPlayer(){
-        return player;
+    public void addPlayer(Player player){
+        this.player = player;
+        moveableShapes.add(player);
     }
 
-    public AIPlayer getAiPlayer(){
-        return aiPlayer;
+    public void addAiPlayer(AIPlayer aiPlayer){
+        this.aiPlayer = aiPlayer;
+        moveableShapes.add(aiPlayer);
     }
 
-    public void createColoredPath(ArrayList<Point> points) {
-        addColoredShape(new ColoredPath(points, Color.RED, true));
-    }
+
 
     public void addColoredShape(ColoredShape coloredShape){
         coloredShapes.add(coloredShape);
     }
 
+    public void addMoveableShape(MoveableShape moveableShape){
+        moveableShapes.add(moveableShape);
+    }
+
     public void removeColoredShape(ColoredShape coloredShape){
         if(coloredShapes.contains(coloredShape)) coloredShapes.remove(coloredShape);
-    }
-
-    public void upDateGame(){
-        updatePlayer();
-    }
-
-    private void updatePlayer(){
-        getPlayer().update(innerShape, outerShape);
     }
 
     public void doDrawing(Graphics g){
@@ -80,7 +55,7 @@ public final class ShapeContainer {
                 g2d.fill(coloredShape);
             }
         }
-        if(player.getPlayerPath() != null){
+        if(player!= null && player.getPlayerPath() != null){
             g2d.setColor(player.getColor());
             g2d.draw(player.getPlayerPath());
         }
@@ -92,22 +67,5 @@ public final class ShapeContainer {
             }
         }
 
-    }
-
-    public void splitInnerShape(ArrayList<Point> splitPoints) {
-        removeColoredShape(outerShape);
-        removeColoredShape(innerShape);
-        ColoredPath[] coloredPath = innerShape.splitpath(splitPoints);
-        if(coloredPath[0].contains(aiPlayer.getPosition())){
-            innerShape = coloredPath[0];
-        }
-        else innerShape = coloredPath[1];
-        addColoredShape(innerShape);
-        outerShape = new ColoredPath(outerPoints,true);
-        Area a0 = new Area(outerShape);
-        Area a1 = new Area(innerShape);
-        a0.subtract(a1);
-        outerShape = new ColoredPath(a0);
-        addColoredShape(outerShape);
     }
 }
