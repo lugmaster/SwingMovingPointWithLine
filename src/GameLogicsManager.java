@@ -24,6 +24,8 @@ public class GameLogicsManager {
     private int totalAreaOffsetY;
     private final int winningCondition;
     private boolean gameIsRunning = true;
+    private boolean gameIsWon = false;
+    private boolean gameIsLost = false;
 
     private GameLogicsManager(){
         winningCondition = 80;
@@ -57,7 +59,7 @@ public class GameLogicsManager {
     }
 
     public void updateGame(){
-        if(gameLost() || gameWon()){
+        if(gameIsLost || gameIsWon){
             gameIsRunning = false;
             player.setGameToFinished();
             aiPlayer.setGameToFinished();
@@ -65,7 +67,10 @@ public class GameLogicsManager {
         if(gameIsRunning){
             player.update(innerPath, outerPath);
             aiPlayer.update(innerPath, outerPath);
+            detectPlayerCollision();
+            detectPlayerPathCollision();
             updateTotalAreaAdded();
+            compareTotalAreaReached();
         }
     }
 
@@ -89,16 +94,16 @@ public class GameLogicsManager {
         return (float)(Math.round(f * 100))/100;
     }
 
-    private boolean maxTotalAreaReached(){
-        return calculateTotalAreaPercent() >= winningCondition;
+    private void compareTotalAreaReached(){
+        if(calculateTotalAreaPercent() >= winningCondition) gameIsWon = true;
     }
 
     public boolean gameLost(){
-        return player.isVulnerable() && aiPlayer.intersects(player.getBounds2D());
+        return gameIsLost;
     }
 
     public boolean gameWon(){
-        return maxTotalAreaReached();
+        return gameIsWon;
     }
 
     public void splitInnerShape(ArrayList<Point> splitPoints) {
@@ -258,6 +263,27 @@ public class GameLogicsManager {
             }
         }
         return false;
+    }
+
+    private void detectPlayerPathCollision(){
+        if(player.getPlayerPath() != null){
+            ArrayList<Point> points = player.getPlayerPath().getPathPoints();
+            if(points != null && points.size() >= 2){
+                for (int i = 0; i < points.size()-1; i++) {
+                    Point p1 = points.get(i);
+                    Point p2 = points.get(i+1);
+                    if(GameLogicsManager.pointIsInLine(p1,p2,aiPlayer.getPosition())){
+                        gameIsLost = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private void detectPlayerCollision(){
+        if(player.isVulnerable() && aiPlayer.intersects(player.getBounds2D())){
+            gameIsLost = true;
+        }
     }
 
     public Player getPlayer(){
