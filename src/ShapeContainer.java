@@ -34,9 +34,15 @@ public final class ShapeContainer {
 
 
 
+
     public void addColoredShape(ColoredShape coloredShape){
         System.out.println("shape added");
         coloredShapes.add(coloredShape);
+    }
+
+    public void addColoredShape(ColoredShape coloredShape, int index){
+        System.out.println("shape added");
+        coloredShapes.add(index, coloredShape);
     }
 
     public void addMoveableShape(MoveableShape moveableShape){
@@ -69,5 +75,11 @@ public final class ShapeContainer {
             }
         }
 
+    }
+
+    public void orderShapes(){
+        for (int i = 0; i < coloredShapes.size(); i++) {
+            //order 1866
+        }
     }
 }
