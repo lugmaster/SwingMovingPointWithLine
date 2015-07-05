@@ -39,6 +39,12 @@ public final class ShapeContainer {
     }
 
     public void doDrawing(Graphics g){
+        if(GameLogicsManager.getInstance().gameLost()){
+
+        }
+        if(GameLogicsManager.getInstance().gameWon()){
+
+        }
         Graphics2D g2d = (Graphics2D) g;
         if(!coloredShapes.isEmpty()) {
             for(ColoredShape coloredShape : coloredShapes){

@@ -52,14 +52,7 @@ public class GameLogicsManager {
     public void updateGame(){
         player.update(innerPath, outerPath);
         aiPlayer.update();
-        if(gameLost()){
-            System.out.println("LOST");
-        }
         updateTotalAreaAdded();
-        if(maxTotalAreaReached()){
-            //finish game;
-            System.out.println("WON THE FUCKING GAME!");
-        }
     }
 
     private void updateTotalAreaAdded(){
@@ -82,11 +75,15 @@ public class GameLogicsManager {
         return calculateTotalAreaPercent() >= winningCondition;
     }
 
-    private boolean gameLost(){
+    public boolean gameLost(){
         if(player.isVulnerable() && aiPlayer.intersects(player.getBounds2D())){
             return true;
         }
         return false;
+    }
+
+    public boolean gameWon(){
+        return maxTotalAreaReached();
     }
 
     public void splitInnerShape(ArrayList<Point> splitPoints) {
