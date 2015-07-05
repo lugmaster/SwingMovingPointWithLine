@@ -1,15 +1,11 @@
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Graphics2D;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -20,6 +16,7 @@ public class Board extends JPanel implements ActionListener{
     private final int DELAY = 20;
     private Timer timer;
     private ShapeContainer shapeContainer;
+    private GameLogicsManager gameLogicsManager;
 
     public Board() {
         super();
@@ -32,7 +29,7 @@ public class Board extends JPanel implements ActionListener{
         setBackground(Color.BLACK);
         timer = new Timer(DELAY, this);
         timer.start();
-
+        gameLogicsManager = GameLogicsManager.getInstance();
         shapeContainer = ShapeContainer.getInstance();
     }
 
@@ -47,17 +44,17 @@ public class Board extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
-        shapeContainer.doGameCycle();
+        gameLogicsManager.updateGame();
     }
 
     private class TAdapter extends KeyAdapter {
         @Override
         public void keyReleased(KeyEvent e) {
-            shapeContainer.getPlayer().keyReleased(e);
+            gameLogicsManager.getPlayer().keyReleased(e);
         }
         @Override
         public void keyPressed(KeyEvent e) {
-            shapeContainer.getPlayer().keyPressed(e);
+            gameLogicsManager.getPlayer().keyPressed(e);
         }
     }
 

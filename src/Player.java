@@ -1,57 +1,157 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
-public class Player extends MoveableEllipse implements MoveableShape, LineDrawingShape{
+public final class Player extends ColoredEllipse{
+
+    private final int WEST = KeyEvent.VK_A;
+    private final int EAST = KeyEvent.VK_D;
+    private final int NORTH = KeyEvent.VK_W;
+    private final int SOUTH = KeyEvent.VK_S;
 
     private boolean isColliding = false;
-    private boolean isDrawingLines = true;
-    private boolean isFirstMove = true;
-    private boolean isMoving = false;
+    private boolean isDrawingLines = false;
+    private boolean isVulnerable = false;
+    private boolean gameIsRunning = true;
 
-    private int direction;
-    private int startDirection;
-    private int angularSum = 0;
-    private final int LEFT = KeyEvent.VK_A;
-    private final int RIGHT = KeyEvent.VK_D;
-    private final int UP = KeyEvent.VK_W;
-    private final int DOWN = KeyEvent.VK_S;
-
-    private float dx,dy;
+    private int direction = -1;
+    private int lastDirection = -1;
+    private int lastKeyPressed = -1;
 
     private Point position;
+    private Point lastPosition;
+
     private ColoredPath path;
 
     private ArrayList<Point> points;
 
 
-
-    public Player(float x, float y, float width, float height, float moveSpeed){
-        this(x, y, width, height, moveSpeed, Color.BLUE);
-    }
-
     public Player(float x, float y, float width, float height, float moveSpeed, Color color){
         super(x, y, width, height, moveSpeed, color);
         position = new Point((int)x,(int)y);
+        lastPosition = new Point(position);
         points = new ArrayList<>();
-        points.add(createNewPoint());
+        points.add(new Point(position));
         path = new ColoredPath(color);
     }
 
-    private void onCollisionExitColoredShape(){
-        addAdjustedPoint(direction);
-        resetAngularSum();
-        ShapeContainer.getInstance().splitInnerShape(points);
-        isDrawingLines = false;
-        clearPoints();
+    public ColoredPath getPlayerPath(){
+        if(gameIsRunning && isDrawingLines){
+            return path;
+        }
+        return null;
     }
 
-    private void onCollisionEnterColoredShape(){
-        resetAngularSum();
-        clearPoints();
-        isDrawingLines = true;
-        addAdjustedPoint(direction);
+    //Debug INFO remove before FINISH
+        /*
+        if(key == KeyEvent.VK_ENTER){
+            for (Point point : points) {
+                System.out.println("NOW:" + point);
+            }
+            System.out.println("NOWPOS:" + position);
+            System.out.println("\n");
+            updatePlayerPath();
+        }*/
+
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        if(isValidKey(key)) {
+            lastKeyPressed = key;
+        }
+    }
+
+    public void setGameToFinished(){
+        gameIsRunning = false;
+    }
+
+    public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+        if(isValidKey(key)){
+            if(key == lastKeyPressed){
+                lastKeyPressed = -1;
+            }
+        }
+    }
+
+    public void update(ColoredPath inner, ColoredPath outer){
+        //System.out.println(gameIsRunning);
+        if(gameIsRunning){
+            move();
+            updatePosition();
+            detectSelfCollision();
+            updatePlayerPath();
+            detectCollisionShapes(inner, outer);
+        }
+    }
+
+    public boolean isVulnerable(){
+        return isVulnerable;
+    }
+
+    private void move(){
+        if(lastKeyPressed == -1){
+            if(direction != -1) lastDirection = direction;
+            direction = -1;
+        }
+        else {
+            if(direction == -1 && lastDirection == -1){
+                lastDirection = lastKeyPressed;
+                direction = lastKeyPressed;
+            }
+            else if(direction == -1 && !isOpositeDirection(lastDirection, lastKeyPressed)){
+                direction = lastKeyPressed;
+                if(direction != lastDirection){
+                    addPoint(position);
+                }
+
+
+            }
+            else if(direction != -1 && lastKeyPressed != direction && !isOpositeDirection(direction, lastKeyPressed)){
+                lastDirection = direction;
+                direction = lastKeyPressed;
+                addPoint(position);
+            }
+        }
+        float[] deltaPos = adjustMovement(direction);
+        super.move(deltaPos[0],deltaPos[1]);
+    }
+
+    private void updatePosition(){
+        position.setLocation(x,y);
+    }
+
+    private void detectSelfCollision(){
+        boolean foundSelfCollision = false;
+        if(points.size() >= 2){
+            for (int i = 0; i < points.size(); i++) {
+                if(points.isEmpty() || i < 0)return;
+                if(foundSelfCollision){
+                    points.remove(i);
+                    i--;
+                }
+                else{
+                    if(i+1 < points.size()){
+                        Point p1 = points.get(i);
+                        Point p2 = points.get(i+1);
+                        if(GameLogicsManager.pointIsInLine(p1,p2,position)){
+                            foundSelfCollision = true;
+                        }
+                    }
+                }
+            }
+        }
+        if(foundSelfCollision){
+            addPoint(position);
+        }
+    }
+
+    private void updatePlayerPath(){
+        if(positionHasChanged()){
+            lastPosition.setLocation(position);
+            ArrayList<Point> playerPath = new ArrayList<>(points);
+            playerPath.add(new Point(position));
+            path.setNewPath(playerPath, false);
+        }
     }
 
 
@@ -60,7 +160,6 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         if(!isColliding && inner.contains(position)){
             onCollisionEnterColoredShape();
             isColliding = true;
-            System.out.println("newShape: ");
         }
         if(isColliding && outer.contains(position)){
             onCollisionExitColoredShape();
@@ -68,28 +167,31 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         }
     }
 
-    private void addPoint() {
-        points.add(createNewPoint());
+    private void onCollisionExitColoredShape(){
+        addAdjustedPoint(direction);
+        GameLogicsManager.getInstance().splitInnerShape(points);
+        isDrawingLines = false;
+        isVulnerable = false;
+        clearPoints();
+    }
+
+    private void onCollisionEnterColoredShape(){
+        clearPoints();
+        isDrawingLines = true;
+        isVulnerable = true;
+        addAdjustedPoint(direction);
+    }
+
+    private void addPoint(Point position) {
+        points.add(new Point(position));
     }
 
     private void addAdjustedPoint(int direction){
-        if(direction == LEFT) points.add(createPointOffset(1,0));
-        if(direction == RIGHT) points.add(createPointOffset(0,0));
-        if(direction == UP) points.add(createPointOffset(0,1));
-        if(direction == DOWN) points.add(createPointOffset(0,0));
-    }
-
-    private Point createNewPoint(){
-        return new Point((int)this.x, (int)this.y);
-    }
-
-    private Point createPointOffset(int x, int y){
-        Point p = new Point((int)this.x + x, (int)this.y + y);
-        System.out.println(p);
-        return p;
-    }
-    public ArrayList<Point> getPoints() {
-        return points;
+        int ax = 0;
+        int ay = 0;
+        if(direction == WEST) ax++;
+        if(direction == NORTH) ay++;
+        points.add(new Point((int) this.x + ax, (int) this.y + ay));
     }
 
     private void clearPoints() {
@@ -97,156 +199,26 @@ public class Player extends MoveableEllipse implements MoveableShape, LineDrawin
         path.reset();
     }
 
-    public void updatePlayer(ColoredPath inner, ColoredPath outer){
-        move();
-        updatePosition();
-        detectCollisionShapes(inner, outer);
-    }
-
-    private void move(){
-       super.move(dx,dy);
-    }
-
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-        if(isValidKey(key)) {
-            if(isFirstMove){
-                isFirstMove = false;
-                direction = key;
-                startDirection = key;
-            }
-            if(key != direction && !isOpositeDirection(key)){
-                direction = key;
-                if(isColliding) addPoint();
-                calculateAngularSum(direction);
-
-            }
-            adjustMovement();
-
-        }
-    }
-
-    public void keyReleased(KeyEvent e) {
-        int key = e.getKeyCode();
-        if(key == direction){
-            stopMovement();
-        }
+    private boolean positionHasChanged(){
+        return !position.equals(lastPosition);
     }
 
     private boolean isValidKey(int key){
-        return (key == LEFT || key == RIGHT || key == UP || key == DOWN );
+        return (key == WEST || key == EAST || key == NORTH || key == SOUTH);
     }
 
-    private void stopMovement(){
-        dx = 0;
-        dy = 0;
+    private float[] adjustMovement(int direction) {
+        float[] deltaPos = {0,0};
+        if(direction == WEST) deltaPos[0] = -moveSpeed;
+        if(direction == EAST) deltaPos[0] = moveSpeed;
+        if(direction == NORTH) deltaPos[1] = -moveSpeed;
+        if(direction == SOUTH) deltaPos[1] = moveSpeed;
+        return deltaPos;
     }
 
-    private void adjustMovement() {
-        stopMovement();
-        if(direction == LEFT) dx = -moveSpeed;
-        if(direction == RIGHT) dx = moveSpeed;
-        if(direction == UP) dy = -moveSpeed;
-        if(direction == DOWN) dy = moveSpeed;
+    private boolean isOpositeDirection(int oldDirection, int newDirection){
+        return  (oldDirection == WEST && newDirection == EAST) || (oldDirection == EAST && newDirection == WEST) ||
+        (oldDirection == NORTH && newDirection == SOUTH) || (oldDirection == SOUTH && newDirection == NORTH);
     }
 
-    private void calculateAngularSum(int direction) {
-        int keyLeft = -1;
-        int keyRight = -1;
-        int keyUp = -1;
-        int keyDown = -1;
-        switch(startDirection){
-            case LEFT :
-                keyLeft = LEFT;
-                keyRight = RIGHT;
-                keyUp = UP;
-                keyDown = DOWN;
-                break;
-            case RIGHT :
-                keyLeft = DOWN;
-                keyRight = UP;
-                keyUp = RIGHT;
-                keyDown = LEFT;
-                break;
-            case UP :
-                keyLeft = UP;
-                keyRight = DOWN;
-                keyUp = LEFT;
-                keyDown = RIGHT;
-                break;
-            case DOWN :
-                keyLeft = LEFT;
-                keyRight = RIGHT;
-                keyUp = DOWN;
-                keyDown = UP;
-                break;
-        }
-        int tmp = 0;
-        if(Math.abs(angularSum)%4 == 0) angularSum = 0;
-
-        if(angularSum == 0) {
-            if(direction == keyLeft) tmp--;
-            if(direction == keyRight) tmp++;
-        }
-        if(angularSum > 0) {
-            if(angularSum == 1){
-                if(direction == keyDown) tmp++;
-                if(direction == keyUp) tmp--;
-            }
-            if(angularSum == 2) {
-                if(direction == keyLeft) tmp++;
-                if(direction == keyRight) tmp--;
-            }
-            if(angularSum == 3) {
-                if(direction == keyDown) tmp--;
-                if(direction == keyUp) tmp++;
-            }
-        }
-        if(angularSum < 0) {
-            if(angularSum == -1){
-                if(direction == keyDown) tmp--;
-                if(direction == keyUp) tmp++;
-            }
-            if(angularSum == -2) {
-                if(direction == keyLeft) tmp++;
-                if(direction == keyRight) tmp--;
-            }
-            if(angularSum == -3) {
-                if(direction == keyDown) tmp++;
-                if(direction == keyUp) tmp--;
-            }
-        }
-        angularSum += tmp;
-    }
-
-    private void resetAngularSum(){
-        angularSum = 0;
-    }
-
-    private boolean isOpositeDirection(int newDirection){
-        return  (direction == LEFT && newDirection == RIGHT) || (direction == RIGHT && newDirection == LEFT) ||
-        (direction == UP && newDirection == DOWN) || (direction == DOWN && newDirection == UP);
-    }
-
-    private boolean isHorizontalDirection(int direction){
-        return direction == RIGHT || direction == LEFT;
-    }
-
-    private boolean isVerticalDirection(int direction){
-        return direction == UP || direction == DOWN;
-    }
-
-    private void updatePosition(){
-        position.setLocation(x,y);
-    }
-
-    public ColoredPath getPlayerPath(){
-        if(isDrawingLines){
-            ArrayList<Point> playerPath = new ArrayList<>(points);
-            playerPath.add(createNewPoint());
-            path.setNewPath(playerPath, false);
-            return path;
-        }
-        return null;
-    }
 }
