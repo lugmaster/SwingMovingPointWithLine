@@ -14,7 +14,7 @@ public class AIPlayer extends ColoredEllipse{
         super(x,y,width,height, moveSpeed, color);
         position = new Point(x,y);
         random = new Random();
-        RESETCOOLDOWN = 150;
+        RESETCOOLDOWN = 100;
         coolDown = RESETCOOLDOWN;
         initMovement();
     }

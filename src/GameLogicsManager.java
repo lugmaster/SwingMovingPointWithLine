@@ -70,7 +70,7 @@ public class GameLogicsManager {
     }
 
     public float getAreaLeft(){
-        return (80f - calculateTotalAreaPercent());
+        return (100f - calculateTotalAreaPercent());
     }
 
     private void updateTotalAreaAdded(){

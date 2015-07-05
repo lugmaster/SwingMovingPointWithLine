@@ -20,7 +20,7 @@ public class Initializer {
     public final int INNERSHAPEDELTAY;
 
     private Initializer(){
-        player = new Player(194, 150, 3, 3, 1f, Color.blue);
+        player = new Player(194, 100, 3, 3, 1f, Color.blue);
         aiPlayer = new AIPlayer(50,160,9,9,2.0f, Color.red);
         INNERSHAPEWIDTH = Board.WIDTH-10;
         INNERSHAPEHEIGHT = Board.HEIGHT-10;
