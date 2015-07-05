@@ -64,7 +64,7 @@ public class GameLogicsManager {
         }
         if(gameIsRunning){
             player.update(innerPath, outerPath);
-            aiPlayer.update();
+            aiPlayer.update(innerPath, outerPath);
             updateTotalAreaAdded();
         }
     }
@@ -82,7 +82,6 @@ public class GameLogicsManager {
                 }
             }
         }
-        System.out.println(totalAreaInPoints);
     }
 
     private float calculateTotalAreaPercent(){

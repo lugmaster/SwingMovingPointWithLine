@@ -21,7 +21,7 @@ public class Initializer {
 
     private Initializer(){
         player = new Player(194, 150, 3, 3, 1f, Color.blue);
-        aiPlayer = new AIPlayer(50,160,3,3,1.0f, Color.red);
+        aiPlayer = new AIPlayer(50,160,9,9,1.0f, Color.red);
         INNERSHAPEWIDTH = Board.WIDTH-10;
         INNERSHAPEHEIGHT = Board.HEIGHT-10;
         INNERSHAPEDELTAX = 9;

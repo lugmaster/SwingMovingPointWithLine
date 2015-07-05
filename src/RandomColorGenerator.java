@@ -21,6 +21,7 @@ public class RandomColorGenerator {
                 color = Color.CYAN;
                 break;
             case 3:
+                //brown
                 color = new Color(139,69,19);
                 break;
             case 4:
