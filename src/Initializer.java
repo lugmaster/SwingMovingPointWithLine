@@ -14,10 +14,18 @@ public class Initializer {
     private Player player;
     private AIPlayer aiPlayer;
 
+    public final int INNERSHAPEWIDTH;
+    public final int INNERSHAPEHEIGHT;
+    public final int INNERSHAPEDELTAX;
+    public final int INNERSHAPEDELTAY;
+
     private Initializer(){
         player = new Player(194, 150, 3, 3, 1f, Color.blue);
-        aiPlayer = new AIPlayer(50,50,3,3,1.0f, Color.red);
-
+        aiPlayer = new AIPlayer(50,160,3,3,1.0f, Color.red);
+        INNERSHAPEWIDTH = Board.WIDTH-10;
+        INNERSHAPEHEIGHT = Board.HEIGHT-10;
+        INNERSHAPEDELTAX = 9;
+        INNERSHAPEDELTAY = 9;
         //outer
         Point p0 = new Point(-3,-3);
         Point p1 = new Point(Board.WIDTH+3,-3);
@@ -30,10 +38,10 @@ public class Initializer {
         outerShape = new ColoredPath(outerPoints, Color.DARK_GRAY, true);
 
         //inner
-        Point p4 = new Point(9,190);
-        Point p5 = new Point(9,9);
-        Point p6 = new Point(190,9);
-        Point p7 = new Point(190,190);
+        Point p4 = new Point(INNERSHAPEDELTAX,INNERSHAPEHEIGHT);
+        Point p5 = new Point(INNERSHAPEDELTAX,INNERSHAPEDELTAY);
+        Point p6 = new Point(INNERSHAPEWIDTH,INNERSHAPEDELTAY);
+        Point p7 = new Point(INNERSHAPEWIDTH,INNERSHAPEHEIGHT);
         innerPoints.add(p4);
         innerPoints.add(p5);
         innerPoints.add(p6);

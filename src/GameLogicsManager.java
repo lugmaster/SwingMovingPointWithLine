@@ -20,12 +20,18 @@ public class GameLogicsManager {
     private ArrayList<ColoredPath> splitShapes;
 
     private int totalAreaInPoints = 0;
+    private int totalAreaOffsetX;
+    private int totalAreaOffsetY;
     private final int winningCondition;
     private boolean gameIsRunning = true;
 
     private GameLogicsManager(){
         winningCondition = 80;
-        totalAreaAdded = new byte[Board.WIDTH][Board.HEIGHT];
+        totalAreaOffsetX = Initializer.getInstance().INNERSHAPEDELTAX;
+        totalAreaOffsetY = Initializer.getInstance().INNERSHAPEDELTAY;
+        int x = Initializer.getInstance().INNERSHAPEWIDTH-totalAreaOffsetX;
+        int y = Initializer.getInstance().INNERSHAPEHEIGHT-totalAreaOffsetY;
+        totalAreaAdded = new byte[x][y];
 
         player = Initializer.getInstance().getPlayer();
         ShapeContainer.getInstance().addPlayer(player);
@@ -64,23 +70,23 @@ public class GameLogicsManager {
     }
 
     public float getAreaLeft(){
-        return (100 - calculateTotalAreaPercent());
+        return (80f - calculateTotalAreaPercent());
     }
 
     private void updateTotalAreaAdded(){
         for (int i = 0; i < totalAreaAdded.length; i++) {
             for(int j = 0; j < totalAreaAdded[i].length; j++){
-                if(totalAreaAdded[i][j] != 1 && outerPath.contains(new Point(i,j)) ){
+                if(totalAreaAdded[i][j] != 1 && outerPath.contains(new Point(i+totalAreaOffsetX,j+totalAreaOffsetY)) ){
                     totalAreaAdded[i][j] = 1;
                     totalAreaInPoints++;
                 }
             }
         }
+        System.out.println(totalAreaInPoints);
     }
 
     private float calculateTotalAreaPercent(){
-        float f = totalAreaInPoints/((Board.HEIGHT * Board.WIDTH)/100);
-        System.out.println(f);
+        float f = totalAreaInPoints/(((float)totalAreaAdded.length * (float)totalAreaAdded[0].length)/100);
         return (float)(Math.round(f * 100))/100;
     }
 
