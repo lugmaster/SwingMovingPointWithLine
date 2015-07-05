@@ -45,25 +45,46 @@ public class AIPlayer extends ColoredEllipse{
     }
 
     private void initMovement(){
-        dx = random.nextInt(2) - random.nextInt(2);
-        dy = random.nextInt(2) - random.nextInt(2);
+        dx = 0;
+        dy = 0;
         while (dx == 0 && dy == 0) {
             dx = random.nextInt(2) - random.nextInt(2);
             dy = random.nextInt(2) - random.nextInt(2);
         }
+        dx *= moveSpeed;
+        dy *= moveSpeed;
         System.out.println("dx:" + dx + " ,dy:" +dy);
 
 
     }
 
     private void revertMovement(){
-        if(dx != 0 && dy != 0){
-            dy = -dy;
-        }
-        else {
+        if( (Math.abs(dx / moveSpeed) == 1 && dy == 0) || (Math.abs(dy / moveSpeed) == 1 && dx == 0) ){
             dx = -dx;
             dy = -dy;
+            return;
         }
+        if(dx < 0) {
+            if(dy < 0) {
+                dx = -dx;
+                return;
+            }
+            if(dy > 0) {
+                dy = -dy;
+                return;
+            }
+        }
+        if(dx > 0) {
+            if(dy < 0) {
+                dy = -dy;
+                return;
+            }
+            if(dy > 0) {
+                dx = -dx;
+                return;
+            }
+        }
+
     }
 
     private void randomMovementChange(){
