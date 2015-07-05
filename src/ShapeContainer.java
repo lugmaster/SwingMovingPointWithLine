@@ -36,22 +36,11 @@ public final class ShapeContainer {
 
 
     public void addColoredShape(ColoredShape coloredShape){
-        System.out.println("shape added");
         coloredShapes.add(coloredShape);
-    }
-
-    public void addColoredShape(ColoredShape coloredShape, int index){
-        System.out.println("shape added");
-        coloredShapes.add(index, coloredShape);
-    }
-
-    public void addMoveableShape(MoveableShape moveableShape){
-        moveableShapes.add(moveableShape);
     }
 
     public void removeColoredShape(ColoredShape coloredShape){
         if(coloredShapes.contains(coloredShape)) coloredShapes.remove(coloredShape);
-        System.out.println("shape removed");
     }
 
     public void doDrawing(Graphics g){
@@ -75,15 +64,5 @@ public final class ShapeContainer {
             }
         }
 
-    }
-
-    public void orderShapes(){
-        for (int i = 0; i < coloredShapes.size(); i++) {
-            //order 1866
-        }
-    }
-
-    public ArrayList<ColoredShape> getColoredShapes(){
-        return coloredShapes;
     }
 }

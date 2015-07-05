@@ -203,11 +203,6 @@ public class GameLogicsManager {
         }
         coloredPaths[0] = new ColoredPath(pathA,true);
         coloredPaths[1] = new ColoredPath(pathB,true);
-        for (Point aFloat : splitPoints) {
-            System.out.println("splitPoints: " + aFloat);
-        }
-        System.out.println("path0: \n" + coloredPaths[0]);
-        System.out.println("path1: \n" + coloredPaths[1]);
         return coloredPaths;
     }
 
