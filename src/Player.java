@@ -12,6 +12,7 @@ public final class Player extends ColoredEllipse{
     private boolean isColliding = false;
     private boolean isDrawingLines = false;
     private boolean isVulnerable = false;
+    private boolean gameIsRunning = true;
 
     private int direction = -1;
     private int lastDirection = -1;
@@ -35,7 +36,7 @@ public final class Player extends ColoredEllipse{
     }
 
     public ColoredPath getPlayerPath(){
-        if(isDrawingLines){
+        if(gameIsRunning && isDrawingLines){
             return path;
         }
         return null;
@@ -59,6 +60,10 @@ public final class Player extends ColoredEllipse{
         }
     }
 
+    public void setGameToFinished(){
+        gameIsRunning = false;
+    }
+
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
         if(isValidKey(key)){
@@ -69,11 +74,14 @@ public final class Player extends ColoredEllipse{
     }
 
     public void update(ColoredPath inner, ColoredPath outer){
-        move();
-        updatePosition();
-        detectSelfCollision();
-        updatePlayerPath();
-        detectCollisionShapes(inner, outer);
+        //System.out.println(gameIsRunning);
+        if(gameIsRunning){
+            move();
+            updatePosition();
+            detectSelfCollision();
+            updatePlayerPath();
+            detectCollisionShapes(inner, outer);
+        }
     }
 
     public boolean isVulnerable(){

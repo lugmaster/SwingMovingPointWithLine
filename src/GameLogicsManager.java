@@ -21,6 +21,7 @@ public class GameLogicsManager {
 
     private int totalAreaInPoints = 0;
     private final int winningCondition;
+    private boolean gameIsRunning = true;
 
     private GameLogicsManager(){
         winningCondition = 80;
@@ -50,9 +51,11 @@ public class GameLogicsManager {
     }
 
     public void updateGame(){
-        player.update(innerPath, outerPath);
-        aiPlayer.update();
-        updateTotalAreaAdded();
+        if(gameIsRunning){
+            player.update(innerPath, outerPath);
+            aiPlayer.update();
+            updateTotalAreaAdded();
+        }
     }
 
     private void updateTotalAreaAdded(){
@@ -77,13 +80,20 @@ public class GameLogicsManager {
 
     public boolean gameLost(){
         if(player.isVulnerable() && aiPlayer.intersects(player.getBounds2D())){
+            player.setGameToFinished();
+            gameIsRunning = false;
             return true;
         }
         return false;
     }
 
     public boolean gameWon(){
-        return maxTotalAreaReached();
+        if(maxTotalAreaReached()){
+            player.setGameToFinished();
+            gameIsRunning = false;
+            return true;
+        }
+        return false;
     }
 
     public void splitInnerShape(ArrayList<Point> splitPoints) {

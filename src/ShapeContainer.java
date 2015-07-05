@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.awt.geom.Area;
 import java.util.ArrayList;
 
 public final class ShapeContainer {
@@ -40,30 +39,40 @@ public final class ShapeContainer {
 
     public void doDrawing(Graphics g){
         if(GameLogicsManager.getInstance().gameLost()){
-
+            drawScreenMessage(g, "Game Over");
         }
-        if(GameLogicsManager.getInstance().gameWon()){
-
+        else if(GameLogicsManager.getInstance().gameWon()){
+            drawScreenMessage(g, "Game Won");
         }
-        Graphics2D g2d = (Graphics2D) g;
-        if(!coloredShapes.isEmpty()) {
-            for(ColoredShape coloredShape : coloredShapes){
-                g2d.setColor(coloredShape.getColor());
-                g2d.draw(coloredShape);
-                g2d.fill(coloredShape);
+        else{
+            Graphics2D g2d = (Graphics2D) g;
+            if(!coloredShapes.isEmpty()) {
+                for(ColoredShape coloredShape : coloredShapes){
+                    g2d.setColor(coloredShape.getColor());
+                    g2d.draw(coloredShape);
+                    g2d.fill(coloredShape);
+                }
+            }
+            if(player!= null && player.getPlayerPath() != null){
+                g2d.setColor(player.getColor());
+                g2d.draw(player.getPlayerPath());
+            }
+            if(!moveableShapes.isEmpty()) {
+                for (MoveableShape moveableShape : moveableShapes) {
+                    g2d.setColor(moveableShape.getColor());
+                    g2d.draw(moveableShape);
+                    g2d.fill(moveableShape);
+                }
             }
         }
-        if(player!= null && player.getPlayerPath() != null){
-            g2d.setColor(player.getColor());
-            g2d.draw(player.getPlayerPath());
-        }
-        if(!moveableShapes.isEmpty()) {
-            for (MoveableShape moveableShape : moveableShapes) {
-                g2d.setColor(moveableShape.getColor());
-                g2d.draw(moveableShape);
-                g2d.fill(moveableShape);
-            }
-        }
+    }
 
+    private void drawScreenMessage(Graphics g, String msg) {
+        Font small = new Font("Helvetica", Font.BOLD, 14);
+        FontMetrics fm = g.getFontMetrics(small);
+
+        g.setColor(Color.white);
+        g.setFont(small);
+        g.drawString(msg, (Board.WIDTH - fm.stringWidth(msg)) / 2, Board.HEIGHT/ 2);
     }
 }
