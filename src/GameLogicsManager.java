@@ -88,6 +88,9 @@ public class GameLogicsManager {
             subPath = new ColoredPath(coloredPath[0], RandomColorGenerator.generateRandomColor(), true);
         }
         outerShape = subtractPath(outerShapeTemplate, innerShape);
+        for (int i = 0; i < ShapeContainer.getInstance().getColoredShapes().size(); i++) {
+            outerShape = subtractPath(innerShape, ShapeContainer.getInstance().getColoredShapes().get(i));
+        }
         ShapeContainer.getInstance().addColoredShape(outerShape, 0);
         ShapeContainer.getInstance().addColoredShape(innerShape, 1);
         ShapeContainer.getInstance().addColoredShape(subPath);

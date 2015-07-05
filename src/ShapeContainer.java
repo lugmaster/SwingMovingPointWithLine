@@ -82,4 +82,8 @@ public final class ShapeContainer {
             //order 1866
         }
     }
+
+    public ArrayList<ColoredShape> getColoredShapes(){
+        return coloredShapes;
+    }
 }
