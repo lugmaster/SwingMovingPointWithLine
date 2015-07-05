@@ -202,7 +202,8 @@ public class GameLogicsManager {
             }
         }
         coloredPaths[0] = new ColoredPath(pathA,true);
-        coloredPaths[1] = new ColoredPath(pathB,true);
+        if(pathB.isEmpty()) coloredPaths[1] = new ColoredPath(splitPoints,true);
+        else coloredPaths[1] = new ColoredPath(pathB,true);
         return coloredPaths;
     }
 

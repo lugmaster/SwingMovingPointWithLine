@@ -12,9 +12,7 @@ public final class ShapeContainer {
     private Player player;
     private AIPlayer aiPlayer;
 
-    private ShapeContainer() {
-
-    }
+    private ShapeContainer() {}
 
     public static ShapeContainer getInstance(){
         if(shapeContainer == null)
@@ -31,9 +29,6 @@ public final class ShapeContainer {
         this.aiPlayer = aiPlayer;
         moveableShapes.add(aiPlayer);
     }
-
-
-
 
     public void addColoredShape(ColoredShape coloredShape){
         coloredShapes.add(coloredShape);

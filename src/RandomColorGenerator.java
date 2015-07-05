@@ -8,7 +8,7 @@ public class RandomColorGenerator {
 
     public static Color generateRandomColor(){
         Random r = new Random();
-        int colorIndex = r.nextInt(5);
+        int colorIndex = r.nextInt(6);
         Color color = null;
         switch (colorIndex) {
             case 0:
@@ -21,17 +21,14 @@ public class RandomColorGenerator {
                 color = Color.CYAN;
                 break;
             case 3:
-                color = Color.PINK;
+                color = new Color(139,69,19);
                 break;
             case 4:
-                color = Color.ORANGE;
+                color = Color.MAGENTA;
                 break;
             case 5:
-                color = Color.PINK;
-                break;
-            /*case 6:
                 color = Color.WHITE;
-                break;*/
+                break;
         }
         return color;
     }
