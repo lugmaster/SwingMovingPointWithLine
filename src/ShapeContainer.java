@@ -38,32 +38,30 @@ public final class ShapeContainer {
     }
 
     public void doDrawing(Graphics g){
+        Graphics2D g2d = (Graphics2D) g;
+        if(!coloredShapes.isEmpty()) {
+            for(ColoredShape coloredShape : coloredShapes){
+                g2d.setColor(coloredShape.getColor());
+                g2d.draw(coloredShape);
+                g2d.fill(coloredShape);
+            }
+        }
+        if(player!= null && player.getPlayerPath() != null){
+            g2d.setColor(player.getColor());
+            g2d.draw(player.getPlayerPath());
+        }
+        if(!moveableShapes.isEmpty()) {
+            for (MoveableShape moveableShape : moveableShapes) {
+                g2d.setColor(moveableShape.getColor());
+                g2d.draw(moveableShape);
+                g2d.fill(moveableShape);
+            }
+        }
         if(GameLogicsManager.getInstance().gameLost()){
             drawScreenMessage(g, "Game Over");
         }
-        else if(GameLogicsManager.getInstance().gameWon()){
+        if(GameLogicsManager.getInstance().gameWon()){
             drawScreenMessage(g, "Game Won");
-        }
-        else{
-            Graphics2D g2d = (Graphics2D) g;
-            if(!coloredShapes.isEmpty()) {
-                for(ColoredShape coloredShape : coloredShapes){
-                    g2d.setColor(coloredShape.getColor());
-                    g2d.draw(coloredShape);
-                    g2d.fill(coloredShape);
-                }
-            }
-            if(player!= null && player.getPlayerPath() != null){
-                g2d.setColor(player.getColor());
-                g2d.draw(player.getPlayerPath());
-            }
-            if(!moveableShapes.isEmpty()) {
-                for (MoveableShape moveableShape : moveableShapes) {
-                    g2d.setColor(moveableShape.getColor());
-                    g2d.draw(moveableShape);
-                    g2d.fill(moveableShape);
-                }
-            }
         }
     }
 
@@ -71,7 +69,7 @@ public final class ShapeContainer {
         Font small = new Font("Helvetica", Font.BOLD, 14);
         FontMetrics fm = g.getFontMetrics(small);
 
-        g.setColor(Color.white);
+        g.setColor(RandomColorGenerator.generateRandomColor());
         g.setFont(small);
         g.drawString(msg, (Board.WIDTH - fm.stringWidth(msg)) / 2, Board.HEIGHT/ 2);
     }

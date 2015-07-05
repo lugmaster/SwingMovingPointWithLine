@@ -51,6 +51,11 @@ public class GameLogicsManager {
     }
 
     public void updateGame(){
+        if(gameLost() || gameWon()){
+            gameIsRunning = false;
+            player.setGameToFinished();
+            aiPlayer.setGameToFinished();
+        }
         if(gameIsRunning){
             player.update(innerPath, outerPath);
             aiPlayer.update();
@@ -79,21 +84,11 @@ public class GameLogicsManager {
     }
 
     public boolean gameLost(){
-        if(player.isVulnerable() && aiPlayer.intersects(player.getBounds2D())){
-            player.setGameToFinished();
-            gameIsRunning = false;
-            return true;
-        }
-        return false;
+        return player.isVulnerable() && aiPlayer.intersects(player.getBounds2D());
     }
 
     public boolean gameWon(){
-        if(maxTotalAreaReached()){
-            player.setGameToFinished();
-            gameIsRunning = false;
-            return true;
-        }
-        return false;
+        return maxTotalAreaReached();
     }
 
     public void splitInnerShape(ArrayList<Point> splitPoints) {
