@@ -63,6 +63,10 @@ public class GameLogicsManager {
         }
     }
 
+    public float getAreaLeft(){
+        return (100 - calculateTotalAreaPercent());
+    }
+
     private void updateTotalAreaAdded(){
         for (int i = 0; i < totalAreaAdded.length; i++) {
             for(int j = 0; j < totalAreaAdded[i].length; j++){
@@ -76,6 +80,7 @@ public class GameLogicsManager {
 
     private float calculateTotalAreaPercent(){
         float f = totalAreaInPoints/((Board.HEIGHT * Board.WIDTH)/100);
+        System.out.println(f);
         return (float)(Math.round(f * 100))/100;
     }
 

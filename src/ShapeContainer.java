@@ -57,6 +57,8 @@ public final class ShapeContainer {
                 g2d.fill(moveableShape);
             }
         }
+        g.setColor(Color.WHITE);
+        g.drawString("Area left: " + GameLogicsManager.getInstance().getAreaLeft(), 5, 15);
         if(GameLogicsManager.getInstance().gameLost()){
             drawScreenMessage(g, "Game Over");
         }
