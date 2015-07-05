@@ -11,6 +11,7 @@ public final class Player extends ColoredEllipse{
 
     private boolean isColliding = false;
     private boolean isDrawingLines = false;
+    private boolean isVulnerable = false;
 
     private int direction = -1;
     private int lastDirection = -1;
@@ -73,6 +74,10 @@ public final class Player extends ColoredEllipse{
         detectSelfCollision();
         updatePlayerPath();
         detectCollisionShapes(inner, outer);
+    }
+
+    public boolean isVulnerable(){
+        return isVulnerable;
     }
 
     private void move(){
@@ -158,12 +163,14 @@ public final class Player extends ColoredEllipse{
         addAdjustedPoint(direction);
         GameLogicsManager.getInstance().splitInnerShape(points);
         isDrawingLines = false;
+        isVulnerable = false;
         clearPoints();
     }
 
     private void onCollisionEnterColoredShape(){
         clearPoints();
         isDrawingLines = true;
+        isVulnerable = true;
         addAdjustedPoint(direction);
     }
 
