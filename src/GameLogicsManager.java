@@ -36,9 +36,7 @@ public class GameLogicsManager {
         totalAreaAdded = new byte[x][y];
 
         player = Initializer.getInstance().getPlayer();
-        ShapeContainer.getInstance().addPlayer(player);
         aiPlayer = Initializer.getInstance().getAiPlayer();
-        ShapeContainer.getInstance().addMoveableShape(aiPlayer);
 
         outerShape = new ColoredPath(Initializer.getInstance().getOuterShape(), true);
         innerShape = new ColoredPath(Initializer.getInstance().getInnerShape(), true);
@@ -47,8 +45,6 @@ public class GameLogicsManager {
         outerShape = subtractPath(outerShapeTemplate, innerShape);
         coloredShapes = new ArrayList<>();
 
-        ShapeContainer.getInstance().addColoredShape(outerShape);
-        ShapeContainer.getInstance().addColoredShape(innerShape);
     }
 
     public static GameLogicsManager getInstance(){
@@ -57,7 +53,7 @@ public class GameLogicsManager {
         return gameLogicsManager;
     }
 
-    public void updateGame(){
+    public void update(){
         if(gameIsLost || gameIsWon){
             gameIsRunning = false;
             player.setGameToFinished();
@@ -106,7 +102,6 @@ public class GameLogicsManager {
 
     public void splitInnerShape(ArrayList<Point> splitPoints) {
         ColoredPath[] coloredPath = splitpath(innerShape, splitPoints);
-        removeOldShapes();
         ColoredPath subPath;
         if(coloredPath[0].contains(aiPlayer.getPosition())){
             innerShape = new ColoredPath(coloredPath[0], innerShapTemplate.getColor(), true);
@@ -118,7 +113,6 @@ public class GameLogicsManager {
         }
         outerShape = subtractPath(outerShapeTemplate, innerShape);
         coloredShapes.add(subPath);
-        setNewShapes();
     }
 
     public static ColoredPath subtractPath(ColoredShape outerShape, ColoredShape innerShape){
@@ -126,22 +120,6 @@ public class GameLogicsManager {
         Area a1 = new Area(innerShape);
         a0.subtract(a1);
         return new ColoredPath(a0, outerShape.getColor());
-    }
-
-    private void removeOldShapes(){
-        ShapeContainer.getInstance().removeColoredShape(innerShape);
-        ShapeContainer.getInstance().removeColoredShape(outerShape);
-        for (int i = 0; i < coloredShapes.size(); i++) {
-            ShapeContainer.getInstance().removeColoredShape(coloredShapes.get(i));
-        }
-    }
-
-    private void setNewShapes(){
-        ShapeContainer.getInstance().addColoredShape(outerShape);
-        ShapeContainer.getInstance().addColoredShape(innerShape);
-        for (ColoredShape coloredShape : coloredShapes) {
-            ShapeContainer.getInstance().addColoredShape(coloredShape);
-        }
     }
 
     private ColoredPath[] splitpath(ColoredPath coloredPath, ArrayList<Point> splitLinePoints){

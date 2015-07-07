@@ -48,9 +48,9 @@ public class Initializer {
 
         //outerShape
         Point p0 = new Point(-3,-3);
-        Point p1 = new Point(Board.WIDTH+3,-3);
-        Point p2 = new Point(Board.WIDTH+3,Board.HEIGHT+3);
-        Point p3 = new Point(-3,Board.HEIGHT+3);
+        Point p1 = new Point(boardWidth+3,-3);
+        Point p2 = new Point(boardWidth+3,boardHeight+3);
+        Point p3 = new Point(-3,boardHeight+3);
         outerPoints.add(p0);
         outerPoints.add(p1);
         outerPoints.add(p2);

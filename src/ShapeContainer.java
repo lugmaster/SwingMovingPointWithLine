@@ -1,3 +1,5 @@
+import com.sun.corba.se.impl.orbutil.graph.Graph;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,8 +15,12 @@ public final class ShapeContainer {
     private ArrayList<MoveableShape> moveableShapes = new ArrayList<>();
 
     private Player player;
+    private AIPlayer aiPlayer;
 
-    private ShapeContainer() {}
+    private ShapeContainer() {
+        player = Initializer.getInstance().getPlayer();
+       aiPlayer = Initializer.getInstance().getAiPlayer();
+    }
 
     public static ShapeContainer getInstance(){
         if(shapeContainer == null)
@@ -25,14 +31,11 @@ public final class ShapeContainer {
     public void addPlayer(Player player){
         this.player = player;
         moveableShapes.add(player);
+        moveableShapes.add(aiPlayer);
     }
 
     public void addColoredShape(ColoredShape coloredShape){
         coloredShapes.add(coloredShape);
-    }
-
-    public void addMoveableShape(MoveableShape moveableShape){
-        moveableShapes.add(moveableShape);
     }
 
     public void removeColoredShape(ColoredShape coloredShape){
@@ -76,5 +79,22 @@ public final class ShapeContainer {
         g.setColor(RandomColorGenerator.generateRandomColor());
         g.setFont(small);
         g.drawString(msg, (Board.WIDTH - fm.stringWidth(msg)) / 2, Board.HEIGHT/ 2);
+    }
+
+    private void removeOldShapes(){
+        coloredShapes.clear();
+    }
+
+    private void setNewShapes(){
+        coloredShapes.add(GameLogicsManager.getInstance().getOuterShape());
+        coloredShapes.add(GameLogicsManager.getInstance().getInnerShape());
+        for (ColoredShape coloredShape : GameLogicsManager.getInstance().coloredShapes()) {
+            this.coloredShapes.add(coloredShape);
+        }
+    }
+
+    public void update(){
+        removeOldShapes();
+        setNewShapes();
     }
 }

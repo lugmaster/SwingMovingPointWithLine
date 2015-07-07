@@ -11,8 +11,8 @@ import javax.swing.Timer;
 
 public class Board extends JPanel implements ActionListener{
 
-    public static final int WIDTH = 200;
-    public static final int HEIGHT = 200;
+    public static final int WIDTH = Initializer.getInstance().getBoardWidth();
+    public static final int HEIGHT = Initializer.getInstance().getBoardHeight();
     private final int DELAY = 10;
     private Timer timer;
     private ShapeContainer shapeContainer;
@@ -20,6 +20,9 @@ public class Board extends JPanel implements ActionListener{
 
     public Board() {
         super();
+        gameLogicsManager = GameLogicsManager.getInstance();
+        shapeContainer = ShapeContainer.getInstance();
+
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setDoubleBuffered(true);
@@ -29,8 +32,7 @@ public class Board extends JPanel implements ActionListener{
         setBackground(Color.BLACK);
         timer = new Timer(DELAY, this);
         timer.start();
-        gameLogicsManager = GameLogicsManager.getInstance();
-        shapeContainer = ShapeContainer.getInstance();
+
     }
 
     @Override
@@ -44,7 +46,8 @@ public class Board extends JPanel implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         repaint();
-        gameLogicsManager.updateGame();
+        gameLogicsManager.update();
+        shapeContainer.update();
     }
 
     private class TAdapter extends KeyAdapter {
