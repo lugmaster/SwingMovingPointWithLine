@@ -29,10 +29,10 @@ public final class Player extends ColoredEllipse{
     private ArrayList<Point> points;
 
 
-    public Player(float x, float y, float width, float height, int moveSpeed, Color color){
-        super(x, y, width, height,color);
+    public Player(int x, int y, int radius, int moveSpeed, Color color){
+        super(x, y, radius, color);
         this.moveSpeed = moveSpeed;
-        position = new Point((int)x,(int)y);
+        position = new Point(x,y);
         lastPosition = new Point(position);
         points = new ArrayList<>();
         points.add(new Point(position));

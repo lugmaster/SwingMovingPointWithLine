@@ -14,8 +14,8 @@ public class AIPlayer extends ColoredEllipse{
     private Player player;
     private Random random;
 
-    public AIPlayer (int x, int y, int width, int height, int moveSpeed, Color color, Player player){
-        super(x,y,width,height, color);
+    public AIPlayer (int x, int y, int radius, int moveSpeed, Color color, Player player){
+        super(x,y,radius,color);
         position = new Point(x,y);
         random = new Random();
         coolDown = 100;

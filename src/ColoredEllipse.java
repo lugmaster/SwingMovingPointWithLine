@@ -5,8 +5,8 @@ public abstract class ColoredEllipse extends Ellipse2D.Float implements Moveable
 
     private final Color color;
 
-    public ColoredEllipse(float x, float y, float width, float height,Color color){
-        super(x, y, width, height);
+    public ColoredEllipse(int x, int y, int radius, Color color){
+        super(x, y, radius, radius);
         this.color = color;
     }
 
