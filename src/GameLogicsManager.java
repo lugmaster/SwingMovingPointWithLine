@@ -1,4 +1,4 @@
-import java.awt.*;
+import java.awt.Point;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 
@@ -19,16 +19,16 @@ public class GameLogicsManager {
 
     private ArrayList<ColoredPath> splitShapes;
 
-    private int totalAreaInPoints = 0;
+    private int totalAreaInPoints;
     private int totalAreaOffsetX;
     private int totalAreaOffsetY;
-    private final int winningCondition;
+    private final int WINNINGCONDITION;
     private boolean gameIsRunning = true;
     private boolean gameIsWon = false;
     private boolean gameIsLost = false;
 
     private GameLogicsManager(){
-        winningCondition = 80;
+        WINNINGCONDITION = 80;
         totalAreaOffsetX = Initializer.getInstance().INNERSHAPEDELTAX;
         totalAreaOffsetY = Initializer.getInstance().INNERSHAPEDELTAY;
         int x = Initializer.getInstance().INNERSHAPEWIDTH-totalAreaOffsetX;
@@ -93,7 +93,7 @@ public class GameLogicsManager {
     }
 
     private void compareTotalAreaReached(){
-        if(calculateTotalAreaPercent() >= winningCondition) gameIsWon = true;
+        if(calculateTotalAreaPercent() >= WINNINGCONDITION) gameIsWon = true;
     }
 
     public boolean gameLost(){
@@ -107,7 +107,7 @@ public class GameLogicsManager {
     public void splitInnerShape(ArrayList<Point> splitPoints) {
         ColoredPath[] coloredPath = splitpath(innerPath, splitPoints);
         removeOldShapes();
-        ColoredPath subPath = null;
+        ColoredPath subPath;
         if(coloredPath[0].contains(aiPlayer.getPosition())){
             innerPath = new ColoredPath(coloredPath[0], innerPathTemplate.getColor(), true);
             subPath = new ColoredPath(coloredPath[1], RandomColorGenerator.generateRandomColor(), true);

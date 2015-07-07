@@ -1,9 +1,6 @@
-import java.awt.*;
+import java.awt.Color;
 import java.util.Random;
 
-/**
- * Created by Lukas Normal on 28.06.2015.
- */
 public class RandomColorGenerator {
 
     public static Color generateRandomColor(){

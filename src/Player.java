@@ -1,6 +1,7 @@
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Point;
+import java.awt.Color;
 import java.util.ArrayList;
+import java.awt.event.KeyEvent;
 
 public final class Player extends ColoredEllipse{
 
@@ -74,6 +75,7 @@ public final class Player extends ColoredEllipse{
                 detectSelfCollision();
                 updatePlayerPath();
                 detectCollisionShapes(inner, outer);
+                updateSteps--;
             }
         }
     }

@@ -1,4 +1,4 @@
-import java.awt.*;
+import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 
 public abstract class ColoredEllipse extends Ellipse2D.Float implements MoveableShape  {

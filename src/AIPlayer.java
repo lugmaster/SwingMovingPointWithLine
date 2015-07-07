@@ -1,4 +1,5 @@
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -62,9 +63,6 @@ public class AIPlayer extends ColoredEllipse{
             dx = random.nextInt(2) - random.nextInt(2);
             dy = random.nextInt(2) - random.nextInt(2);
         }
-        System.out.println("dx:" + dx + " ,dy:" +dy);
-
-
     }
 
     private void revertMovement(){

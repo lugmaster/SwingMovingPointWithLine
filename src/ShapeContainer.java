@@ -1,4 +1,8 @@
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.util.ArrayList;
 
 public final class ShapeContainer {

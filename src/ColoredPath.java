@@ -1,4 +1,5 @@
-import java.awt.*;
+import java.awt.Point;
+import java.awt.Color;
 import java.awt.geom.Area;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
