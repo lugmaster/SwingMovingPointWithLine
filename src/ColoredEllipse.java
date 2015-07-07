@@ -1,7 +1,7 @@
 import java.awt.Color;
 import java.awt.geom.Ellipse2D;
 
-public abstract class ColoredEllipse extends Ellipse2D.Float implements MoveableShape  {
+public abstract class ColoredEllipse extends Ellipse2D.Float implements ColoredShape  {
 
     private final Color color;
 
@@ -15,7 +15,6 @@ public abstract class ColoredEllipse extends Ellipse2D.Float implements Moveable
         return color;
     }
 
-    @Override
     public void move(int dx, int dy) {
 
         if(super.x + dx < (int) (width/2)) {

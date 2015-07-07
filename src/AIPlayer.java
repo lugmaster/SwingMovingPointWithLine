@@ -14,11 +14,11 @@ public class AIPlayer extends ColoredEllipse{
     private Player player;
     private Random random;
 
-    public AIPlayer (int x, int y, int radius, int moveSpeed, Color color, Player player){
+    public AIPlayer (int x, int y, int radius, int moveSpeed, Color color, Player player, int coolDown){
         super(x,y,radius,color);
         position = new Point(x,y);
         random = new Random();
-        coolDown = 100;
+        this.coolDown = coolDown;
         this.moveSpeed = moveSpeed;
         this.player = player;
         initMovement();
@@ -28,24 +28,24 @@ public class AIPlayer extends ColoredEllipse{
         return position;
     }
 
-    private void updatePosition(){
-        position.setLocation(this.x, this.y);
-    }
-
-    public void update(ColoredPath inner, ColoredPath outer){
+    public void update(ColoredPath outer){
         if(gameIsRunning){
             int updateSteps = moveSpeed;
             while (updateSteps > 0) {
                 move();
                 updatePosition();
                 randomMovementChange();
-                detectCollision(inner, outer);
+                detectCollision(outer);
                 detectPlayerCollision();
                 detectPlayerPathCollision();
                 updateSteps--;
             }
 
         }
+    }
+
+    public boolean getPlayerCollisionFound(){
+        return playerCollisionFound;
     }
 
     public void move(){
@@ -91,7 +91,6 @@ public class AIPlayer extends ColoredEllipse{
                 return;
             }
         }
-
     }
 
     private void randomMovementChange(){
@@ -106,7 +105,7 @@ public class AIPlayer extends ColoredEllipse{
         }
     }
 
-    private void detectCollision(ColoredPath inner, ColoredPath outer){
+    private void detectCollision(ColoredPath outer){
         if(outer.intersects(this.getBounds())){
             revertMovement();
         }
@@ -133,7 +132,8 @@ public class AIPlayer extends ColoredEllipse{
         }
     }
 
-    public boolean getPlayerCollisionFound(){
-        return playerCollisionFound;
+    private void updatePosition(){
+        position.setLocation(this.x, this.y);
     }
+
 }

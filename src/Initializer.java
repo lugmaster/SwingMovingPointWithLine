@@ -6,9 +6,6 @@ public class Initializer {
 
     private static Initializer initializer = new Initializer();
 
-    private ArrayList<Point> innerPoints = new ArrayList<>();
-    private ArrayList<Point> outerPoints = new ArrayList<>();
-
     private ColoredPath outerShape;
     private ColoredPath innerShape;
 
@@ -17,8 +14,8 @@ public class Initializer {
 
     private int innerShapeWidth;
     private int innerShapeHeight;
-    private int innerShapeDeltaX;
-    private int innerShapeDeltaY;
+    private int innerShapeDistanceToBorderX;
+    private int innerShapeDistanceToBorderY;
 
     private int boardWidth;
     private int boardHeight;
@@ -46,7 +43,7 @@ public class Initializer {
 
         //moveableShapes:
         player = new Player(194,100,3,1,Color.blue);
-        aiPlayer = new AIPlayer(50,160,9,2,Color.red,player);
+        aiPlayer = new AIPlayer(50,160,9,2,Color.red,player,100);
 
 
         //outerShape
@@ -54,6 +51,7 @@ public class Initializer {
         Point p1 = new Point(boardWidth+3,-3);
         Point p2 = new Point(boardWidth+3,boardHeight+3);
         Point p3 = new Point(-3,boardHeight+3);
+        ArrayList<Point> outerPoints = new ArrayList<>();
         outerPoints.add(p0);
         outerPoints.add(p1);
         outerPoints.add(p2);
@@ -61,13 +59,14 @@ public class Initializer {
         outerShape = new ColoredPath(outerPoints, Color.DARK_GRAY, true);
 
         //innerShape
+        ArrayList<Point> innerPoints = new ArrayList<>();
         innerShapeWidth = boardWidth-10;
         innerShapeHeight = boardHeight-10;
-        innerShapeDeltaX = 9;
-        innerShapeDeltaY = 9;
-        Point p4 = new Point(innerShapeDeltaX, innerShapeHeight);
-        Point p5 = new Point(innerShapeDeltaX, innerShapeDeltaY);
-        Point p6 = new Point(innerShapeWidth, innerShapeDeltaY);
+        innerShapeDistanceToBorderX = 9;
+        innerShapeDistanceToBorderY = 9;
+        Point p4 = new Point(innerShapeDistanceToBorderX, innerShapeHeight);
+        Point p5 = new Point(innerShapeDistanceToBorderX, innerShapeDistanceToBorderY);
+        Point p6 = new Point(innerShapeWidth, innerShapeDistanceToBorderY);
         Point p7 = new Point(innerShapeWidth, innerShapeHeight);
         innerPoints.add(p4);
         innerPoints.add(p5);
@@ -84,12 +83,12 @@ public class Initializer {
         return innerShapeHeight;
     }
 
-    public int getInnerShapeDeltaX() {
-        return innerShapeDeltaX;
+    public int getInnerShapeDistanceToBorderX() {
+        return innerShapeDistanceToBorderX;
     }
 
-    public int getInnerShapeDeltaY() {
-        return innerShapeDeltaY;
+    public int getInnerShapeDistanceToBorderY() {
+        return innerShapeDistanceToBorderY;
     }
 
     public int getBoardWidth() {

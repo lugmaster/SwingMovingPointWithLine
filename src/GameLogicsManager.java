@@ -31,8 +31,8 @@ public class GameLogicsManager {
         WINNINGCONDITION = Initializer.getInstance().getWinningCondition();
 
         //Byte 2dArray
-        totalAreaOffsetX = Initializer.getInstance().getInnerShapeDeltaX();
-        totalAreaOffsetY = Initializer.getInstance().getInnerShapeDeltaY();
+        totalAreaOffsetX = Initializer.getInstance().getInnerShapeDistanceToBorderX();
+        totalAreaOffsetY = Initializer.getInstance().getInnerShapeDistanceToBorderY();
         int x = Initializer.getInstance().getInnerShapeWidth() -totalAreaOffsetX;
         int y = Initializer.getInstance().getInnerShapeHeight() -totalAreaOffsetY;
         totalAreaAdded = new byte[x][y];
@@ -62,11 +62,19 @@ public class GameLogicsManager {
         }
         if(gameIsRunning){
             player.update(innerShape, outerShape);
-            aiPlayer.update(innerShape, outerShape);
+            aiPlayer.update(outerShape);
             detectPlayerCollision();
             updateTotalAreaAdded();
             compareTotalAreaReached();
         }
+    }
+
+    public AIPlayer getAiPlayer() {
+        return aiPlayer;
+    }
+
+    public Player getPlayer() {
+        return player;
     }
 
     public ColoredPath getInnerShape(){
