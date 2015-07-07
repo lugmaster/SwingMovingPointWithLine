@@ -26,7 +26,7 @@ public final class Player extends ColoredEllipse{
     private ArrayList<Point> points;
 
 
-    public Player(float x, float y, float width, float height, float moveSpeed, Color color){
+    public Player(float x, float y, float width, float height, int moveSpeed, Color color){
         super(x, y, width, height, moveSpeed, color);
         position = new Point((int)x,(int)y);
         lastPosition = new Point(position);

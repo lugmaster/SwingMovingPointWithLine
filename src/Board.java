@@ -18,6 +18,9 @@ public class Board extends JPanel implements ActionListener{
     private ShapeContainer shapeContainer;
     private GameLogicsManager gameLogicsManager;
 
+
+    //private Initializer initializer;
+
     public Board() {
         super();
 
@@ -29,6 +32,7 @@ public class Board extends JPanel implements ActionListener{
         setBackground(Color.BLACK);
         timer = new Timer(DELAY, this);
         timer.start();
+        //initializer = Initializer.getInstance();
         gameLogicsManager = GameLogicsManager.getInstance();
         shapeContainer = ShapeContainer.getInstance();
     }

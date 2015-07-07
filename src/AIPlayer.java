@@ -6,17 +6,20 @@ public class AIPlayer extends ColoredEllipse{
 
     private Point position;
     private boolean gameIsRunning = true;
+    private boolean playerCollisionFound = false;
     private int dx,dy;
     private int coolDown;
     private final int RESETCOOLDOWN;
+    private Player player;
     Random random;
 
-    public AIPlayer (int x, int y, int width, int height, float moveSpeed, Color color){
+    public AIPlayer (int x, int y, int width, int height, int moveSpeed, Color color, Player player){
         super(x,y,width,height, moveSpeed, color);
         position = new Point(x,y);
         random = new Random();
         RESETCOOLDOWN = 100;
         coolDown = RESETCOOLDOWN;
+        this.player = player;
         initMovement();
     }
 
@@ -30,10 +33,17 @@ public class AIPlayer extends ColoredEllipse{
 
     public void update(ColoredPath inner, ColoredPath outer){
         if(gameIsRunning){
-            detectCollision(inner, outer);
-            move();
-            updatePosition();
-            randomMovementChange();
+            int updateSeps = moveSpeed;
+            while (updateSeps > 0) {
+                move();
+                updatePosition();
+                randomMovementChange();
+                detectCollision(inner, outer);
+                detectPlayerCollision();
+                detectPlayerPathCollision();
+                updateSeps--;
+            }
+
         }
     }
 
@@ -52,15 +62,13 @@ public class AIPlayer extends ColoredEllipse{
             dx = random.nextInt(2) - random.nextInt(2);
             dy = random.nextInt(2) - random.nextInt(2);
         }
-        dx *= moveSpeed;
-        dy *= moveSpeed;
         System.out.println("dx:" + dx + " ,dy:" +dy);
 
 
     }
 
     private void revertMovement(){
-        if( (Math.abs(dx / moveSpeed) == 1 && dy == 0) || (Math.abs(dy / moveSpeed) == 1 && dx == 0) ){
+        if( (Math.abs(dx) == 1 && dy == 0) || (Math.abs(dy) == 1 && dx == 0) ){
             dx = -dx;
             dy = -dy;
             return;
@@ -104,5 +112,30 @@ public class AIPlayer extends ColoredEllipse{
         if(outer.intersects(this.getBounds())){
             revertMovement();
         }
+    }
+
+    private void detectPlayerPathCollision(){
+        if(player.getPlayerPath() != null){
+            ArrayList<Point> points = player.getPlayerPath().getPathPoints();
+            if(points != null && points.size() >= 2){
+                for (int i = 0; i < points.size()-1; i++) {
+                    Point p1 = points.get(i);
+                    Point p2 = points.get(i+1);
+                    if(GameLogicsManager.pointIsInLine(p1,p2,this.getPosition())){
+                        playerCollisionFound = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private void detectPlayerCollision(){
+        if(player.isVulnerable() && this.intersects(player.getBounds2D())){
+            playerCollisionFound = true;
+        }
+    }
+
+    public boolean getPlayerCollisionFound(){
+        return playerCollisionFound;
     }
 }

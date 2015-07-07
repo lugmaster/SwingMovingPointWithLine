@@ -3,10 +3,10 @@ import java.awt.geom.Ellipse2D;
 
 public abstract class ColoredEllipse extends Ellipse2D.Float implements MoveableShape  {
 
-    protected float moveSpeed;
+    protected int moveSpeed;
     private final Color color;
 
-    public ColoredEllipse(float x, float y, float width, float height, float moveSpeed, Color color){
+    public ColoredEllipse(float x, float y, float width, float height, int moveSpeed, Color color){
         super(x, y, width, height);
         this.color = color;
         this.moveSpeed = moveSpeed;

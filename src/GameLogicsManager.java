@@ -23,6 +23,7 @@ public class GameLogicsManager {
     private int totalAreaOffsetX;
     private int totalAreaOffsetY;
     private final int winningCondition;
+    private boolean initialisingFinished = false;
     private boolean gameIsRunning = true;
     private boolean gameIsWon = false;
     private boolean gameIsLost = false;
@@ -49,7 +50,7 @@ public class GameLogicsManager {
 
         ShapeContainer.getInstance().addColoredShape(outerPath);
         ShapeContainer.getInstance().addColoredShape(innerPath);
-
+        initialisingFinished = true;
     }
 
     public static GameLogicsManager getInstance(){
@@ -68,7 +69,7 @@ public class GameLogicsManager {
             player.update(innerPath, outerPath);
             aiPlayer.update(innerPath, outerPath);
             detectPlayerCollision();
-            detectPlayerPathCollision();
+            //detectPlayerPathCollision();
             updateTotalAreaAdded();
             compareTotalAreaReached();
         }
@@ -281,9 +282,7 @@ public class GameLogicsManager {
     }
 
     private void detectPlayerCollision(){
-        if(player.isVulnerable() && aiPlayer.intersects(player.getBounds2D())){
-            gameIsLost = true;
-        }
+        if(aiPlayer.getPlayerCollisionFound()) gameIsLost = true;
     }
 
     public Player getPlayer(){
@@ -292,6 +291,10 @@ public class GameLogicsManager {
 
     public AIPlayer getAiPlayer(){
         return aiPlayer;
+    }
+
+    public boolean isInitialisingFinished(){
+        return initialisingFinished;
     }
 
 }
