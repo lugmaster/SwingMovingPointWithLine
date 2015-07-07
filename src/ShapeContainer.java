@@ -1,5 +1,3 @@
-import com.sun.corba.se.impl.orbutil.graph.Graph;
-
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,27 +17,15 @@ public final class ShapeContainer {
 
     private ShapeContainer() {
         player = Initializer.getInstance().getPlayer();
-       aiPlayer = Initializer.getInstance().getAiPlayer();
+        aiPlayer = Initializer.getInstance().getAiPlayer();
+        moveableShapes.add(this.player);
+        moveableShapes.add(aiPlayer);
     }
 
     public static ShapeContainer getInstance(){
         if(shapeContainer == null)
             shapeContainer = new ShapeContainer();
         return shapeContainer;
-    }
-
-    public void addPlayer(Player player){
-        this.player = player;
-        moveableShapes.add(player);
-        moveableShapes.add(aiPlayer);
-    }
-
-    public void addColoredShape(ColoredShape coloredShape){
-        coloredShapes.add(coloredShape);
-    }
-
-    public void removeColoredShape(ColoredShape coloredShape){
-        if(coloredShapes.contains(coloredShape)) coloredShapes.remove(coloredShape);
     }
 
     public void doDrawing(Graphics g){
@@ -63,11 +49,11 @@ public final class ShapeContainer {
             }
         }
         g.setColor(Color.WHITE);
-        g.drawString("Area left: " + GameLogicsManager.getInstance().getAreaLeft(), 5, 15);
-        if(GameLogicsManager.getInstance().gameLost()){
+        g.drawString("Area left: " + GameLogicsManager.getInstance().getAreaLeftPercent(), 5, 15);
+        if(GameLogicsManager.getInstance().gameIsLost()){
             drawScreenMessage(g, "Game Over");
         }
-        if(GameLogicsManager.getInstance().gameWon()){
+        if(GameLogicsManager.getInstance().gameIsWon()){
             drawScreenMessage(g, "Game Won");
         }
     }

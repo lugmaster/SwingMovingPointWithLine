@@ -13,15 +13,17 @@ public class Board extends JPanel implements ActionListener{
 
     public static final int WIDTH = Initializer.getInstance().getBoardWidth();
     public static final int HEIGHT = Initializer.getInstance().getBoardHeight();
-    private final int DELAY = 10;
+    private final int DELAY = Initializer.getInstance().getTimerDelay();
     private Timer timer;
     private ShapeContainer shapeContainer;
     private GameLogicsManager gameLogicsManager;
+    private Player player;
 
     public Board() {
         super();
         gameLogicsManager = GameLogicsManager.getInstance();
         shapeContainer = ShapeContainer.getInstance();
+        player = Initializer.getInstance().getPlayer();
 
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -45,19 +47,19 @@ public class Board extends JPanel implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        repaint();
-        gameLogicsManager.update();
         shapeContainer.update();
+        gameLogicsManager.update();
+        repaint();
     }
 
     private class TAdapter extends KeyAdapter {
         @Override
         public void keyReleased(KeyEvent e) {
-            gameLogicsManager.getPlayer().keyReleased(e);
+            player.keyReleased(e);
         }
         @Override
         public void keyPressed(KeyEvent e) {
-            gameLogicsManager.getPlayer().keyPressed(e);
+            player.keyPressed(e);
         }
     }
 

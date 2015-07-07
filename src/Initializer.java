@@ -23,6 +23,8 @@ public class Initializer {
     private int boardWidth;
     private int boardHeight;
 
+    private int timerDelay;
+
     private int winningCondition;
 
     private Initializer(){
@@ -40,6 +42,7 @@ public class Initializer {
         boardWidth = 200;
         boardHeight = 200;
         winningCondition = 80;
+        timerDelay = 10;
 
         //moveableShapes:
         player = new Player(194,100,3,1,Color.blue);
@@ -117,4 +120,7 @@ public class Initializer {
         return outerShape;
     }
 
+    public int getTimerDelay(){
+        return timerDelay;
+    }
 }
