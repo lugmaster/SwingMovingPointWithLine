@@ -15,19 +15,38 @@ public class Initializer {
     private Player player;
     private AIPlayer aiPlayer;
 
-    public final int INNERSHAPEWIDTH;
-    public final int INNERSHAPEHEIGHT;
-    public final int INNERSHAPEDELTAX;
-    public final int INNERSHAPEDELTAY;
+    private int innerShapeWidth;
+    private int innerShapeHeight;
+    private int innerShapeDeltaX;
+    private int innerShapeDeltaY;
+
+    private int boardWidth;
+    private int boardHeight;
+
+    private int winningCondition;
 
     private Initializer(){
+        init();
+    }
+
+    public static Initializer getInstance(){
+        if(initializer == null)
+            initializer = new Initializer();
+        return initializer;
+    }
+
+    private void init(){
+        //Size of Board and amount of addedArea needed to win
+        boardWidth = 200;
+        boardHeight = 200;
+        winningCondition = 80;
+
+        //moveableShapes:
         player = new Player(194,100,3,1,Color.blue);
         aiPlayer = new AIPlayer(50,160,9,2,Color.red,player);
-        INNERSHAPEWIDTH = Board.WIDTH-10;
-        INNERSHAPEHEIGHT = Board.HEIGHT-10;
-        INNERSHAPEDELTAX = 9;
-        INNERSHAPEDELTAY = 9;
-        //outer
+
+
+        //outerShape
         Point p0 = new Point(-3,-3);
         Point p1 = new Point(Board.WIDTH+3,-3);
         Point p2 = new Point(Board.WIDTH+3,Board.HEIGHT+3);
@@ -38,11 +57,15 @@ public class Initializer {
         outerPoints.add(p3);
         outerShape = new ColoredPath(outerPoints, Color.DARK_GRAY, true);
 
-        //inner
-        Point p4 = new Point(INNERSHAPEDELTAX,INNERSHAPEHEIGHT);
-        Point p5 = new Point(INNERSHAPEDELTAX,INNERSHAPEDELTAY);
-        Point p6 = new Point(INNERSHAPEWIDTH,INNERSHAPEDELTAY);
-        Point p7 = new Point(INNERSHAPEWIDTH,INNERSHAPEHEIGHT);
+        //innerShape
+        innerShapeWidth = boardWidth-10;
+        innerShapeHeight = boardHeight-10;
+        innerShapeDeltaX = 9;
+        innerShapeDeltaY = 9;
+        Point p4 = new Point(innerShapeDeltaX, innerShapeHeight);
+        Point p5 = new Point(innerShapeDeltaX, innerShapeDeltaY);
+        Point p6 = new Point(innerShapeWidth, innerShapeDeltaY);
+        Point p7 = new Point(innerShapeWidth, innerShapeHeight);
         innerPoints.add(p4);
         innerPoints.add(p5);
         innerPoints.add(p6);
@@ -50,10 +73,32 @@ public class Initializer {
         innerShape = new ColoredPath(innerPoints, Color.BLACK, true);
     }
 
-    public static Initializer getInstance(){
-        if(initializer == null)
-            initializer = new Initializer();
-        return initializer;
+    public int getInnerShapeWidth() {
+        return innerShapeWidth;
+    }
+
+    public int getInnerShapeHeight() {
+        return innerShapeHeight;
+    }
+
+    public int getInnerShapeDeltaX() {
+        return innerShapeDeltaX;
+    }
+
+    public int getInnerShapeDeltaY() {
+        return innerShapeDeltaY;
+    }
+
+    public int getBoardWidth() {
+        return boardWidth;
+    }
+
+    public int getBoardHeight() {
+        return boardHeight;
+    }
+
+    public int getWinningCondition() {
+        return winningCondition;
     }
 
     public Player getPlayer(){
