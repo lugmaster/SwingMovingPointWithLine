@@ -1,5 +1,3 @@
-import com.sun.javafx.scene.paint.GradientUtils;
-
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Line2D;

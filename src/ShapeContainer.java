@@ -47,7 +47,7 @@ public final class ShapeContainer {
             }
         }
         if(player!= null && player.getPlayerPath() != null){
-            g2d.setColor(player.getColor());
+            g2d.setColor(RandomColorGenerator.generateRandomColor());
             g2d.draw(player.getPlayerPath());
         }
         if(!moveableShapes.isEmpty()) {
