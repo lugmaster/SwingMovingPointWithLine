@@ -23,7 +23,6 @@ public class GameLogicsManager {
     private int totalAreaOffsetX;
     private int totalAreaOffsetY;
     private final int winningCondition;
-    private boolean initialisingFinished = false;
     private boolean gameIsRunning = true;
     private boolean gameIsWon = false;
     private boolean gameIsLost = false;
@@ -39,7 +38,7 @@ public class GameLogicsManager {
         player = Initializer.getInstance().getPlayer();
         ShapeContainer.getInstance().addPlayer(player);
         aiPlayer = Initializer.getInstance().getAiPlayer();
-        ShapeContainer.getInstance().addAiPlayer(aiPlayer);
+        ShapeContainer.getInstance().addMoveableShape(aiPlayer);
 
         outerPath = new ColoredPath(Initializer.getInstance().getOuterShape(), true);
         innerPath = new ColoredPath(Initializer.getInstance().getInnerShape(), true);
@@ -50,7 +49,6 @@ public class GameLogicsManager {
 
         ShapeContainer.getInstance().addColoredShape(outerPath);
         ShapeContainer.getInstance().addColoredShape(innerPath);
-        initialisingFinished = true;
     }
 
     public static GameLogicsManager getInstance(){
@@ -69,14 +67,13 @@ public class GameLogicsManager {
             player.update(innerPath, outerPath);
             aiPlayer.update(innerPath, outerPath);
             detectPlayerCollision();
-            //detectPlayerPathCollision();
             updateTotalAreaAdded();
             compareTotalAreaReached();
         }
     }
 
     public float getAreaLeft(){
-        return (100f - calculateTotalAreaPercent());
+        return (100f - (float)(Math.round(calculateTotalAreaPercent() * 100))/100);
     }
 
     private void updateTotalAreaAdded(){
@@ -92,7 +89,7 @@ public class GameLogicsManager {
 
     private float calculateTotalAreaPercent(){
         float f = totalAreaInPoints/(((float)totalAreaAdded.length * (float)totalAreaAdded[0].length)/100);
-        return (float)(Math.round(f * 100))/100;
+        return f;
     }
 
     private void compareTotalAreaReached(){
@@ -266,35 +263,12 @@ public class GameLogicsManager {
         return false;
     }
 
-    private void detectPlayerPathCollision(){
-        if(player.getPlayerPath() != null){
-            ArrayList<Point> points = player.getPlayerPath().getPathPoints();
-            if(points != null && points.size() >= 2){
-                for (int i = 0; i < points.size()-1; i++) {
-                    Point p1 = points.get(i);
-                    Point p2 = points.get(i+1);
-                    if(GameLogicsManager.pointIsInLine(p1,p2,aiPlayer.getPosition())){
-                        gameIsLost = true;
-                    }
-                }
-            }
-        }
-    }
-
     private void detectPlayerCollision(){
         if(aiPlayer.getPlayerCollisionFound()) gameIsLost = true;
     }
 
     public Player getPlayer(){
         return player;
-    }
-
-    public AIPlayer getAiPlayer(){
-        return aiPlayer;
-    }
-
-    public boolean isInitialisingFinished(){
-        return initialisingFinished;
     }
 
 }

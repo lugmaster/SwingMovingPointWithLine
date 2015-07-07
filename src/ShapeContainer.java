@@ -9,7 +9,6 @@ public final class ShapeContainer {
     private ArrayList<MoveableShape> moveableShapes = new ArrayList<>();
 
     private Player player;
-    private AIPlayer aiPlayer;
 
     private ShapeContainer() {}
 
@@ -24,13 +23,12 @@ public final class ShapeContainer {
         moveableShapes.add(player);
     }
 
-    public void addAiPlayer(AIPlayer aiPlayer){
-        this.aiPlayer = aiPlayer;
-        moveableShapes.add(aiPlayer);
-    }
-
     public void addColoredShape(ColoredShape coloredShape){
         coloredShapes.add(coloredShape);
+    }
+
+    public void addMoveableShape(MoveableShape moveableShape){
+        moveableShapes.add(moveableShape);
     }
 
     public void removeColoredShape(ColoredShape coloredShape){

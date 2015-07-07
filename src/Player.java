@@ -18,6 +18,8 @@ public final class Player extends ColoredEllipse{
     private int lastDirection = -1;
     private int lastKeyPressed = -1;
 
+    private int moveSpeed;
+
     private Point position;
     private Point lastPosition;
 
@@ -27,7 +29,8 @@ public final class Player extends ColoredEllipse{
 
 
     public Player(float x, float y, float width, float height, int moveSpeed, Color color){
-        super(x, y, width, height, moveSpeed, color);
+        super(x, y, width, height,color);
+        this.moveSpeed = moveSpeed;
         position = new Point((int)x,(int)y);
         lastPosition = new Point(position);
         points = new ArrayList<>();
@@ -41,17 +44,6 @@ public final class Player extends ColoredEllipse{
         }
         return null;
     }
-
-    //Debug INFO remove before FINISH
-        /*
-        if(key == KeyEvent.VK_ENTER){
-            for (Point point : points) {
-                System.out.println("NOW:" + point);
-            }
-            System.out.println("NOWPOS:" + position);
-            System.out.println("\n");
-            updatePlayerPath();
-        }*/
 
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
@@ -74,19 +66,22 @@ public final class Player extends ColoredEllipse{
     }
 
     public void update(ColoredPath inner, ColoredPath outer){
-        //System.out.println(gameIsRunning);
         if(gameIsRunning){
-            move();
-            updatePosition();
-            detectSelfCollision();
-            updatePlayerPath();
-            detectCollisionShapes(inner, outer);
+            int updateSteps = moveSpeed;
+            while (updateSteps > 0) {
+                move();
+                updatePosition();
+                detectSelfCollision();
+                updatePlayerPath();
+                detectCollisionShapes(inner, outer);
+            }
         }
     }
 
     public boolean isVulnerable(){
         return isVulnerable;
     }
+
 
     private void move(){
         if(lastKeyPressed == -1){
@@ -112,11 +107,12 @@ public final class Player extends ColoredEllipse{
                 addPoint(position);
             }
         }
-        float[] deltaPos = adjustMovement(direction);
+        int[] deltaPos = adjustMovement(direction);
         super.move(deltaPos[0],deltaPos[1]);
     }
 
-    private void updatePosition(){
+
+    void updatePosition(){
         position.setLocation(x,y);
     }
 
@@ -207,8 +203,8 @@ public final class Player extends ColoredEllipse{
         return (key == WEST || key == EAST || key == NORTH || key == SOUTH);
     }
 
-    private float[] adjustMovement(int direction) {
-        float[] deltaPos = {0,0};
+    private int[] adjustMovement(int direction) {
+        int[] deltaPos = {0,0};
         if(direction == WEST) deltaPos[0] = -moveSpeed;
         if(direction == EAST) deltaPos[0] = moveSpeed;
         if(direction == NORTH) deltaPos[1] = -moveSpeed;

@@ -3,13 +3,11 @@ import java.awt.geom.Ellipse2D;
 
 public abstract class ColoredEllipse extends Ellipse2D.Float implements MoveableShape  {
 
-    protected int moveSpeed;
     private final Color color;
 
-    public ColoredEllipse(float x, float y, float width, float height, int moveSpeed, Color color){
+    public ColoredEllipse(float x, float y, float width, float height,Color color){
         super(x, y, width, height);
         this.color = color;
-        this.moveSpeed = moveSpeed;
     }
 
     @Override
@@ -18,7 +16,7 @@ public abstract class ColoredEllipse extends Ellipse2D.Float implements Moveable
     }
 
     @Override
-    public void move(float dx, float dy) {
+    public void move(int dx, int dy) {
 
         if(super.x + dx < (int) (width/2)) {
             super.x = (int) (width/2);

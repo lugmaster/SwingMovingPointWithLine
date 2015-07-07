@@ -1,8 +1,6 @@
 import java.awt.*;
 import java.awt.geom.Area;
-import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 public class ColoredPath extends Path2D.Float implements ColoredShape {

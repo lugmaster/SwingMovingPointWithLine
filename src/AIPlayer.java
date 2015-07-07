@@ -9,16 +9,16 @@ public class AIPlayer extends ColoredEllipse{
     private boolean playerCollisionFound = false;
     private int dx,dy;
     private int coolDown;
-    private final int RESETCOOLDOWN;
+    private int moveSpeed;
     private Player player;
-    Random random;
+    private Random random;
 
     public AIPlayer (int x, int y, int width, int height, int moveSpeed, Color color, Player player){
-        super(x,y,width,height, moveSpeed, color);
+        super(x,y,width,height, color);
         position = new Point(x,y);
         random = new Random();
-        RESETCOOLDOWN = 100;
-        coolDown = RESETCOOLDOWN;
+        coolDown = 100;
+        this.moveSpeed = moveSpeed;
         this.player = player;
         initMovement();
     }
@@ -33,15 +33,15 @@ public class AIPlayer extends ColoredEllipse{
 
     public void update(ColoredPath inner, ColoredPath outer){
         if(gameIsRunning){
-            int updateSeps = moveSpeed;
-            while (updateSeps > 0) {
+            int updateSteps = moveSpeed;
+            while (updateSteps > 0) {
                 move();
                 updatePosition();
                 randomMovementChange();
                 detectCollision(inner, outer);
                 detectPlayerCollision();
                 detectPlayerPathCollision();
-                updateSeps--;
+                updateSteps--;
             }
 
         }
@@ -100,7 +100,7 @@ public class AIPlayer extends ColoredEllipse{
         if(coolDown == 0){
             int chance = random.nextInt(100);
             if(chance == 1){
-                coolDown = 150;
+                coolDown = 100;
                 initMovement();
             }
         }else{
