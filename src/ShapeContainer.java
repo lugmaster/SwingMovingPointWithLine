@@ -4,11 +4,16 @@ import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.util.ArrayList;
-
+/*
+ * The ShapeContainer holds all drawable Shapes received from the GameLogicsManager.
+ * It draws all the shapes each updateCycle.
+ * If the game is lost or won, it draws instead a Message
+ */
 public final class ShapeContainer {
 
     private static ShapeContainer shapeContainer = new ShapeContainer();
 
+    //a list containing all drawable shapes
     private ArrayList<ColoredShape> coloredShapes = new ArrayList<>();
 
     private ShapeContainer(){
@@ -21,6 +26,9 @@ public final class ShapeContainer {
         return shapeContainer;
     }
 
+    /*
+     * The Graphics object is passed from the Board Class
+     */
     public void doDrawing(Graphics g){
         Graphics2D g2d = (Graphics2D) g;
 
@@ -30,6 +38,7 @@ public final class ShapeContainer {
                 g2d.setColor(coloredShape.getColor());
                 g2d.draw(coloredShape);
                 g2d.fill(coloredShape);
+                //drawing player line
                 if(coloredShape instanceof Player){
                     Player player = (Player) coloredShape;
                     if(player!= null && player.getPlayerPath() != null){
@@ -39,7 +48,7 @@ public final class ShapeContainer {
                 }
             }
         }
-        //TextDrawing
+        //Area left until to cut from the inner shape
         g.setColor(Color.WHITE);
         g.drawString("Area left: " + GameLogicsManager.getInstance().getAreaLeftPercent(), 5, 15);
 
@@ -52,6 +61,9 @@ public final class ShapeContainer {
         }
     }
 
+    /*
+     * Receives a graphics object and a message from the doDrawing method
+     */
     private void drawScreenMessage(Graphics g, String msg) {
         Font small = new Font("Helvetica", Font.BOLD, 14);
         FontMetrics fm = g.getFontMetrics(small);
@@ -61,6 +73,9 @@ public final class ShapeContainer {
         g.drawString(msg, (Board.WIDTH - fm.stringWidth(msg)) / 2, Board.HEIGHT/ 2);
     }
 
+    /*
+     * clears all old Shapes and takes the new ones from GameLogisManaer
+     */
     private void setNewShapes(){
         coloredShapes.clear();
 

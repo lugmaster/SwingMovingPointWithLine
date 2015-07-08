@@ -3,12 +3,24 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
+/*
+ * This class generates the aiPlayer, which is initialized with a random direction.
+ * Each timer tick the aiPlayer object is updated and moves around by adding dx,dy to its x and y coordinates from superclass
+ * The aiPlayer is only allowed to move in the innerShape
+ * @param x,y Coordinates of the aiPlayer, stored in position
+ * @param radius radius of the ColoredEllipseShape the aiPlayer is extending
+ * @param moveSpeed sets how often update is applied per timer tick
+ * @param color when drawn
+ * @param player reference to the player object for detecting collisions
+ * @param coolDown the amount of timer ticks needed to apply a random movement change after occurrence
+ */
+
 public class AIPlayer extends ColoredEllipse{
 
     private Point position;
-    private boolean gameIsRunning = true;
-    private boolean playerCollisionFound = false;
-    private int dx,dy;
+    private boolean gameIsRunning = true; // as long as true, the game is running
+    private boolean playerCollisionFound = false; //once set true on collision, the game will stop
+    private int dx,dy; //delta values for changing position with each timer tick
     private int coolDown;
     private int moveSpeed;
     private Player player;
@@ -28,13 +40,17 @@ public class AIPlayer extends ColoredEllipse{
         return position;
     }
 
+    /*
+     * This method is applied every timer tick (see class board)
+     * @param outer this coloredPath is used for detecting Collision
+     */
     public void update(ColoredPath outer){
         if(gameIsRunning){
             int updateSteps = moveSpeed;
             while (updateSteps > 0) {
+                randomMovementChange();
                 move();
                 updatePosition();
-                randomMovementChange();
                 detectCollision(outer);
                 detectPlayerCollision();
                 detectPlayerPathCollision();
@@ -48,14 +64,26 @@ public class AIPlayer extends ColoredEllipse{
         return playerCollisionFound;
     }
 
+
+    /*
+     * Applies dx and dy to superclass move, both can be 0 or +/-1
+     * @param dx,dy
+     */
     public void move(){
         super.move(dx,dy);
     }
 
+
+    /*
+     * is Applied when winning or lost conditions of the game are met
+     */
     public void setGameToFinished(){
         gameIsRunning = false;
     }
 
+    /*
+     * initialises delta values (dx,dy) with random numbers between -1,0,1
+     */
     private void initMovement(){
         dx = 0;
         dy = 0;
@@ -65,6 +93,9 @@ public class AIPlayer extends ColoredEllipse{
         }
     }
 
+    /*
+     * reverts delta values (dx,dy), depending on former movingDirection
+     */
     private void revertMovement(){
         if( (Math.abs(dx) == 1 && dy == 0) || (Math.abs(dy) == 1 && dx == 0) ){
             dx = -dx;
@@ -93,6 +124,10 @@ public class AIPlayer extends ColoredEllipse{
         }
     }
 
+    /*
+     *  changes the actual moving direction, if coolDown is 0 and a 1% chance is met
+     *  coolDown is only restarted if 1% chance is met
+     */
     private void randomMovementChange(){
         if(coolDown == 0){
             int chance = random.nextInt(100);
@@ -105,12 +140,28 @@ public class AIPlayer extends ColoredEllipse{
         }
     }
 
+    /*
+     * detects if aiPlayer object is colliding with outerShape
+     */
     private void detectCollision(ColoredPath outer){
         if(outer.intersects(this.getBounds())){
             revertMovement();
         }
     }
 
+    /*
+     * detects if aiPlayer object is colliding with player object
+     */
+    private void detectPlayerCollision(){
+        if(player.isVulnerable() && this.intersects(player.getBounds2D())){
+            playerCollisionFound = true;
+        }
+    }
+
+    /*
+     * detects if aiPlayer object is colliding with drawn line from player object
+     * by creating a line from 2 playerPath points and checking if aiPlayers center lies between
+     */
     private void detectPlayerPathCollision(){
         if(player.getPlayerPath() != null){
             ArrayList<Point> points = player.getPlayerPath().getPathPoints();
@@ -123,12 +174,6 @@ public class AIPlayer extends ColoredEllipse{
                     }
                 }
             }
-        }
-    }
-
-    private void detectPlayerCollision(){
-        if(player.isVulnerable() && this.intersects(player.getBounds2D())){
-            playerCollisionFound = true;
         }
     }
 

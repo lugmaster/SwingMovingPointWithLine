@@ -4,6 +4,18 @@ import java.awt.geom.Area;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 
+/*
+ * ColoredPath extends the Path2D.Float class.
+ * It stores a path, which can be a line if the path is NOT closed or
+ * it can be a shape if the path is closed.
+ * The path coordinates, also referred as shape outline are stored as points
+ * in an arrayList
+ * The path can be created by an arrayList defining its path or its outline, by another path,
+ * by an area (NOTE: no outline is stored by an area!), or it can be created
+ * empty handed, only with a color(NOTE: as long as no path is set, nothing will be drawn!)
+ * A ColoredPath can as well adopt a new shape or line by setting a new path.
+ */
+
 public class ColoredPath extends Path2D.Float implements ColoredShape {
 
     private ArrayList<Point> pathPoints;
@@ -36,14 +48,18 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
         this.color = color;
     }
 
-    public ArrayList<Point> getPathPoints() {
-        return pathPoints;
-    }
-
     public ColoredPath(ArrayList<Point> pathPoints, boolean closed){
         this(pathPoints, Color.YELLOW, closed);
     }
 
+    public ArrayList<Point> getPathPoints() {
+        return pathPoints;
+    }
+
+    /*
+     * sets a new path by a given list of points.
+     * @param closed    decides whether the path is closed or not
+     */
     public void setNewPath(ArrayList<Point> newPoints, boolean closed){
         this.reset();
         if(!pathPoints.isEmpty()) pathPoints.clear();
@@ -65,13 +81,5 @@ public class ColoredPath extends Path2D.Float implements ColoredShape {
     @Override
     public Color getColor() {
         return color;
-    }
-
-    public String toString(){
-        String s = "";
-        for (Point pathPoint : pathPoints) {
-            s += pathPoint + "\n";
-        }
-        return s;
     }
 }

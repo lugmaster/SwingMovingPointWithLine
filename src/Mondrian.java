@@ -3,7 +3,9 @@ import javax.swing.*;
 
 public class Mondrian extends JFrame {
 
-
+    /*
+     * this class starts mondrian as a new thread
+     */
     public Mondrian() {
         add(new Board());
 

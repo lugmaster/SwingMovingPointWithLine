@@ -9,6 +9,14 @@ import java.awt.event.KeyEvent;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+/*
+ * The class board extends the JPanel. It has a fixed size and contains the timer object for updating
+ * the JPanel and the whole game.
+ * The Board implements the ActionListener interface and detects user inputs, which are passed to the player object.
+ * The Board initialises as well the graphics drawing and reaches the graphics to the ShapeContainer to be drawn.
+ * After each timer delay ("Update Cycle") and action event will be performed and the method onActionPerformed will be called
+ */
+
 public class Board extends JPanel implements ActionListener{
 
     public static final int WIDTH = Initializer.getInstance().getBoardWidth();
@@ -41,6 +49,7 @@ public class Board extends JPanel implements ActionListener{
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         shapeContainer.doDrawing(g);
+        //this ensures that the graphics is up to date
         Toolkit.getDefaultToolkit().sync();
     }
 

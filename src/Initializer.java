@@ -2,6 +2,10 @@ import java.awt.Point;
 import java.awt.Color;
 import java.util.ArrayList;
 
+/*
+ * Initializer holds all Data that needs to be initialized on different objects.
+ * Information on the initialized objects is found in der their classes.
+ */
 public class Initializer {
 
     private static Initializer initializer = new Initializer();
@@ -41,7 +45,7 @@ public class Initializer {
         winningCondition = 80;
         timerDelay = 10;
 
-        //moveableShapes:
+        //player and ai
         player = new Player(194,100,3,1,Color.blue);
         aiPlayer = new AIPlayer(50,160,9,2,Color.red,player,100);
 
