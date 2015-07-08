@@ -69,7 +69,7 @@ public class AIPlayer extends ColoredEllipse{
      * Applies dx and dy to superclass move, both can be 0 or +/-1
      * @param dx,dy
      */
-    public void move(){
+    private void move(){
         super.move(dx,dy);
     }
 
@@ -119,7 +119,6 @@ public class AIPlayer extends ColoredEllipse{
             }
             if(dy > 0) {
                 dx = -dx;
-                return;
             }
         }
     }

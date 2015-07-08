@@ -29,8 +29,8 @@ public class GameLogicsManager {
     private ColoredPath outerShape;
 
     //used to recreate all shapes after a cut
-    public final ColoredPath outerShapeTemplate;
-    public final ColoredPath innerShapeTemplate;
+    private final ColoredPath outerShapeTemplate;
+    private final ColoredPath innerShapeTemplate;
 
     //contains all shapes that need to be drawn by ShapeContainer
     private ArrayList<ColoredShape> coloredShapes;
