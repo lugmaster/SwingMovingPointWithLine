@@ -1,5 +1,5 @@
-import java.awt.*;
-import javax.swing.*;
+import java.awt.EventQueue;
+import javax.swing.JFrame;
 
 public final class Mondrian extends JFrame {
 

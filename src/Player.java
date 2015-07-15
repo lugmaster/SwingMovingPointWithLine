@@ -1,5 +1,6 @@
 import java.awt.Point;
 import java.awt.Color;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.awt.event.KeyEvent;
 
@@ -20,7 +21,7 @@ import java.awt.event.KeyEvent;
  * @param color when drawn
  */
 
-public final class Player extends ColoredEllipse{
+public final class Player extends ColoredEllipse implements KeyListener{
 
     /*
      * KeyMapping for MovingDirection
@@ -84,11 +85,23 @@ public final class Player extends ColoredEllipse{
         return null;
     }
 
+
+    /*
+     * keyTyped does not have any use for mondrian, so it
+     * stays unimplemented!
+     */
+    @Override
+    public void keyTyped(KeyEvent e) {
+        // no need for implementation
+    }
+
+
     /*
      * valid keys are only arrow keys
      * only the last taken input is stored
      * for the usage of lastKeyPressed look at the move() method
      */
+    @Override
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if(isValidKey(key)) {
@@ -100,6 +113,7 @@ public final class Player extends ColoredEllipse{
      * valid keys are only arrow keys
      * sets lastKeyPressed to inactive again
      */
+    @Override
     public void keyReleased(KeyEvent e) {
         int key = e.getKeyCode();
         if(isValidKey(key)){

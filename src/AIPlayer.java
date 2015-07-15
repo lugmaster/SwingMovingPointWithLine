@@ -145,7 +145,6 @@ public final class AIPlayer extends ColoredEllipse{
     private void detectCollision(ColoredPath outer){
         if(outer.intersects(this.getBounds())){
             revertMovement();
-            //coolDown = 100;
         }
     }
 

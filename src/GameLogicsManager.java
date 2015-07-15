@@ -47,10 +47,10 @@ public final class GameLogicsManager {
     private boolean gameIsWon = false;
     private boolean gameIsLost = false;
 
+
     /*
      * all necessary parameters are taken from Initializer Class
      */
-
     private GameLogicsManager(){
         WINNINGCONDITION = Initializer.getInstance().getWinningCondition();
 
@@ -83,7 +83,6 @@ public final class GameLogicsManager {
     /*
      * this method is applied each update cycle
      */
-
     public void update(){
         if(gameIsLost || gameIsWon){
             gameIsRunning = false;
@@ -122,7 +121,6 @@ public final class GameLogicsManager {
     /*
      * @return float value of area added from inner to outer shape in percent (00.00f)
      */
-
     public float getAreaLeftPercent(){
         return (100f - (float)(Math.round(calculateTotalAreaPercent() * 100))/100);
     }
@@ -194,13 +192,14 @@ public final class GameLogicsManager {
     }
 
     /*
-     * each point the cut and added shapes contain is marked with 1
+     * each point the new added shapes contain is marked with 1
      * totalAreaInPoints stores the absolute value of points in shapes that have been added to the outer shape, means
      * as well, the original outer shape is not counted!
      */
     private void updateTotalAreaAdded(){
         for (int i = 0; i < totalAreaAdded.length; i++) {
             for(int j = 0; j < totalAreaAdded[i].length; j++){
+                //totalAreaOffsetX and totalAreaOffsetY need to be added to transform the sub coordinate system from inner shape to the original coordinate system
                 if(totalAreaAdded[i][j] != 1 && outerShape.contains(new Point(i+totalAreaOffsetX,j+totalAreaOffsetY)) ){
                     totalAreaAdded[i][j] = 1;
                     totalAreaInPoints++;
@@ -210,7 +209,7 @@ public final class GameLogicsManager {
     }
 
     /*
-     * returns an percentage amount of added shapes through cuts
+     * returns the percentage amount of added shapes through cuts
      */
     private float calculateTotalAreaPercent(){
         return totalAreaInPoints/(((float)totalAreaAdded.length * (float)totalAreaAdded[0].length)/100);
@@ -232,7 +231,7 @@ public final class GameLogicsManager {
     }
 
     /*
-     * Splits a closed rectangular coloredPath object along a line
+     * Splits a closed RECTANGULAR! coloredPath object along a line
      * The outline of a rectangular shape can be seen es a graph, where the nodes represent the corners of the shape
      * A rectangular shape can always be split by a line which starts between two nodes on the graph representation and
      * ends between two nodes (the last node is connected to the first node!).
@@ -253,9 +252,7 @@ public final class GameLogicsManager {
      *  1.) Start and endpoint of the splitLine lie between the same two points of the path outline
      *  2.) Startpoint lies between two points of the path and endpoint between another pair.
      *  In all other cases the shape can not be split.
-     *
      */
-
     private ColoredPath[] splitShapes(ColoredPath oldShape, ArrayList<Point> splitLinePoints){
         ColoredPath[] newShapes = new ColoredPath[2];
         ArrayList<Point> pathA = new ArrayList<>();
