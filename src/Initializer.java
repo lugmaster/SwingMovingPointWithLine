@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * Initializer holds all Data that needs to be initialized on different objects.
  * Information on the initialized objects is found in der their classes.
  */
-public class Initializer {
+public final class Initializer {
 
     private static Initializer initializer = new Initializer();
 

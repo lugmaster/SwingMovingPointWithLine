@@ -12,7 +12,7 @@ import java.util.ArrayList;
  *
  */
 
-public class GameLogicsManager {
+public final class GameLogicsManager {
 
     private static GameLogicsManager gameLogicsManager = new GameLogicsManager();
 

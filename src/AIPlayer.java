@@ -15,7 +15,7 @@ import java.util.Random;
  * @param coolDown the amount of timer ticks needed to apply a random movement change after occurrence
  */
 
-public class AIPlayer extends ColoredEllipse{
+public final class AIPlayer extends ColoredEllipse{
 
     private Point position;
     private boolean gameIsRunning = true; // as long as true, the game is running
@@ -145,6 +145,7 @@ public class AIPlayer extends ColoredEllipse{
     private void detectCollision(ColoredPath outer){
         if(outer.intersects(this.getBounds())){
             revertMovement();
+            //coolDown = 100;
         }
     }
 

@@ -4,7 +4,7 @@ import java.util.Random;
 /*
  * This class has only 1 purpose: generate a random color and return it
  */
-public class RandomColorGenerator {
+public final class RandomColorGenerator {
 
     public static Color generateRandomColor(){
         Random r = new Random();

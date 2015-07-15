@@ -1,7 +1,7 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class Mondrian extends JFrame {
+public final class Mondrian extends JFrame {
 
     /*
      * this class starts mondrian as a new thread

@@ -17,7 +17,7 @@ import javax.swing.Timer;
  * After each timer delay ("Update Cycle") and action event will be performed and the method onActionPerformed will be called
  */
 
-public class Board extends JPanel implements ActionListener{
+public final class Board extends JPanel implements ActionListener{
 
     public static final int WIDTH = Initializer.getInstance().getBoardWidth();
     public static final int HEIGHT = Initializer.getInstance().getBoardHeight();
@@ -32,7 +32,6 @@ public class Board extends JPanel implements ActionListener{
         gameLogicsManager = GameLogicsManager.getInstance();
         shapeContainer = ShapeContainer.getInstance();
         player = Initializer.getInstance().getPlayer();
-
 
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setDoubleBuffered(true);
@@ -71,5 +70,4 @@ public class Board extends JPanel implements ActionListener{
             player.keyPressed(e);
         }
     }
-
 }
